@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^doc$
+^Meta$
+
+resbiota_build.R
+README.md
+LICENSE
