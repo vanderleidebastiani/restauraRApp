@@ -1,0 +1,36 @@
+Package: resbiotaAPP
+Type: Package
+Title: Resbiota - Restore Ecosystem Services and Biodiversity Through Trait-Based Approaches
+Version: 0.0.1
+Date: 2026-03-04
+Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
+Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
+Depends: R (>= 3.5)
+Imports:
+    resbiota,
+    ggplot2,
+    utils,
+    stats,
+    grDevices,
+    shiny,
+    htmltools,
+    DiagrammeR,
+    shinyalert,
+    shiny.i18n,
+    sortable,
+    rhandsontable,
+    shinydashboard,
+    shinyWidgets,
+    shinyjs,
+    shinydashboardPlus
+Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
+License: GPL (>= 3)
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Collate: 
+    'app.R'
+    'appServer.R'
+    'appUI.R'
+    'resbiotaAPP-package.R'
+    'globals.R'
+    'runResbiota.R'
