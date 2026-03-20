@@ -4,8 +4,8 @@
 # ui : call this function once somewhere
 shinyWidgets::useSweetAlert()
 
-i18n <- shiny.i18n::Translator$new(translation_json_path = system.file("app", "translation.json", package = "resbiotaAPP"))
-# i18n <- shiny.i18n::Translator$new(translation_json_path = "resbiota/inst/app/translation.json")
+i18n <- shiny.i18n::Translator$new(translation_json_path = system.file("app", "translation.json", package = "restauraRApp"))
+# i18n <- shiny.i18n::Translator$new(translation_json_path = "restauraRApp/inst/app/translation.json")
 i18n$set_translation_language("en")
 i18n$use_js()
 # i18n$set_translation_language("pt")
@@ -21,10 +21,10 @@ header <- shinydashboardPlus::dashboardHeader(
 		# Use shinyjs functions
 		shinyjs::useShinyjs(),
 		tags$span(
-			class = "logo-mini", "res"
+			class = "logo-mini", "Res"
 		),
 		tags$span(
-			class = "logo-lg", "resbiota"
+			class = "logo-lg", "RestauraR"
 		)
 	),
 	titleWidth = 175,
@@ -124,7 +124,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
-												  									  htmltools::h4(htmltools::strong("resbiota - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches")),
+												  									  htmltools::h4(htmltools::strong("restauraR - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches")),
 												  									  htmltools::br(),
 												  									  htmltools::p(htmltools::strong("Description")),
 												  									  htmltools::p("Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation."),
@@ -138,7 +138,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
-												  									  htmltools::h4(htmltools::strong("resbiota - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches")),
+												  									  htmltools::h4(htmltools::strong("restauraR - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches")),
 												  									  htmltools::br(),
 												  									  htmltools::p(htmltools::strong(i18n$t("The framework"))),
 												  									  htmltools::p(i18n$t("The framework generates communities with distinct species compositions drawn at random from a species pool. The algorithm takes as input a data set with trait information for the species in the regional pool, that is, a list of species from which trait data are available that could be used to restore a particular ecosystem. Using species from the regional pool, the algorithm produces a set of N-simulated communities with species richness that ranges within a user-defined interval.")),
@@ -181,14 +181,14 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
-												  									  htmltools::h4(htmltools::strong("resbiota - v0.0.3")),
+												  									  htmltools::h4(htmltools::strong("restauraRApp - v0.0.1")),
 												  									  htmltools::br(),
 												  									  htmltools::p(htmltools::strong(i18n$t("Authors"))),
 												  									  htmltools::p(paste0("Vanderlei J. Debastiani, Andr", "\u00e9", " G. Coutinho, Marcos B. Carlucci, Marcus V. Cianciaruso")),
 												  									  htmltools::br(), 
 												  									  htmltools::p(htmltools::strong(i18n$t("References"))),
 												  									  htmltools::p("Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological restoration at large scales. Journal of Applied Ecology, 60, 1562-1571. https://doi.org/10.1111/1365-2664.14439"),
-												  									  htmltools::p("Coutinho, A. G., Nunes, A., Branquinho, C., Carlucci, M. B., & Cianciaruso, M. V. (2024). Natural regeneration enhances ecosystem multifunctionality but species addition can increase it during restoration monitoring. Manuscript in preparation.")
+												  									  htmltools::p("Coutinho, A. G., Nunes, A., Branquinho, C., Debastiani, V. J., Carlucci, M. B., & Cianciaruso, M. V. (2026). Boosting multifunctionality through adaptive trait-based species addition in ongoing restoration projects. Ecological Applications, 36, e70197. https://doi.org/10.1002/eap.70197")
 												  						) # End column
 												  					) # End row
 												  	) # End tabPanel

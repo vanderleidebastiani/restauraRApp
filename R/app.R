@@ -1,7 +1,7 @@
 #' @title app
 #' @name app
 #' @encoding UTF-8
-#' @import resbiota
+#' @import restauraR
 #' @import shiny
 # @import shinydashboard
 # @import shinydashboardPlus
@@ -42,7 +42,7 @@ NULL
 #                                            md = FALSE,
 #                                            scrollToTop = TRUE
 # )
-shinyApp(
-  ui = appUI,
-  server = appServer
-)
+# shinyApp(
+#   ui = appUI,
+#   server = appServer
+# )

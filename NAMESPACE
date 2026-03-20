@@ -2,8 +2,8 @@
 
 export(appServer)
 export(appUI)
-export(runResbiota)
-import(resbiota)
+export(restauraR)
+import(restauraR)
 import(shiny)
 importFrom(DiagrammeR,grViz)
 importFrom(DiagrammeR,grVizOutput)

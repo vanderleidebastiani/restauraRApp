@@ -4,7 +4,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Miscellanea ----
 	# Welcome alert 
 	shinyalert::shinyalert(title = NULL,
-						   # text = "Welcome to resbiota",
+						   # text = "Welcome to restauraR",
 						   text = htmltools::tagList(tags$img(src = "startup.png", width = "300px", height = "200px")),
 						   className = "alertStartup",
 						   type = "",
@@ -287,7 +287,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(!is.null(inputDataRV$traits)){
 			# Extract basic data information
 			inputDataRV$auxTraitsVariables <- colnames(inputDataRV$traits)
-			inputDataRV$auxTraitsClass <- data.frame(t(sapply(inputDataRV$traits, resbiota:::vectorClass)), row.names = "Class")
+			inputDataRV$auxTraitsClass <- data.frame(t(sapply(inputDataRV$traits, restauraR:::vectorClass)), row.names = "Class")
 			# Update slider
 			shinyWidgets::updateSliderTextInput(session, inputId = "richSliderSimInput",
 												choices = seq_len(nrow(inputDataRV$traits)),
@@ -338,7 +338,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(!is.null(inputDataRV$restGroup)){
 			# Extract basic data information
 			inputDataRV$auxRestGroupVariables <- colnames(inputDataRV$restGroup)
-			inputDataRV$auxRestGroupClass <- data.frame(t(sapply(inputDataRV$restGroup, resbiota:::vectorClass)), row.names = "Class")
+			inputDataRV$auxRestGroupClass <- data.frame(t(sapply(inputDataRV$restGroup, restauraR:::vectorClass)), row.names = "Class")
 		} else{
 			inputDataRV$auxRestGroupVariables <- character(0)
 			inputDataRV$auxRestGroupClass <- character(0)
@@ -706,7 +706,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			scenario <- scenario$simulation$results
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
-					if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						shiny::observeEvent(input[[paste0("logicalTestPrioritySelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
@@ -715,7 +715,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_histogram(bins = grDevices::nclass.FD(scenario[[inVars[i]]][!is.na(scenario[[inVars[i]]])]), col = "#ffffff", fill = "#1d4b61") +
 									ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																# shiny::actionButton("xxx", label = "A"),
@@ -749,7 +749,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_bar(fill = "#1d4b61") +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton("Dismiss"),
@@ -783,7 +783,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			scenario <- scenario$simulation$results
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
-					if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						shiny::observeEvent(input[[paste0("logicalTestFilterSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
@@ -792,7 +792,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_histogram(bins = grDevices::nclass.FD(scenario[[inVars[i]]][!is.na(scenario[[inVars[i]]])]), col = "#ffffff", fill = "#1d4b61") +
 									ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton(i18n$t("Dismiss")),
@@ -825,7 +825,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_bar(fill = "#1d4b61") +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton(i18n$t("Dismiss")),
@@ -859,7 +859,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			scenario <- scenario$simulation$results
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
-					if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
@@ -868,7 +868,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_histogram(bins = grDevices::nclass.FD(scenario[[inVars[i]]][!is.na(scenario[[inVars[i]]])]), col = "#ffffff", fill = "#1d4b61") +
 									ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton(i18n$t("Dismiss")),
@@ -901,7 +901,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_bar(fill = "#1d4b61") +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton(i18n$t("Dismiss")),
@@ -935,7 +935,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			scenario <- scenario$selection$multisite$results
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
-					if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						shiny::observeEvent(input[[paste0("logicalTestMultisiteSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
@@ -944,7 +944,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_histogram(bins = grDevices::nclass.FD(scenario[[inVars[i]]][!is.na(scenario[[inVars[i]]])]), col = "#ffffff", fill = "#1d4b61") +
 									ggplot2::scale_x_continuous(breaks = df.quantiles$q, labels = df.quantiles$label, guide = ggplot2::guide_axis(n.dodge = 2)) +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton(i18n$t("Dismiss")),
@@ -977,7 +977,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
 									ggplot2::geom_bar(fill = "#1d4b61") +
-									resbiota:::themeResbiota(baseSize = 15)
+									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																footer = shiny::modalButton(i18n$t("Dismiss")),
@@ -1745,7 +1745,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	shiny::observeEvent(input$doCheck, {
 		# Remove any open modal
 		shiny::removeModal(session = session)
-		scenario <- tryCatch(resbiota:::checkResbiotaData(traits = inputDataRV$traits,
+		scenario <- tryCatch(restauraR:::checkRestauraRData(traits = inputDataRV$traits,
 														  restComp = inputDataRV$restComp, 
 														  restGroup = inputDataRV$restGroup,
 														  reference = inputDataRV$reference,
@@ -1849,7 +1849,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			# print(inputParSimRV$restGroup)
 			# print(inputDataRV$restGroup)
 			
-			scenario <- tryCatch(resbiota::simulateCommunities(traits = inputDataRV$traits,
+			scenario <- tryCatch(restauraR::simulateCommunities(traits = inputDataRV$traits,
 															   restComp = inputParSimRV$restComp, # Ok
 															   restGroup = inputParSimRV$restGroup, # Ok
 															   # restGroup = inputDataRV$restGroup, # straight input
@@ -1926,7 +1926,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				# Copy to temp list
 				tempRV[[i]] <- resultsRV$simulate[[input$mergeSimulateInput[i]]]
 			}
-			scenario <- tryCatch(do.call(resbiota::mergeSimulations, tempRV), 
+			scenario <- tryCatch(do.call(restauraR::mergeSimulations, tempRV), 
 								 error = function(e) e)
 			if(inherits(scenario, what = "error")){
 				shinyWidgets::sendSweetAlert(
@@ -2019,7 +2019,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			)
 		} else {
 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-			scenario <- tryCatch(resbiota::computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
+			scenario <- tryCatch(restauraR::computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
 															 traits = inputDataRV$traits,
 															 ava = input$avaComInput, # straight input
 															 cwm = input$cwmComInput, # straight input
@@ -2077,7 +2077,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			scenario <- resultsRV$simulate[[input$scenarioComMultiInput]]
 			scenario <- scenario$simulation$results
 			for(i in seq_len(pvars)){
-				if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestMultiInput", inVars[i])]]
 					testTemp <- paste(nameTest, ">=", valueTest[1], "&", nameTest, "<=", valueTest[2])
@@ -2093,7 +2093,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		} else{
 			testList <- NULL
 		}
-		scenario <- tryCatch(resbiota::computeMultifunctionality(x = resultsRV$simulate[[input$scenarioComMultiInput]],
+		scenario <- tryCatch(restauraR::computeMultifunctionality(x = resultsRV$simulate[[input$scenarioComMultiInput]],
 																 tests = testList), 
 							 error = function(e) e)
 		shiny::removeModal(session = session)
@@ -2135,7 +2135,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			)
 		} else{
 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-			scenario <- tryCatch(resbiota::standardiseParameters(x = scenario,
+			scenario <- tryCatch(restauraR::standardiseParameters(x = scenario,
 																 parameters = input$stanComParInput, # straight input
 																 method = input$speficyMethodStanInput # straight input
 			), error = function(e) e)
@@ -2192,7 +2192,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			}
 			testList <- c()
 			for(i in seq_len(pvars)){
-				if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestPrioritySelInput", inVars[i])]]
 					testTemp <- paste(nameTest, ">=", valueTest[1], "&", nameTest, "<=", valueTest[2])
@@ -2216,7 +2216,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			pvars <- length(inVars)
 			testList <- c()
 			for(i in seq_len(pvars)){
-				if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestFilterSelInput", inVars[i])]]
 					testTemp <- paste(nameTest, ">=", valueTest[1], "&", nameTest, "<=", valueTest[2])
@@ -2238,7 +2238,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		} else{
 			inputParSelRV$group <- NULL
 		}
-		scenario <- tryCatch(resbiota::selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
+		scenario <- tryCatch(restauraR::selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
 														 testsFilter = inputParSelRV$testsFilter,
 														 testsPriority = inputParSelRV$testsPriority,
 														 siteGroup = inputParSelRV$group,
@@ -2298,7 +2298,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				# Then remove
 				# resultsRV$select[[input$mergeSelectInput[i]]] <- NULL
 			}
-			scenario <- tryCatch(do.call(resbiota::mergeSelection, tempRV), 
+			scenario <- tryCatch(do.call(restauraR::mergeSelection, tempRV), 
 								 error = function(e) e)
 			if(inherits(scenario, what = "error")){
 				shinyWidgets::sendSweetAlert(
@@ -2354,7 +2354,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
 		print(input$siteGroupOptInput)
 		print(resultsRV$select[[input$scenarioOptInput]])
-		scenario <- tryCatch(resbiota::optimiseSelection(x = resultsRV$select[[input$scenarioOptInput]],
+		scenario <- tryCatch(restauraR::optimiseSelection(x = resultsRV$select[[input$scenarioOptInput]],
 														 siteGroup = input$siteGroupOptInput, # straight input
 														 includeReference = as.logical(input$includeReferenceOptInput), # straight input
 														 maxComb = input$maxCombOptInput, # straight input
@@ -2406,7 +2406,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			pvars <- length(inVars)
 			testList <- c()
 			for(i in seq_len(pvars)){
-				if(resbiota:::vectorClass(scenario[,inVars[i]]) == "numeric"){
+				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestMultisiteSelInput", inVars[i])]]
 					testTemp <- paste(nameTest, ">=", valueTest[1], "&", nameTest, "<=", valueTest[2])
@@ -2425,7 +2425,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			# inputParSelRV$testsFilter <- NULL
 			testList <- NULL
 		}
-		scenario <- tryCatch(resbiota::selectCommunities(x = resultsRV$select[[input$scenarioSelOptInput]],
+		scenario <- tryCatch(restauraR::selectCommunities(x = resultsRV$select[[input$scenarioSelOptInput]],
 														 testsMultisite = testList
 														 
 		), error = function(e) e)
@@ -2461,7 +2461,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# if (!is.null(input$xvarViewInput) && !is.null(input$yvarViewInput)) {
 		if (!is.null(input$xvarViewInput)) {
 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-			scenario <- tryCatch(resbiota::viewResults(x = scenario,
+			scenario <- tryCatch(restauraR::viewResults(x = scenario,
 													   xvar = input$xvarViewInput,
 													   yvar = input$yvarViewInput,
 													   showReference = as.logical(input$showRefViewParInput),
@@ -2653,7 +2653,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			else {
 				scenario$selection$multifunctionality  <- resMulti
 			}
-			scenario <- tryCatch(resbiota::viewMultifunctionality(x = scenario,
+			scenario <- tryCatch(restauraR::viewMultifunctionality(x = scenario,
 																  showReference = as.logical(input$showRefViewMultiInput)
 			), error = function(e) e)
 			shiny::removeModal(session = session)
@@ -2702,7 +2702,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			)
 		} else{
 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-			scenario <- tryCatch(resbiota::extractResults(x = scenario,
+			scenario <- tryCatch(restauraR::extractResults(x = scenario,
 														  type = input$typeExportInput, # straight input
 														  dbFormat = as.logical(exportRV$dbFormat),
 														  traits = inputDataRV$traits, 
@@ -3176,7 +3176,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### Output diagram - diagramOutput ----
 	output$diagramOutput <- DiagrammeR::renderGrViz({
 		DiagrammeR::grViz(paste0(
-			"digraph resbiotaFlowchart {
+			"digraph restauraRFlowchart {
       # define node aesthetics
       graph[splines = ortho]
       node [fontname = Helvetica, shape = box, width = 5, height = 1, fontsize = 16, style = filled, fillcolor = whitesmoke]
