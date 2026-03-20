@@ -1,5 +1,3 @@
-# restauraRApp - App of restauraR Package
-
 # R Package - restauraRApp - v0.0.1
 
 **restauraRApp - App of restauraR Package**
