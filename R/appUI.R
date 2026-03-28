@@ -56,7 +56,14 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 		id = "menu",
 		shinydashboardPlus::controlbarItem(
 			title = i18n$t("Global options"),
-			shiny::textInput("projectName", label = i18n$t("Project name"), value = "Projet"),
+			shiny::selectInput(inputId = "selectedLanguage",
+							   label = i18n$t("Change language"),
+							   choices = stats::setNames(
+							   	i18n$get_languages(),
+							   	c("English", paste0("Portugu", "\u00ea","s")) # Set labels for the languages
+							   ),
+							   selected = i18n$get_key_translation()
+			),
 			shinyWidgets::prettyRadioButtons(inputId = "fileSep",
 											 label = i18n$t("Separator character"),
 											 choices = c(",", ";"),
@@ -79,13 +86,21 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 			# 					 selected = i18n$get_key_translation(),
 			# 					 justified = TRUE
 			# )
-			shiny::selectInput(inputId = "selectedLanguage",
-							   label = i18n$t("Change language"),
-							   choices = stats::setNames(
-							   	i18n$get_languages(),
-							   	c("English", paste0("Portugu", "\u00ea","s")) # Set labels for the languages
-							   ),
-							   selected = i18n$get_key_translation()
+			htmltools::br(),
+			htmltools::h4(htmltools::strong(i18n$t("Project options"))),
+			shiny::textInput("projectName", 
+							 label = i18n$t("Project name"), 
+							 value = "Project"),
+			shinyWidgets::downloadBttn(outputId = "doSaveProject",
+									   label = i18n$t("Save project"),
+									   style = "fill",
+									   icon = NULL,
+									   size = "sm",
+									   color = "primary"),
+			shiny::fileInput(inputId = "projectInput",
+							 label = i18n$t("Load project"),
+							 accept = c(".rds"),
+							 buttonLabel = "Browse..."
 			)
 		),
 		shinydashboardPlus::controlbarItem(
@@ -327,6 +342,26 @@ body <- shinydashboard::dashboardBody(
 												  									  													 color = "default"),
 												  									  							style = "margin-top:0px"
 												  									  						)
+												  									  ),
+												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
+												  									  						shiny::fileInput(inputId = "sppDistInput",
+												  									  										 # label = "Species distance matrix",
+												  									  										 label = htmltools::p(i18n$t("Species distance matrix"), 
+												  									  										 					 shiny::actionButton("sppDistInputInfo",
+												  									  										 					 					label = "",
+												  									  										 					 					icon = shiny::icon("info"),
+												  									  										 					 					style = "padding:3px; font-size:60%")),
+												  									  										 accept = c(".csv"),
+												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  						),
+												  									  						htmltools::div(
+												  									  							shinyWidgets::actionBttn(inputId = "doClearSppDist", 
+												  									  													 label = i18n$t("Clear"),
+												  									  													 style = "fill",
+												  									  													 size = "sm",
+												  									  													 color = "default"),
+												  									  							style = "margin-top:0px"
+												  									  						)
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 4, 
@@ -375,7 +410,7 @@ body <- shinydashboard::dashboardBody(
 												  						) # End column
 												  					) # End row
 												  	), # End view restoration sites tab
-												  	shiny::tabPanel(i18n$t("View reference sites"), 
+												  	shiny::tabPanel(i18n$t("View reference and supplementary sites"), 
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
@@ -390,7 +425,23 @@ body <- shinydashboard::dashboardBody(
 												  									  )
 												  						) # End column
 												  					) # End row
-												  	) # End view reference sites tab
+												  	), # End view reference sites tab
+												  	shiny::tabPanel(i18n$t("View co-occurrence and species distance matrices"), 
+												  					shiny::fluidRow(
+												  						htmltools::br(),
+												  						shiny::column(width = 12,
+												  									  shiny::conditionalPanel(condition = "output.showCooccurrence == true",
+												  									  						htmltools::h5(htmltools::strong(i18n$t("Co-occurrence matrix"))),
+												  									  						rhandsontable::rHandsontableOutput("outputTableCooccurrence"),
+												  									  						htmltools::br()
+												  									  ),
+												  									  shiny::conditionalPanel(condition = "output.showSppDist == true",
+												  									  						htmltools::h5(htmltools::strong(i18n$t("Species distance matrix"))),
+												  									  						rhandsontable::rHandsontableOutput("outputTableSppDist")
+												  									  )
+												  						) # End column
+												  					) # End row
+												  	) # End view co-occurrence tab
 												  ) # End tabsetPanel
 									) # End column
 								) # End row
@@ -571,17 +622,36 @@ body <- shinydashboard::dashboardBody(
 												  									  												  options = list(`actions-box` = TRUE),
 												  									  												  inline = FALSE
 												  									  						),
-												  									  						shinyWidgets::pickerInput(inputId = "maxDiverSimInput",
-												  									  												  # label = "Traits to Rao Quadratic Entropy",
-												  									  												  label = htmltools::p(i18n$t("Traits to Rao Quadratic Entropy"), 
-												  									  												  					 shiny::actionButton("maxDiverSimInputInfo",
-												  									  												  					 					label = "",
-												  									  												  					 					icon = shiny::icon("info"),
-												  									  												  					 					style = "padding:3px; font-size:60%")),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list(`actions-box` = TRUE),
-												  									  												  inline = FALSE
+												  									  						
+												  									  						# AQUI ----
+												  									  						shiny::uiOutput("radioDistMaxDiverSimOutput"),
+												  									  						# shiny::conditionalPanel(condition = "(input.isDistMaxDiverInput == 'TRUE')",
+												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
+												  									  						# 												  # label = "Variables to specify the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
+												  									  						# 												  					 					label = "",
+												  									  						# 												  					 					icon = shiny::icon("info"),
+												  									  						# 												  					 					style = "padding:3px; font-size:60%")),
+												  									  						# 												  choices = NULL,
+												  									  						# 												  multiple = TRUE,
+												  									  						# 												  options = list(`actions-box` = TRUE),
+												  									  						# 												  inline = FALSE
+												  									  						# 						)
+												  									  						# ),
+												  									  						shiny::conditionalPanel(condition = "(input.isDistMaxDiverInput == 'FALSE')",
+												  									  												shinyWidgets::pickerInput(inputId = "maxDiverSimInput",
+												  									  																		  # label = "Traits to functional diversity optimisation",
+												  									  																		  label = htmltools::p(i18n$t("Traits to functional diversity optimisation"), 
+												  									  																		  					 shiny::actionButton("maxDiverSimInputInfo",
+												  									  																		  					 					label = "",
+												  									  																		  					 					icon = shiny::icon("info"),
+												  									  																		  					 					style = "padding:3px; font-size:60%")),
+												  									  																		  choices = NULL,
+												  									  																		  multiple = TRUE,
+												  									  																		  options = list(`actions-box` = TRUE),
+												  									  																		  inline = FALSE
+												  									  												)
 												  									  						)
 												  									  ),
 												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
@@ -644,6 +714,15 @@ body <- shinydashboard::dashboardBody(
 												  									  						title = i18n$t("Advanced options"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
+												  									  						shiny::numericInput(inputId = "setSeedSimInput", 
+												  									  											# label = "Specify a seed for the simulation",
+												  									  											label = htmltools::p(i18n$t("Specify a seed for the simulation"), 
+												  									  																 shiny::actionButton("setSeedSimInputInfo",
+												  									  																 					label = "",
+												  									  																 					icon = shiny::icon("info"),
+												  									  																 					style = "padding:3px; font-size:60%")),
+												  									  											value = NULL
+												  									  						),
 												  									  						shiny::conditionalPanel(condition = "(input.methodSimInput == 'Individuals')",
 												  									  												shinyWidgets::pickerInput(inputId = "probSimInput",
 												  									  																		  # label = "Probabilities to draw individuals",
@@ -875,29 +954,71 @@ body <- shinydashboard::dashboardBody(
 												  									  												  options = list(`actions-box` = TRUE),
 												  									  												  inline = FALSE
 												  									  						),
-												  									  						shinyWidgets::pickerInput(inputId = "raoComInput",
-												  									  												  # label = "Traits to Rao Quadratic Entropy",
-												  									  												  label = htmltools::p(i18n$t("Traits to Rao Quadratic Entropy"), 
-												  									  												  					 shiny::actionButton("raoComInputInfo",
-												  									  												  					 					label = "",
-												  									  												  					 					icon = shiny::icon("info"),
-												  									  												  					 					style = "padding:3px; font-size:60%")),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list(`actions-box` = TRUE),
-												  									  												  inline = FALSE
+												  									  						
+												  									  						# AQUI ----
+												  									  						shiny::uiOutput("radioDistRaoComOutput"),
+												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
+												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
+												  									  						# 												  # label = "Variables to specify the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
+												  									  						# 												  					 					label = "",
+												  									  						# 												  					 					icon = shiny::icon("info"),
+												  									  						# 												  					 					style = "padding:3px; font-size:60%")),
+												  									  						# 												  choices = NULL,
+												  									  						# 												  multiple = TRUE,
+												  									  						# 												  options = list(`actions-box` = TRUE),
+												  									  						# 												  inline = FALSE
+												  									  						# 						)
+												  									  						# ),
+												  									  						shiny::conditionalPanel(condition = "(input.isDistRaoComInput == 'FALSE')",
+												  									  												shinyWidgets::pickerInput(inputId = "raoComInput",
+												  									  																		  # label = "Traits to Rao Quadratic Entropy",
+												  									  																		  label = htmltools::p(i18n$t("Traits to Rao Quadratic Entropy"), 
+												  									  																		  					 shiny::actionButton("raoComInputInfo",
+												  									  																		  					 					label = "",
+												  									  																		  					 					icon = shiny::icon("info"),
+												  									  																		  					 					style = "padding:3px; font-size:60%")),
+												  									  																		  choices = NULL,
+												  									  																		  multiple = TRUE,
+												  									  																		  options = list(`actions-box` = TRUE),
+												  									  																		  inline = FALSE
+												  									  												)
 												  									  						),
-												  									  						shinyWidgets::pickerInput(inputId = "disComInput",
-												  									  												  # label = "Traits to dissimilarity between reference sites",
-												  									  												  label = htmltools::p(i18n$t("Traits to dissimilarity between reference sites"), 
-												  									  												  					 shiny::actionButton("disComInputInfo",
-												  									  												  					 					label = "",
-												  									  												  					 					icon = shiny::icon("info"),
-												  									  												  					 					style = "padding:3px; font-size:60%")),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list(`actions-box` = TRUE),
-												  									  												  inline = FALSE
+												  									  						
+												  									  						
+												  									  						
+												  									  						
+												  									  						# AQUI ----
+												  									  						
+												  									  						shiny::uiOutput("radioDistDissComOutput"),
+												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
+												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
+												  									  						# 												  # label = "Variables to specify the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
+												  									  						# 												  					 					label = "",
+												  									  						# 												  					 					icon = shiny::icon("info"),
+												  									  						# 												  					 					style = "padding:3px; font-size:60%")),
+												  									  						# 												  choices = NULL,
+												  									  						# 												  multiple = TRUE,
+												  									  						# 												  options = list(`actions-box` = TRUE),
+												  									  						# 												  inline = FALSE
+												  									  						# 						)
+												  									  						# ),
+												  									  						shiny::conditionalPanel(condition = "(input.isDistDissComInput == 'FALSE')",
+												  									  												shinyWidgets::pickerInput(inputId = "disComInput",
+												  									  																		  # label = "Traits to dissimilarity between reference sites",
+												  									  																		  label = htmltools::p(i18n$t("Traits to dissimilarity between reference sites"), 
+												  									  																		  					 shiny::actionButton("disComInputInfo",
+												  									  																		  					 					label = "",
+												  									  																		  					 					icon = shiny::icon("info"),
+												  									  																		  					 					style = "padding:3px; font-size:60%")),
+												  									  																		  choices = NULL,
+												  									  																		  multiple = TRUE,
+												  									  																		  options = list(`actions-box` = TRUE),
+												  									  																		  inline = FALSE
+												  									  												)
 												  									  						)
 												  									  ),
 												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
@@ -1305,17 +1426,36 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::uiOutput("radioCalcTaxonomicBetaOptOutput"),
 												  									  						shiny::uiOutput("pickerMethodOptOutput"),
-												  									  						shinyWidgets::pickerInput(inputId = "betaOptInput",
-												  									  												  # label = "Beta diversity",
-												  									  												  label = htmltools::p(i18n$t("Beta diversity"),
-												  									  												  					 shiny::actionButton("betaOptInputInfo",
-												  									  												  					 					label = "",
-												  									  												  					 					icon = shiny::icon("info"),
-												  									  												  					 					style = "padding:3px; font-size:60%")),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list(`actions-box` = TRUE),
-												  									  												  inline = FALSE
+												  									  						
+												  									  						# AQUI ----
+												  									  						shiny::uiOutput("radioDistBetaOptOutput"),
+												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
+												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
+												  									  						# 												  # label = "Variables to specify the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
+												  									  						# 												  					 					label = "",
+												  									  						# 												  					 					icon = shiny::icon("info"),
+												  									  						# 												  					 					style = "padding:3px; font-size:60%")),
+												  									  						# 												  choices = NULL,
+												  									  						# 												  multiple = TRUE,
+												  									  						# 												  options = list(`actions-box` = TRUE),
+												  									  						# 												  inline = FALSE
+												  									  						# 						)
+												  									  						# ),
+												  									  						shiny::conditionalPanel(condition = "(input.isDistBetaOptInput == 'FALSE')",
+												  									  												shinyWidgets::pickerInput(inputId = "betaOptInput",
+												  									  																		  # label = "Beta diversity",
+												  									  																		  label = htmltools::p(i18n$t("Beta diversity"),
+												  									  																		  					 shiny::actionButton("betaOptInputInfo",
+												  									  																		  					 					label = "",
+												  									  																		  					 					icon = shiny::icon("info"),
+												  									  																		  					 					style = "padding:3px; font-size:60%")),
+												  									  																		  choices = NULL,
+												  									  																		  multiple = TRUE,
+												  									  																		  options = list(`actions-box` = TRUE),
+												  									  																		  inline = FALSE
+												  									  												)
 												  									  						)
 												  									  )
 												  						),
@@ -1473,7 +1613,7 @@ body <- shinydashboard::dashboardBody(
 												  						) # End column
 												  					) # End row
 												  	), # End tabPanel
-												  	shiny::tabPanel("Multifunctionality", 
+												  	shiny::tabPanel(i18n$t("Multifunctionality"), 
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 4,
