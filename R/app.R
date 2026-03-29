@@ -20,7 +20,7 @@
 #' @importFrom shinyjs reset useShinyjs
 #' @importFrom shinyWidgets actionBttn downloadBttn pickerInput prettyRadioButtons sliderTextInput updatePickerInput updateSliderTextInput useSweetAlert sendSweetAlert
 #' @importFrom shiny.i18n Translator update_lang usei18n
-#' @importFrom stats quantile setNames
+#' @importFrom stats quantile setNames as.dist
 #' @importFrom ggplot2 aes geom_bar geom_histogram ggplot ggsave guide_axis labs scale_x_continuous
 #' @importFrom grDevices nclass.FD
 #' @importFrom DiagrammeR grViz grVizOutput renderGrViz

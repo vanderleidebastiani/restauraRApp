@@ -115,7 +115,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									   updatePar = 0 # Ok
 	)
 	### viewRV ----
-	viewRV <- shiny::reactiveValues(showMultisiteViewParInput = 0
+	viewRV <- shiny::reactiveValues(showMultisiteViewParInput = FALSE
 	)
 	### exportRV ----
 	exportRV <- shiny::reactiveValues(dbFormat = NULL,
@@ -274,7 +274,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			inputDataRV$auxTraitsClass <- inputList$inputDataAuxTraitsClass
 			inputDataRV$auxTraitsVariables <- inputList$inputDataAuxTraitsVariables
 			inputDataRV$auxRestGroupClass <- inputList$inputDataAuxRestGroupClass
-			inputDataRV$auxRestGroupVariables <- inputList$inputDataauxRestGroupVariables
+			inputDataRV$auxRestGroupVariables <- inputList$inputDataAuxRestGroupVariables
 			# Force update
 			inputDataRV$updateData <- ifelse(inputDataRV$updateData == 1, 0, 1)
 			# resultsRV
@@ -304,7 +304,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# 				   inputDataAuxTraitsClass = inputDataRV$auxTraitsClass,
 	# 				   inputDataAuxTraitsVariables = inputDataRV$auxTraitsVariables,
 	# 				   inputDataAuxRestGroupClass = inputDataRV$auxRestGroupClass,
-	# 				   inputDataauxRestGroupVariables = inputDataRV$auxRestGroupVariables,
+	# 				   inputDataAuxRestGroupVariables = inputDataRV$auxRestGroupVariables,
 	# 				   resultsDataNSce = resultsRV$nSce,
 	# 				   resultsDataNSim = resultsRV$nSim,
 	# 				   resultsDataSimulate = resultsRV$simulate,
@@ -526,6 +526,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										selected = input$scenarioOptInput)
 		shinyWidgets::updatePickerInput(session, inputId = "scenarioSelOptInput", choices = names(resultsRV$select),
 										selected = input$scenarioSelOptInput)
+		shinyWidgets::updatePickerInput(session, inputId = "scenarioOptimiseSummaryInput", choices = names(resultsRV$select),
+										selected = input$scenarioOptimiseSummaryInput)
 		# View tab
 		if(!is.null(input$scenarioTypeViewParInput)){
 			if(input$scenarioTypeViewParInput == "Raw"){
@@ -738,7 +740,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# Update choices 
 	obsListViewPar <- shiny::reactive({
 		# list(input$scenarioViewParInput, resultsRV$updatePar)
-		list(input$scenarioViewParInput, resultsRV$updatePar, input$showMultisiteViewParInput)
+		list(input$scenarioViewParInput, resultsRV$updatePar, viewRV$showMultisiteViewParInput)
 	})
 	shiny::observeEvent(obsListViewPar(), {
 		if(!is.null(input$scenarioViewParInput)){
@@ -752,11 +754,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			} else {
 				res <- scenario$selection$results
 			}
-			if(!is.null(input$showMultisiteViewParInput)){
-				if(as.logical(input$showMultisiteViewParInput)){
+			# if(!is.null(viewRV$showMultisiteViewParInput)){
+				if(viewRV$showMultisiteViewParInput){
 					res <- scenario$selection$multisite$results
 				}
-			}
+			# }
 			if(!is.null(res)){
 				shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = colnames(res))
 				shinyWidgets::updatePickerInput(session, inputId = "yvarViewInput", choices = colnames(res))
@@ -1897,17 +1899,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# AQUI ----
 	### Simulate tab - maxDiver ----
 	obsListDistMaxDiverSim <- shiny::reactive({
-		list(input$isDistMaxDiverInput, input$maxDiverSimInput)
+		list(input$isDistMaxDiverInput, input$maxDiverSimInput, inputDataRV$sppDist)
 	})
 	shiny::observeEvent(obsListDistMaxDiverSim(), ignoreNULL = FALSE, {
 		if(!is.null(input$isDistMaxDiverInput)){
 			if(input$isDistMaxDiverInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
+					inputParSimRV$maxDiver <- NULL
 					shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
 				} else{
+					inputParSimRV$maxDiver <- stats::as.dist(inputDataRV$sppDist)
 					shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 				}
-				inputParSimRV$maxDiver <- inputDataRV$sppDist
 				# }
 			} else{
 				shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
@@ -1922,17 +1925,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	### Compute tab - rao ----
 	obsListDistRaoCom <- shiny::reactive({
-		list(input$isDistRaoComInput, input$raoComInput)
+		list(input$isDistRaoComInput, input$raoComInput, inputDataRV$sppDist)
 	})
 	shiny::observeEvent(obsListDistRaoCom(), ignoreNULL = FALSE, {
 		if(!is.null(input$isDistRaoComInput)){
 			if(input$isDistRaoComInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
+					inputParComRV$rao <- NULL
 					shiny::updateActionButton(session, "doCompute", disabled = TRUE)
 				} else{
+					inputParComRV$rao <- stats::as.dist(inputDataRV$sppDist)
 					shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				}
-				inputParComRV$rao <- inputDataRV$sppDist
+				
 				# }
 			} else{
 				shiny::updateActionButton(session, "doCompute", disabled = FALSE)
@@ -1947,23 +1952,23 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	### Optimise tab - beta ----
 	obsListDistBetaOpt <- shiny::reactive({
-		list(input$isDistBetaOptInput, input$betaOptInput)
+		list(input$isDistBetaOptInput, input$betaOptInput, inputDataRV$sppDist)
 	})
 	shiny::observeEvent(obsListDistBetaOpt(), ignoreNULL = FALSE, {
 		if(!is.null(input$isDistBetaOptInput)){
 			if(input$isDistBetaOptInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
+					inputParOptRV$beta <- NULL
 					shiny::updateActionButton(session, "doOptimise", disabled = TRUE)
 				} else{
+					inputParOptRV$beta <- stats::as.dist(inputDataRV$sppDist)
 					shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
 				}
-				inputParOptRV$beta <- inputDataRV$sppDist
 				# }
 			} else{
 				shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
 				inputParOptRV$beta <- input$betaOptInput
 			}
-			
 		} else{
 			shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
 			inputParOptRV$beta <- NULL
@@ -1972,23 +1977,23 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	### Compute tab - dissimilarity ----
 	obsListDistDissCom <- shiny::reactive({
-		list(input$isDistDissComInput, input$disComInput)
+		list(input$isDistDissComInput, input$disComInput, inputDataRV$sppDist)
 	})
 	shiny::observeEvent(obsListDistDissCom(), ignoreNULL = FALSE, {
 		if(!is.null(input$isDistDissComInput)){
 			if(input$isDistDissComInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
+					inputParComRV$dissimilarity <- NULL
 					shiny::updateActionButton(session, "doCompute", disabled = TRUE)
 				} else{
+					inputParComRV$dissimilarity <- stats::as.dist(inputDataRV$sppDist)
 					shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				}
-				inputParComRV$dissimilarity <- inputDataRV$sppDist
 				# }
 			} else{
 				shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				inputParComRV$dissimilarity <- input$disComInput
 			}
-			
 		} else{
 			shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 			inputParComRV$dissimilarity <- NULL
@@ -2291,65 +2296,65 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	shiny::observeEvent(input$doCompute, {
 		# Remove any open modal
 		shiny::removeModal(session = session)
-		checkCost <- c(is.null(input$costComInput), is.null(input$densComInput))
-		# if(!c(all(checkCost == TRUE) || all(checkCost == FALSE))){
-		if(!c(all(checkCost) || all(!checkCost))){
+		# checkCost <- c(is.null(input$costComInput), is.null(input$densComInput))
+		# # if(!c(all(checkCost == TRUE) || all(checkCost == FALSE))){
+		# if(!c(all(checkCost) || all(!checkCost))){
+		# 	shinyWidgets::sendSweetAlert(
+		# 		session = session,
+		# 		title = i18n$t("Error!"),
+		# 		text = i18n$t("Specify cost and density. Or none of them"),
+		# 		type = "error"
+		# 	)
+		# } else {
+		print("inputParComRV$rao")
+		print(inputParComRV$rao)
+		print("inputParComRV$dissimilarity")
+		print(inputParComRV$dissimilarity)
+		shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
+		scenario <- tryCatch(restauraR::computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
+														  traits = inputDataRV$traits,
+														  ava = input$avaComInput, # straight input
+														  cwm = input$cwmComInput, # straight input
+														  cwv = input$cwvComInput, # straight input
+														  # rao = input$raoComInput, # straight input
+														  rao = inputParComRV$rao, # Ok
+														  cost = input$costComInput, # straight input
+														  dens = input$densComInput, # straight input
+														  # dissimilarity = input$disComInput, # straight input
+														  dissimilarity = inputParComRV$dissimilarity, # Ok
+														  reference = inputDataRV$reference,
+														  supplementary = inputDataRV$supplementary
+		), error = function(e) e)
+		shiny::removeModal(session = session)
+		if(inherits(scenario, what = "error")){
 			shinyWidgets::sendSweetAlert(
 				session = session,
-				title = i18n$t("Error!"),
-				text = i18n$t("Specify cost and density. Or none of them"),
+				title = i18n$t("Something went wrong!"),
+				text = scenario$message,
 				type = "error"
 			)
-		} else {
-			print("inputParComRV$rao")
-			print(inputParComRV$rao)
-			print("inputParComRV$dissimilarity")
-			print(inputParComRV$dissimilarity)
-			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
-			scenario <- tryCatch(restauraR::computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
-															  traits = inputDataRV$traits,
-															  ava = input$avaComInput, # straight input
-															  cwm = input$cwmComInput, # straight input
-															  cwv = input$cwvComInput, # straight input
-															  # rao = input$raoComInput, # straight input
-															  rao = inputParComRV$rao, # Ok
-															  cost = input$costComInput, # straight input
-															  dens = input$densComInput, # straight input
-															  # dissimilarity = input$disComInput, # straight input
-															  dissimilarity = inputParComRV$dissimilarity, # Ok
-															  reference = inputDataRV$reference,
-															  supplementary = inputDataRV$supplementary
-			), error = function(e) e)
-			shiny::removeModal(session = session)
-			if(inherits(scenario, what = "error")){
-				shinyWidgets::sendSweetAlert(
-					session = session,
-					title = i18n$t("Something went wrong!"),
-					text = scenario$message,
-					type = "error"
-				)
-			} else{
-				# Round for facilitate next steps (sliders)
-				nums <- vapply(scenario$simulation$results, is.numeric, FUN.VALUE = logical(1))
-				scenario$simulation$results[,nums] <- round(scenario$simulation$results[,nums], digits = numVal())
-				if(!is.null(scenario$reference$results)){
-					nums <- vapply(scenario$reference$results, is.numeric, FUN.VALUE = logical(1))
-					scenario$reference$results[, nums] <- round(scenario$reference$results[, nums], digits = numVal())
-				}
-				if(!is.null(scenario$supplementary$results)){
-					nums <- vapply(scenario$supplementary$results, is.numeric, FUN.VALUE = logical(1))
-					scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = numVal())
-				}
-				resultsRV$simulate[[input$scenarioComParInput]] <- scenario
-				# Force update parameters
-				resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-				shinyWidgets::sendSweetAlert(
-					session = session,
-					title = i18n$t("Done!"),
-					type = "success"
-				)
+		} else{
+			# Round for facilitate next steps (sliders)
+			nums <- vapply(scenario$simulation$results, is.numeric, FUN.VALUE = logical(1))
+			scenario$simulation$results[,nums] <- round(scenario$simulation$results[,nums], digits = numVal())
+			if(!is.null(scenario$reference$results)){
+				nums <- vapply(scenario$reference$results, is.numeric, FUN.VALUE = logical(1))
+				scenario$reference$results[, nums] <- round(scenario$reference$results[, nums], digits = numVal())
 			}
+			if(!is.null(scenario$supplementary$results)){
+				nums <- vapply(scenario$supplementary$results, is.numeric, FUN.VALUE = logical(1))
+				scenario$supplementary$results[, nums] <- round(scenario$supplementary$results[, nums], digits = numVal())
+			}
+			resultsRV$simulate[[input$scenarioComParInput]] <- scenario
+			# Force update parameters
+			resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+			shinyWidgets::sendSweetAlert(
+				session = session,
+				title = i18n$t("Done!"),
+				type = "success"
+			)
 		}
+		# }
 	})
 	### doMultiCompute ----
 	shiny::observeEvent(input$doMultiCompute, {
@@ -2945,6 +2950,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			else {
 				scenario$selection$multifunctionality  <- resMulti
 			}
+			print(resMulti)
 			scenario <- tryCatch(restauraR::viewMultifunctionality(x = scenario,
 																   showReference = as.logical(input$showRefViewMultiInput)
 			), error = function(e) e)
@@ -3081,7 +3087,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 							   inputDataAuxTraitsClass = inputDataRV$auxTraitsClass,
 							   inputDataAuxTraitsVariables = inputDataRV$auxTraitsVariables,
 							   inputDataAuxRestGroupClass = inputDataRV$auxRestGroupClass,
-							   inputDataauxRestGroupVariables = inputDataRV$auxRestGroupVariables,
+							   inputDataAuxRestGroupVariables = inputDataRV$auxRestGroupVariables,
 							   resultsDataNSce = resultsRV$nSce,
 							   resultsDataNSim = resultsRV$nSim,
 							   resultsDataSimulate = resultsRV$simulate,
@@ -3691,18 +3697,45 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		output$outputSimulateSummaryText <- shiny::renderUI({
 			if(!is.null(input$scenarioSimulateSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioSimulateSummaryInput]]
-				str1 <- paste0("Pool size: ", ncol(x$simulation$composition))
-				str2 <- paste0("Number of simulations: ", nrow(x$simulation$composition))
-				str3 <- paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes"))
-				str4 <- paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes"))
+				# str1 <- paste0("Species pool size: ", ncol(x$simulation$composition))
+				# str2 <- paste0("Number of simulations: ", nrow(x$simulation$composition))
+				# str3 <- paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes"))
+				# str4 <- paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes"))
+				# if(!is.null(x$simulation$results)) {
+				# 	str5 <- paste0("Parameters: ")
+				# 	str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
+				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
+				# } else{
+				# 	str5 <- paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes"))
+				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
+				# }
+				strTemp <- c()
+				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
+				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
 				if(!is.null(x$simulation$results)) {
-					str5 <- paste0("Parameters: ")
-					str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
-					shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
+					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>"))
+					
+					# strTemp <- c(strTemp, tableHTML::tableHTML(restauraR:::resSummary(x$simulation$results), rownames = TRUE))
+					
 				} else{
-					str5 <- paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes"))
-					shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
+					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes")))
 				}
+				if(!is.null(x$simulation$multifunctionality)) {
+					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multifunctionality)[-1], collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$simulation$multifunctionality), "No", "Yes")))
+				}
+				# if(!is.null(x$simulation$multisite$results)) {
+				# 	strTemp <- c(strTemp, paste0("Multisite results: "))
+				# 	strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multisite$results), collapse = "<br/>"))
+				# } else{
+				# 	strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$simulation$multisite$results), "No", "Yes")))
+				# }
+				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
 		})
 	})
@@ -3711,18 +3744,42 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		output$outputComputeSummaryText <- shiny::renderUI({
 			if(!is.null(input$scenarioComputeSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioComputeSummaryInput]]
-				str1 <- paste0(i18n$t("Pool size: "), ncol(x$simulation$composition))
-				str2 <- paste0(i18n$t("Number of simulations: "), nrow(x$simulation$composition))
-				str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
-				str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
+				# str1 <- paste0(i18n$t("Species pool size: "), ncol(x$simulation$composition))
+				# str2 <- paste0(i18n$t("Number of simulations: "), nrow(x$simulation$composition))
+				# str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
+				# str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
+				# if(!is.null(x$simulation$results)) {
+				# 	str5 <- paste0(i18n$t("Parameters: "))
+				# 	str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
+				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
+				# } else{
+				# 	str5 <- paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), "No", "Yes"))
+				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
+				# }
+				strTemp <- c()
+				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
+				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
 				if(!is.null(x$simulation$results)) {
-					str5 <- paste0(i18n$t("Parameters: "))
-					str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
-					shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
+					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>"))
 				} else{
-					str5 <- paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), "No", "Yes"))
-					shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
+					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes")))
 				}
+				if(!is.null(x$simulation$multifunctionality)) {
+					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multifunctionality)[-1], collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$simulation$multifunctionality), "No", "Yes")))
+				}
+				# if(!is.null(x$simulation$multisite$results)) {
+				# 	strTemp <- c(strTemp, paste0("Multisite results: "))
+				# 	strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multisite$results), collapse = "<br/>"))
+				# } else{
+				# 	strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$simulation$multisite$results), "No", "Yes")))
+				# }
+				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
 		})
 	})
@@ -3731,18 +3788,74 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		output$outputSelectSummaryText <- shiny::renderUI({
 			if(!is.null(input$scenarioSelectSummaryInput)){
 				x <- resultsRV$select[[input$scenarioSelectSummaryInput]]
-				str1 <- paste0(i18n$t("Pool size: "), ncol(x$selection$composition))
-				str2 <- paste0(i18n$t("Number of simulations selected: "), nrow(x$selection$composition))
-				str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
-				str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
+				# str1 <- paste0(i18n$t("Species pool size: "), ncol(x$selection$composition))
+				# str2 <- paste0(i18n$t("Number of simulations selected: "), nrow(x$selection$composition))
+				# str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
+				# str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
+				# if(!is.null(x$selection$results)) {
+				# 	str5 <- paste0(i18n$t("Parameters: "))
+				# 	str6 <- paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>")
+				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
+				# } else{
+				# 	str5 <- paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes"))
+				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
+				# }
+				strTemp <- c()
+				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$selection$composition)))
+				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$selection$composition)))
+				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
+				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
 				if(!is.null(x$selection$results)) {
-					str5 <- paste0(i18n$t("Parameters: "))
-					str6 <- paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>")
-					shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
+					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>"))
 				} else{
-					str5 <- paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes"))
-					shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
+					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes")))
 				}
+				if(!is.null(x$selection$multifunctionality)) {
+					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multifunctionality)[-1], collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$selection$multifunctionality), "No", "Yes")))
+				}
+				if(!is.null(x$selection$multisite$results)) {
+					strTemp <- c(strTemp, paste0("Multisite results: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multisite$results), collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$selection$multisite$results), "No", "Yes")))
+				}
+				shiny::HTML(paste(strTemp, collapse = "<br/>"))
+			}
+		})
+	})
+	### Output text - Optimise tab ----
+	shiny::observeEvent(input$scenarioOptimiseSummaryInput, {
+		output$outputOptimiseSummaryText <- shiny::renderUI({
+			if(!is.null(input$scenarioOptimiseSummaryInput)){
+				x <- resultsRV$select[[input$scenarioOptimiseSummaryInput]]
+				strTemp <- c()
+				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$selection$composition)))
+				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$selection$composition)))
+				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
+				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
+				if(!is.null(x$selection$results)) {
+					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes")))
+				}
+				if(!is.null(x$selection$multifunctionality)) {
+					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multifunctionality)[-1], collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$selection$multifunctionality), "No", "Yes")))
+				}
+				if(!is.null(x$selection$multisite$results)) {
+					strTemp <- c(strTemp, paste0("Multisite results: "))
+					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multisite$results), collapse = "<br/>"))
+				} else{
+					strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$selection$multisite$results), "No", "Yes")))
+				}
+				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
 		})
 	})

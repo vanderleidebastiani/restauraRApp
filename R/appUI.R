@@ -176,7 +176,7 @@ body <- shinydashboard::dashboardBody(
 												  									  htmltools::p(htmltools::strong(i18n$t("The reference sites"))),
 												  									  htmltools::p(i18n$t("Reference sites can be included as an input data set. Thus, all calculated parameters also are calculated to reference sites and can be used in posterior analysis or auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem.")),
 												  									  htmltools::p(htmltools::strong(i18n$t("The outputs"))),
-												  									  htmltools::p(i18n$t("The main outputs are a community matrix with species relative abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship between these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market.")),
+												  									  htmltools::p(i18n$t("The main outputs are a community matrix with species abundances and a data frame with the functional parameters calculated for each community. These outputs allow the user to investigate the relationship between these parameters, select communities that meet the restoration goals, and identify functionally important species that are not available on the market.")),
 												  									  htmltools::p(htmltools::strong(i18n$t("Multifunctionality"))),
 												  									  htmltools::p(i18n$t("The restoration projects can target restoring multiple ecosystem services, called multifunctionality. Thus, different restoration objectives should be assigned to distinct sites within a restoration landscape. However, when dealing with multiple functions, trade-offs are likely to arise, whereby the pursuit of one function may prevent the achievement of another. The matrix of multifunctionality can be calculated using simple logical tests in each available functional parameter. Thus, the multifunctionality of each restoration site is defined as the number of functions above (or below) a given threshold. The sum of individual tests is defined as the alpha multifunctionality metric.")),
 												  									  htmltools::p(i18n$t("The selection of simulated species composition can be performed using the alpha multifunctionality metric to maximise multifunctionality between restored sites. The alpha multifunctionality also allows the selection of a simulated community when no solution satisfies all initial criteria, thus, users can use a less restricted solution.")),
@@ -1519,6 +1519,21 @@ body <- shinydashboard::dashboardBody(
 												  									  						 size = "lg",
 												  									  						 color = "success")
 												  						) # End column
+												  					) # End row
+												  	), # End tabPanel
+												  	shiny::tabPanel(i18n$t("Optimise Summary"), 
+												  					shiny::fluidRow(
+												  						htmltools::br(),
+												  						shiny::column(width = 12,
+												  									  shinyWidgets::pickerInput(inputId = "scenarioOptimiseSummaryInput",
+												  									  						  label = i18n$t("Select scenario"),
+												  									  						  choices = NULL,
+												  									  						  multiple = TRUE,
+												  									  						  options = list("max-options" = 1),
+												  									  						  inline = FALSE
+												  									  ),
+												  									  shiny::htmlOutput(outputId = "outputOptimiseSummaryText")
+												  						)
 												  					) # End row
 												  	), # End tabPanel
 												  ) # End tabsetPanel
