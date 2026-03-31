@@ -33,4 +33,4 @@ Collate:
     'appUI.R'
     'restauraRApp-package.R'
     'globals.R'
-    'restauraR.R'
+    'runRestauraR.R'

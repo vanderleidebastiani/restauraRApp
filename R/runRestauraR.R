@@ -6,7 +6,7 @@
 #' @param ... Arguments used in the runApp function.
 #' @keywords ApplicationFunction
 #' @export
-restauraR <- function(launchBrowser = TRUE, ...){
+runRestauraR <- function(launchBrowser = TRUE, ...){
   appDir <- system.file("app", package = "restauraRApp")
   shiny::runApp(appDir = appDir, launch.browser = launchBrowser, ...)  
 }

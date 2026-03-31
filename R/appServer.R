@@ -40,10 +40,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			return(globalRV$digitsVal)
 		}
 	})
-	output$decimalPlaces <- shiny::renderUI(numericInput(inputId = "decimalPlaces", 
+	output$decimalPlaces <- shiny::renderUI(shiny::numericInput(inputId = "decimalPlaces", 
 														 # label = "Decimal places", 
 														 label = i18n$t("Decimal places"),
 														 min = globalRV$digitsMin, 
+														 step = 1,
 														 value = numVal()))
 	### inputDataRV ----
 	inputDataRV <- shiny::reactiveValues(traits = NULL,
@@ -1555,7 +1556,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### dbFormatExpInput ----
 	output$radiodbFormatExpOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
-										 label = i18n$t("Data base format"),
+										 label = i18n$t("Database format"),
 										 choices = stats::setNames(
 										 	c(TRUE, FALSE),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
@@ -3287,7 +3288,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$constCWMSimInputInfo)){
 			if(input$constCWMSimInputInfo>infoRV$constCWMSimInputInfo){
-				infoText <- i18n$t("Traits names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait and allow create a wide range of means of those traits across the simulated communities.")
+				infoText <- i18n$t("Traits names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait and allow the creation of a wide range of means of those traits across the simulated communities.")
 				infoRV$constCWMSimInputInfo <- input$constCWMSimInputInfo
 			}
 		}
@@ -3552,28 +3553,31 @@ appServer <- shiny::shinyServer(function(input, output, session) {
       
       # Nodes
       ",
-			"loadData[label = <", i18n$t("Load data, at least species trait data<br/><i>Data input tab"), "</i>>]
-      simulateCommunities[label = <", i18n$t("Set simulation input parameters<br/><i>Simulate tab"), "</i>>]
+			"loadData[label = <", i18n$t("Load species traits and composition data<br/><i>Data input tab"), "</i>>]
+      simulateCommunities[label = <", i18n$t("Define simulation parameters<br/><i>Simulate tab"), "</i>>]
       # adjustSimulations[label = <", i18n$t("Simulated communities can be adjusted<br/><i>Simulate tab"), "</i>>]
-      computeParameters[label = <", i18n$t("Compute basic parameters in each simulated community<br/><i>Compute tab"), "</i>>]
-      standardiseParameters[label = <", i18n$t("Calculated parameters can be standardised<br/><i>Compute tab"), "</i>>]
-      computeMultifunctionality[label = <", i18n$t("Calculate multiple restoration targets, called multifunctionality<br/><i>Compute tab"), "</i>>]
-      selectCommunities[label = <", i18n$t("Selections of simulated communities<br/><i>Select tab"), "</i>>]
-      viewResults[label = <", i18n$t("Basic results visualisation<br/><i>View tab"), "</i>>]
-      viewMultifunctionality[label = <", i18n$t("Multifunctionality visualisation<br/><i>View tab"), "</i>>]
-      extractResults[label = <", i18n$t("Extract and save the results<br/><i>View tab"), "</i>>]",
+      computeParameters[label = <", i18n$t("Compute functional metrics<br/><i>Compute tab"), "</i>>]
+      standardiseParameters[label = <", i18n$t("Standardise calculated metrics<br/><i>Compute tab"), "</i>>]
+      computeMultifunctionality[label = <", i18n$t("Calculate multifunctionality<br/><i>Compute tab"), "</i>>]
+      selectCommunities[label = <", i18n$t("Select simulated communities<br/><i>Select tab"), "</i>>]
+            optimiseSelection[label = <", i18n$t("Optimise multi-site selection<br/><i>Optimise tab"),"</i>>]
+      viewResults[label = <", i18n$t("Visualise results<br/><i>Visualise tab"), "</i>>]
+      viewMultifunctionality[label = <", i18n$t("Visualise multifunctionality sets<br/><i>Visualise tab"), "</i>>]
+      extractResults[label = <", i18n$t("Extract and export results<br/><i>Visualise tab"), "</i>>]",
 			
 			"# Edges
       loadData -> simulateCommunities
       simulateCommunities -> computeParameters
-      # simulateCommunities -> adjustSimulations
-      # adjustSimulations -> computeParameters
       computeParameters -> standardiseParameters
       computeParameters -> computeMultifunctionality
       computeParameters -> selectCommunities
       standardiseParameters -> selectCommunities
       computeMultifunctionality -> selectCommunities
       standardiseParameters -> computeMultifunctionality
+      selectCommunities -> optimiseSelection
+      optimiseSelection -> viewResults 
+      optimiseSelection -> viewMultifunctionality 
+      optimiseSelection -> extractResults
       selectCommunities -> viewResults 
       selectCommunities -> viewMultifunctionality 
       selectCommunities -> extractResults

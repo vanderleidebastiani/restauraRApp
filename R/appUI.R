@@ -45,7 +45,7 @@ sidebar <- shinydashboardPlus::dashboardSidebar(
 		shinydashboard::menuItem(text = i18n$t("Compute"), tabName = "computeTab", icon = shiny::icon("calculator")),
 		shinydashboard::menuItem(text = i18n$t("Select"), tabName = "selectTab", icon = shiny::icon("filter")),
 		shinydashboard::menuItem(text = i18n$t("Optimise"), tabName = "optimiseTab", icon = shiny::icon("project-diagram")),
-		shinydashboard::menuItem(text = i18n$t("View"), tabName = "viewTab", icon = shiny::icon("newspaper"))
+		shinydashboard::menuItem(text = i18n$t("Visualise"), tabName = "viewTab", icon = shiny::icon("newspaper"))
 	)
 )
 
@@ -141,10 +141,10 @@ body <- shinydashboard::dashboardBody(
 												  						shiny::column(width = 12,
 												  									  htmltools::h4(htmltools::strong("restauraR - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches")),
 												  									  htmltools::br(),
-												  									  htmltools::p(htmltools::strong("Description")),
-												  									  htmltools::p("Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation."),
+												  									  htmltools::p(htmltools::strong(i18n$t("Description"))),
+												  									  htmltools::p(i18n$t("Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.")),
 												  									  htmltools::br(), 
-												  									  htmltools::p(htmltools::strong("Steps")),
+												  									  htmltools::p(htmltools::strong(i18n$t("Steps"))),
 												  									  DiagrammeR::grVizOutput("diagramOutput", height = "550px")
 												  						) # End column
 												  					) # End row
@@ -380,7 +380,7 @@ body <- shinydashboard::dashboardBody(
 												  						) # End column
 												  					) # End row
 												  	), # End load files tab
-												  	shiny::tabPanel(i18n$t("View traits"), 
+												  	shiny::tabPanel(i18n$t("Traits"), 
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
@@ -394,7 +394,7 @@ body <- shinydashboard::dashboardBody(
 												  						) # End column
 												  					) # End row
 												  	), # End view traits tab
-												  	shiny::tabPanel(i18n$t("View restoration sites"), 
+												  	shiny::tabPanel(i18n$t("Restoration sites"), 
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
@@ -410,7 +410,7 @@ body <- shinydashboard::dashboardBody(
 												  						) # End column
 												  					) # End row
 												  	), # End view restoration sites tab
-												  	shiny::tabPanel(i18n$t("View reference and supplementary sites"), 
+												  	shiny::tabPanel(i18n$t("Reference and supplementary sites"), 
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
@@ -426,7 +426,7 @@ body <- shinydashboard::dashboardBody(
 												  						) # End column
 												  					) # End row
 												  	), # End view reference sites tab
-												  	shiny::tabPanel(i18n$t("View co-occurrence and species distance matrices"), 
+												  	shiny::tabPanel(i18n$t("Co-occurrence and species distance matrices"), 
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 12,
@@ -1542,7 +1542,7 @@ body <- shinydashboard::dashboardBody(
 		), # End optimiseTab
 		#### viewTab ----
 		shinydashboard::tabItem(tabName = "viewTab",
-								htmltools::h2(i18n$t("View results")),
+								htmltools::h2(i18n$t("Visualise results")),
 								shiny::fluidRow(
 									shiny::column(width = 12,
 												  shiny::tabsetPanel(

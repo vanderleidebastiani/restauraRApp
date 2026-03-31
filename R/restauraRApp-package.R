@@ -3,7 +3,6 @@
 #' @docType package
 #' @aliases restauraRApp
 #' @encoding UTF-8
-#' @importFrom DiagrammeR grViz
 #' @description Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 #' @details The restauraR package provides an integrative set of tools to create restoration solutions to assemble communities from a regional 
 #' species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing 

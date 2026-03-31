@@ -20,7 +20,7 @@ install_github("vanderleidebastiani/restauraRApp")
 ```r
 require(restauraR)
 require(restauraRApp)
-restauraR()
+runRestauraR()
 ```
 
 ### References
