@@ -8,11 +8,11 @@ i18n <- shiny.i18n::Translator$new(translation_json_path = system.file("app", "t
 # i18n <- shiny.i18n::Translator$new(translation_json_path = "restauraRApp/inst/app/translation.json")
 i18n$set_translation_language("en")
 i18n$use_js()
-# i18n$set_translation_language("pt")
-
 
 ## Shiny UI ----
 ### Header ----
+#' @rdname app
+#' @export
 header <- shinydashboardPlus::dashboardHeader(
 	title = htmltools::tagList(
 		# Use shiny.i18n functions
@@ -33,11 +33,12 @@ header <- shinydashboardPlus::dashboardHeader(
 
 
 ### Sidebar ----
+#' @rdname app
+#' @export
 sidebar <- shinydashboardPlus::dashboardSidebar(
 	collapsed = TRUE,
 	width = 175,
 	shinydashboard::sidebarMenu(
-		# Setting id makes input$tabs give the tabName of currently-selected tab
 		id = "tabs",
 		shinydashboard::menuItem(text = i18n$t("Home"), tabName = "startTab", icon = shiny::icon("seedling")),
 		shinydashboard::menuItem(text = i18n$t("Data input"), tabName = "dataInputTab", icon = shiny::icon("database")),
@@ -50,6 +51,8 @@ sidebar <- shinydashboardPlus::dashboardSidebar(
 )
 
 ### Control bar ----
+#' @rdname app
+#' @export
 controlbar <- shinydashboardPlus::dashboardControlbar(
 	id = "controlbar",
 	shinydashboardPlus::controlbarMenu(
@@ -100,7 +103,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 			shiny::fileInput(inputId = "projectInput",
 							 label = i18n$t("Load project"),
 							 accept = c(".rds"),
-							 buttonLabel = "Browse..."
+							 buttonLabel = i18n$t("Browse...")
 			)
 		),
 		shinydashboardPlus::controlbarItem(
@@ -113,6 +116,8 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 )
 
 ### Body ----
+#' @rdname app
+#' @export
 body <- shinydashboard::dashboardBody(
 	# Use shiny.i18n functions
 	# shiny.i18n::usei18n(i18n),
@@ -171,7 +176,7 @@ body <- shinydashboard::dashboardBody(
 												  									  htmltools::p(i18n$t("The function in the compute tab, in subtab multifunctionality, is optional and computes the matrix of multifunctionality and alpha multifunctionality. See the multifunctionality topic below.")),
 												  									  htmltools::p(htmltools::strong(i18n$t("Select communities"))),
 												  									  htmltools::p(i18n$t("The selections of simulated communities are performed using the function in the select tab. Selections are based on simple logical tests based on thresholds. The user must define parameter thresholds, that indicate the level of functional composition above (or below) which the function is considered to be restored in each site. The thresholds can be set for one or more calculated parameters in the previous step. This is an essential step that must be based on previous studies that indicate the relationship between species traits and ecosystem functions related to the desired restoration targets. Knowledge of the regional species pool, species availability and reference sites is important to find solutions that adequately optimise restoration goals.")),
-												  									  htmltools::p(i18n$t("The logical tests are specified using the sliders for each parameter which specify the threshold values. All tests are inclusive, testing values greater than or equal to the defined minimum and less than or equal to the defined maximum.")),
+												  									  htmltools::p(i18n$t("The logical tests are specified using the sliders for each parameter which speficy the threshold values. All tests are inclusive, testing values greater than or equal to the defined minimum and less than or equal to the defined maximum.")),
 												  									  htmltools::p(i18n$t("Two selection options can be used, individually or alternatively, based on filter and priority selection. In the filter selection, all simulations that are true in the input test are returned. In this case, all parameters evaluated must be true to a community to be selected. In the priority selection, the tests are evaluated hierarchically and only one simulation is selected. When all simulations fail in the first test, the function tries the next test. In the end, the function samples only one simulation from among those that passed all the tests. In this case, an additional argument defines if the selection is performed inside a specific group. This allows, for example, the selection of one simulation for each site that will be restored.")),
 												  									  htmltools::p(htmltools::strong(i18n$t("The reference sites"))),
 												  									  htmltools::p(i18n$t("Reference sites can be included as an input data set. Thus, all calculated parameters also are calculated to reference sites and can be used in posterior analysis or auxiliary to the selection procedure by identifying the natural range and values of these parameters in the reference ecosystem.")),
@@ -232,7 +237,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					icon = shiny::icon("info"),
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = "Browse..."
+												  									  										 buttonLabel = i18n$t("Browse...")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearTraits", 
@@ -508,8 +513,8 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::conditionalPanel(condition = "(input.methodSimInput == 'Individuals') && (input.isNIndSiteSpecificInput == 'TRUE')",
 												  									  												shinyWidgets::pickerInput(inputId = "nIndSiteSpecificSimInput",
-												  									  																		  # label = "Variables to specify the range of richness",
-												  									  																		  label = htmltools::p(i18n$t("Variables to specify the number of individuals to draw"), 
+												  									  																		  # label = "Variables to speficy the range of richness",
+												  									  																		  label = htmltools::p(i18n$t("Variables to speficy the number of individuals to draw"), 
 												  									  																		  					 shiny::actionButton("nIndSiteSpecificSimInputInfo",
 												  									  																		  					 					label = "",
 												  									  																		  					 					icon = shiny::icon("info"),
@@ -534,8 +539,8 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioRichSiteSpecificSimOutput"),
 												  									  						shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  												shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  																		  # label = "Variables to specify the range of richness",
-												  									  																		  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  																		  # label = "Variables to speficy the range of richness",
+												  									  																		  label = htmltools::p(i18n$t("Variables to speficy the range of richness"), 
 												  									  																		  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  																		  					 					label = "",
 												  									  																		  					 					icon = shiny::icon("info"),
@@ -622,13 +627,11 @@ body <- shinydashboard::dashboardBody(
 												  									  												  options = list(`actions-box` = TRUE),
 												  									  												  inline = FALSE
 												  									  						),
-												  									  						
-												  									  						# AQUI ----
 												  									  						shiny::uiOutput("radioDistMaxDiverSimOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isDistMaxDiverInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
-												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  # label = "Variables to speficy the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to speficy the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
 												  									  						# 												  					 					icon = shiny::icon("info"),
@@ -660,8 +663,8 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsed = TRUE,
 												  									  						shiny::uiOutput("radioSpeficyGroupsSimOutput"),
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "speficyGroupsSimInput",
-												  									  						# 								 # label = "Specify probabilities for groups of species",
-												  									  						# 								 label = htmltools::p(i18n$t("Specify probabilities for groups of species"), 
+												  									  						# 								 # label = "Speficy probabilities for groups of species",
+												  									  						# 								 label = htmltools::p(i18n$t("Speficy probabilities for groups of species"), 
 												  									  						# 								 					 shiny::actionButton("speficyGroupsSimInputInfo",
 												  									  						# 								 					 					label = "",
 												  									  						# 								 					 					icon = shiny::icon("info"),
@@ -715,8 +718,8 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
 												  									  						shiny::numericInput(inputId = "setSeedSimInput", 
-												  									  											# label = "Specify a seed for the simulation",
-												  									  											label = htmltools::p(i18n$t("Specify a seed for the simulation"), 
+												  									  											# label = "Speficy a seed for the simulation",
+												  									  											label = htmltools::p(i18n$t("Speficy a seed for the simulation"), 
 												  									  																 shiny::actionButton("setSeedSimInputInfo",
 												  									  																 					label = "",
 												  									  																 					icon = shiny::icon("info"),
@@ -954,13 +957,11 @@ body <- shinydashboard::dashboardBody(
 												  									  												  options = list(`actions-box` = TRUE),
 												  									  												  inline = FALSE
 												  									  						),
-												  									  						
-												  									  						# AQUI ----
 												  									  						shiny::uiOutput("radioDistRaoComOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
-												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  # label = "Variables to speficy the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to speficy the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
 												  									  						# 												  					 					icon = shiny::icon("info"),
@@ -985,17 +986,11 @@ body <- shinydashboard::dashboardBody(
 												  									  																		  inline = FALSE
 												  									  												)
 												  									  						),
-												  									  						
-												  									  						
-												  									  						
-												  									  						
-												  									  						# AQUI ----
-												  									  						
 												  									  						shiny::uiOutput("radioDistDissComOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
-												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  # label = "Variables to speficy the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to speficy the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
 												  									  						# 												  					 					icon = shiny::icon("info"),
@@ -1426,13 +1421,11 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::uiOutput("radioCalcTaxonomicBetaOptOutput"),
 												  									  						shiny::uiOutput("pickerMethodOptOutput"),
-												  									  						
-												  									  						# AQUI ----
 												  									  						shiny::uiOutput("radioDistBetaOptOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
-												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
+												  									  						# 												  # label = "Variables to speficy the range of richness",
+												  									  						# 												  label = htmltools::p(i18n$t("Variables to speficy the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
 												  									  						# 												  					 					icon = shiny::icon("info"),
