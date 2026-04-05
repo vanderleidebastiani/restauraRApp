@@ -4,7 +4,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Miscellanea ----
 	# Welcome alert 
 	shinyalert::shinyalert(title = NULL,
-						   # text = "Welcome to restauraR",
 						   text = htmltools::tagList(tags$img(src = "startup.png", width = "300px", height = "200px")),
 						   className = "alertStartup",
 						   type = "",
@@ -24,7 +23,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	globalRV <- shiny::reactiveValues(digitsVal = 5, 
 									  digitsMin = 3,
 									  currentDate = format(Sys.Date(), "%Y%m%d"),
-									  # countPlots = 0,
 									  probs = c(0, 0.25, 0.5, 0.75, 1))
 	#### Set the minimal decimal places ----
 	numVal <- shiny::reactive({
@@ -41,7 +39,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 	})
 	output$decimalPlaces <- shiny::renderUI(shiny::numericInput(inputId = "decimalPlaces", 
-														 # label = "Decimal places", 
 														 label = i18n$t("Decimal places"),
 														 min = globalRV$digitsMin, 
 														 step = 1,
@@ -150,9 +147,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		isDistMaxDiverInputInfo = 0,
 		maxDiverSimInputInfo = 0,
 		setSeedSimInputInfo = 0,
-		speficyGroupsSimInputInfo = 0,
+		specifyGroupsSimInputInfo = 0,
 		probGroupTypeSimInputInfo = 0,
-		speficyCooccurSimInputInfo = 0,
+		specifyCooccurSimInputInfo = 0,
 		probSimInputInfo = 0,
 		cvAbundSimInputInfo = 0,
 		phiSimInputInfo = 0,
@@ -169,12 +166,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		costComInputInfo = 0,
 		densComInputInfo = 0,
 		stanComParInputInfo = 0,
-		speficyMethodStanInputInfo = 0,
+		specifyMethodStanInputInfo = 0,
 		testsMultiInputInfo = 0,
 		# selectTab
 		testsFilterSelInputInfo = 0,
 		testsPrioritySelInputInfo = 0,
-		speficyGroupsSelInputInfo = 0,
+		specifyGroupsSelInputInfo = 0,
 		singleSelectionInputInfo = 0,
 		# optimiseTab
 		siteGroupOptInputInfo = 0,
@@ -318,7 +315,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	
 	## doClear buttons ----
-	### doClear CONTINUAR ----
+	# doClear CONTINUAR
 	# remover tambem outros elementos da interface
 	shiny::observeEvent(input$doClear, {
 		inputDataRV$traits <- NULL
@@ -1214,7 +1211,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	# AQUI ----
 	### isDistMaxDiverInput ----
 	output$radioDistMaxDiverSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistMaxDiverInput",
@@ -1233,12 +1229,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	### speficyGroupsSimInput ----
-	output$radioSpeficyGroupsSimOutput <- renderUI({
-		shinyWidgets::prettyRadioButtons(inputId = "speficyGroupsSimInput",
+	### specifyGroupsSimInput ----
+	output$radioSpecifyGroupsSimOutput <- renderUI({
+		shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSimInput",
 										 # label = "Specify probabilities for groups of species",
 										 label = htmltools::p(i18n$t("Specify probabilities for groups of species"), 
-										 					 shiny::actionButton("speficyGroupsSimInputInfo",
+										 					 shiny::actionButton("specifyGroupsSimInputInfo",
 										 					 					label = "",
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
@@ -1251,12 +1247,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	### speficyCooccurSimInput ----
-	output$radioSpeficyCooccurSimOutput <- renderUI({
-		shinyWidgets::prettyRadioButtons(inputId = "speficyCooccurSimInput",
+	### specifyCooccurSimInput ----
+	output$radioSpecifyCooccurSimOutput <- renderUI({
+		shinyWidgets::prettyRadioButtons(inputId = "specifyCooccurSimInput",
 										 # label = "Specify co-occurrence probabilities",
 										 label = htmltools::p(i18n$t("Specify co-occurrence probabilities"), 
-										 					 shiny::actionButton("speficyCooccurSimInputInfo",
+										 					 shiny::actionButton("specifyCooccurSimInputInfo",
 										 					 					label = "",
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
@@ -1304,12 +1300,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	#                                    status = "primary"
 	#   )
 	# })
-	### speficyMethodStanInput ----
-	output$radioSpeficyMethodStanOutput <- renderUI({
-		shinyWidgets::prettyRadioButtons(inputId = "speficyMethodStanInput",
+	### specifyMethodStanInput ----
+	output$radioSpecifyMethodStanOutput <- renderUI({
+		shinyWidgets::prettyRadioButtons(inputId = "specifyMethodStanInput",
 										 # label = "Standardisation method",
 										 label = htmltools::p(i18n$t("Standardisation method"), 
-										 					 shiny::actionButton("speficyMethodStanInputInfo",
+										 					 shiny::actionButton("specifyMethodStanInputInfo",
 										 					 					label = "",
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
@@ -1322,8 +1318,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	
-	# AQUI ----
 	### isDistRaoComInput ----
 	output$radioDistRaoComOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistRaoComInput",
@@ -1342,7 +1336,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	# AQUI ----
 	### isDistDissComInput ----
 	output$radioDistDissComOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistDissComInput",
@@ -1361,12 +1354,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	### speficyGroupsSelInput ----
-	output$radioSpeficyGroupsSelOutput <- renderUI({
-		shinyWidgets::prettyRadioButtons(inputId = "speficyGroupsSelInput",
+	### specifyGroupsSelInput ----
+	output$radioSpecifyGroupsSelOutput <- renderUI({
+		shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSelInput",
 										 # label = "Selection inside sites groups",
 										 label = htmltools::p(i18n$t("Selection inside sites groups"), 
-										 					 shiny::actionButton("speficyGroupsSelInputInfo",
+										 					 shiny::actionButton("specifyGroupsSelInputInfo",
 										 					 					label = "",
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
@@ -1456,7 +1449,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	# AQUI ----
 	### isDistBetaOptInput ----
 	output$radioDistBetaOptOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistBetaOptInput",
@@ -1786,7 +1778,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	
 	
-	# AQUI -----
+
 	# if(!is.null(input$isRichSiteSpecificInput)){
 	# 	if(input$isRichSiteSpecificInput == "TRUE"){
 	# 		if(!is.null(input$richSiteSpecificSimInput)){
@@ -1896,8 +1888,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			inputParSimRV$minAbund <- NULL
 		}
 	})
-	
-	# AQUI ----
+
 	### Simulate tab - maxDiver ----
 	obsListDistMaxDiverSim <- shiny::reactive({
 		list(input$isDistMaxDiverInput, input$maxDiverSimInput, inputDataRV$sppDist)
@@ -2081,7 +2072,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
 			# Set and update the arguments group, probGroupRich and probGroupAbund
 			# Update using dynamic slides
-			if(input$speficyGroupsSimInput == "Yes" && !is.null(input$groupSimInput)){
+			if(input$specifyGroupsSimInput == "Yes" && !is.null(input$groupSimInput)){
 				inputParSimRV$group <- input$groupSimInput
 				inVars <- unique(inputDataRV$traits[, input$groupSimInput])
 				pvars <- length(inVars)
@@ -2111,12 +2102,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				inputParSimRV$probGroupRich <- NULL
 				inputParSimRV$probGroupAbund <- NULL
 			}
-			if(input$speficyCooccurSimInput == "Yes" && !is.null(inputDataRV$cooccurrence)){
+			if(input$specifyCooccurSimInput == "Yes" && !is.null(inputDataRV$cooccurrence)){
 				inputParSimRV$cooccurrence <- inputDataRV$cooccurrence
 			} else{
 				inputParSimRV$cooccurrence <- NULL
 			}
-			# CONTINUAR ----
+			# CONTINUAR
 			if(input$goalsSimInput != "New" || input$isRichSiteSpecificInput == "TRUE" || (input$isNIndSiteSpecificInput == "TRUE" && tolower(input$methodSimInput) == "individuals")){
 				# if(input$goalsSimInput != "New" || input$isRichSiteSpecificInput == "TRUE" || input$isNIndSiteSpecificInput == "TRUE"){
 				inputParSimRV$restGroup <- inputDataRV$restGroup
@@ -2127,10 +2118,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(!is.na(input$setSeedSimInput)){
 				set.seed(input$setSeedSimInput)
 			}
-			# print(inputParSimRV$nInd)
-			# print(inputParSimRV$restGroup)
-			# print(inputDataRV$restGroup)
-			print(inputParSimRV$maxDiver)
 			scenario <- tryCatch(restauraR::simulateCommunities(traits = inputDataRV$traits,
 																restComp = inputParSimRV$restComp, # Ok
 																restGroup = inputParSimRV$restGroup, # Ok
@@ -2266,7 +2253,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### doAdjustSim ----
-	# REMOVER ----
+	# REMOVER
 	# shiny::observeEvent(input$doAdjustSim, {
 	#   # Remove any open modal
 	#   shiny::removeModal(session = session)
@@ -2432,7 +2419,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
 			scenario <- tryCatch(restauraR::standardiseParameters(x = scenario,
 																  parameters = input$stanComParInput, # straight input
-																  method = input$speficyMethodStanInput # straight input
+																  method = input$specifyMethodStanInput # straight input
 			), error = function(e) e)
 			shiny::removeModal(session = session)
 			if(inherits(scenario, what = "error")){
@@ -2528,7 +2515,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		} else{
 			inputParSelRV$testsFilter <- NULL
 		}
-		if(input$speficyGroupsSelInput == "Yes" && !is.null(input$groupSelInput)){
+		if(input$specifyGroupsSelInput == "Yes" && !is.null(input$groupSelInput)){
 			inputParSelRV$group <- input$groupSelInput
 		} else{
 			inputParSelRV$group <- NULL
@@ -3129,8 +3116,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			input$isDistMaxDiverInputInfo,
 			input$maxDiverSimInputInfo,
 			input$setSeedSimInputInfo,
-			input$speficyGroupsSimInputInfo,
-			input$speficyCooccurSimInputInfo,
+			input$specifyGroupsSimInputInfo,
+			input$specifyCooccurSimInputInfo,
 			input$probGroupTypeSimInputInfo,
 			input$probSimInputInfo,
 			input$cvAbundSimInputInfo,
@@ -3148,12 +3135,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			input$costComInputInfo,
 			input$densComInputInfo,
 			input$stanComParInputInfo,
-			input$speficyMethodStanInputInfo,
+			input$specifyMethodStanInputInfo,
 			input$testsMultiInputInfo,
 			# selectTab
 			input$testsFilterSelInputInfo,
 			input$testsPrioritySelInputInfo,
-			input$speficyGroupsSelInputInfo,
+			input$specifyGroupsSelInputInfo,
 			input$singleSelectionInputInfo,
 			# optimiseTab
 			input$siteGroupOptInputInfo,
@@ -3173,62 +3160,62 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# DataInputTab
 		if(!is.null(input$traitsInputInfo)){
 			if(input$traitsInputInfo>infoRV$traitsInputInfo){
-				infoText <- i18n$t("Data table with species traits in a way that arranged species names in the rows and traits in the columns. This table should include any species information that can be used to calculate functional metrics, costs or any information that can be used as parameters to simulate and select simulated communities.")
+				infoText <- i18n$t("Data table with species-by-features containing trait information for all species in the pool. Rows are species, columns are variables. Traits can be numeric or categorical. This table could include any species information that can be used to calculate functional metrics, costs or any information that can be used as parameters to simulate and select simulated communities. This table should include all species from the reference sites and restoration sites. Missing data (NA) are not allowed.")
 				infoRV$traitsInputInfo <- input$traitsInputInfo
 			}
 		}
 		if(!is.null(input$restCompInputInfo)){
 			if(input$restCompInputInfo>infoRV$restCompInputInfo){
-				infoText <- i18n$t("Data table with species composition in the restoration sites in a way that arranged sites in the rows and species names in the columns. Missing data (NA) are not accepted.")
+				infoText <- i18n$t("Data table with species composition from the restoration sites. Rows are sites, columns are species names. The values should represent the abundance of the species (counts) or the relative proportion. Missing data (NA) are not allowed.")
 				infoRV$restCompInputInfo <- input$restCompInputInfo
 			}
 		}
 		if(!is.null(input$restGroupInputInfo)){
 			if(input$restGroupInputInfo>infoRV$restGroupInputInfo){
-				infoText <- i18n$t("Data table with complementary information for restoration sites in a way that arranged sites in the rows and variables in the columns. This information will be included in the metrics calculated for each community and can be used as complementary information to select the simulations.")
+				infoText <- i18n$t("Data table with complementary information for restoration sites. Rows are sites, columns are variables. These can be used to group sites during selection or to define site-specific simulation parameters. Missing data (NA) are not allowed.")
 				infoRV$restGroupInputInfo <- input$restGroupInputInfo
 			}
 		}
 		if(!is.null(input$referenceInputInfo)){
 			if(input$referenceInputInfo>infoRV$referenceInputInfo){
-				infoText <- i18n$t("Data table with species composition in the reference sites in a way that arranged sites in the rows and species names in the columns. Missing data (NA) are not accepted.")
+				infoText <- i18n$t("Data table with species composition from the reference sites. Rows are sites, columns are species names. The values should represent the abundance of the species (counts) or the relative proportion. Missing data (NA) are not allowed.")
 				infoRV$referenceInputInfo <- input$referenceInputInfo
 			}
 		}
 		if(!is.null(input$supplementaryInputInfo)){
 			if(input$supplementaryInputInfo>infoRV$supplementaryInputInfo){
-				infoText <- i18n$t("Data table with species composition in the supplementary sites in a way that arranged sites in the rows and species names in the columns. Missing data (NA) are not accepted.")
+				infoText <- i18n$t("Data table with species composition from supplementary sites. Rows are sites, columns are species names. The values should represent the abundance of the species (counts) or the relative proportion. Missing data (NA) are not allowed.")
 				infoRV$supplementaryInputInfo <- input$supplementaryInputInfo
 			}
 		}
 		if(!is.null(input$cooccurrenceInputInfo)){
 			if(input$cooccurrenceInputInfo>infoRV$cooccurrenceInputInfo){
-				infoText <- i18n$t("Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns. Missing data (NA) are not accepted.")
+				infoText <- i18n$t("Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns. Must be square, symmetric, and include all species from the trait table. Missing data (NA) are not allowed.")
 				infoRV$cooccurrenceInputInfo <- input$cooccurrenceInputInfo
 			}
 		}
 		if(!is.null(input$sppDistInputInfo)){
 			if(input$sppDistInputInfo>infoRV$sppDistInputInfo){
-				infoText <- i18n$t("Distance matrix with species, usually based on trait values or phylogenetic relationships. Missing data (NA) are not accepted.")
+				infoText <- i18n$t("Distance matrix between species, usually based on trait values or phylogenetic relationships. Must be square, symmetric, and include all species from the trait table. Missing data (NA) are not allowed.")
 				infoRV$sppDistInputInfo <- input$sppDistInputInfo
 			}
 		}
 		# simulateTab
 		if(!is.null(input$goalsSimInputInfo)){
 			if(input$goalsSimInputInfo>infoRV$goalsSimInputInfo){
-				infoText <- i18n$t("Restoration goals. When goals are equal to 'New', no restoration sites are considered, and the simulated communities are set as empty communities (sites to restore start with no species, and all species must be planted for restoration). Alternatively, when goals are equal to 'Ongoing', the species composition in the restoration sites must be informed (in the data input tab). Thus, the new species and individuals are introduced into the established communities (sites to restore can start with pre-existing species).")
+				infoText <- i18n$t("Restoration goals. If 'New',  the simulated communities are set as empty communities. The sites to restore start with no species and no initial composition needed. If 'Ongoing', the species composition in the restoration sites must be informed. Thus, the new species and individuals are added to the current composition. The sites to restore can start with established species.")
 				infoRV$goalsSimInputInfo <- input$goalsSimInputInfo
 			}
 		}
 		if(!is.null(input$methodSimInputInfo)){
 			if(input$methodSimInputInfo>infoRV$methodSimInputInfo){
-				infoText <- i18n$t("Method to obtain the samples. The 'proportions' method simulates the species composition sampled taken from a log-normal distribution. Species composition is given in proportions of the total number of individuals. The 'individuals' method performs the simulation sampling individuals taken from a distribution. The probabilities to draw individuals can be supplied by the user or taken from a log-normal distribution. However, the number of individuals to sample in each community must be supplied. In this method, the species composition is raw abundance, given by counting individuals.")
+				infoText <- i18n$t("Method to obtain the samples. The 'proportions' method simulates the species composition sampled from a log-normal distribution. Species composition is given in proportions of the total number of individuals. The 'individuals' method simulates abundances using a multinomial distribution. The probabilities to draw each individual can be supplied by the user or taken from a log-normal distribution. However, the number of individuals to sample in each community must be supplied. In this method, the species composition is absolute abundance, given by counting individuals.")
 				infoRV$methodSimInputInfo <- input$methodSimInputInfo
 			}
 		}
 		if(!is.null(input$isNIndSiteSpecificInputInfo)){
 			if(input$isNIndSiteSpecificInputInfo>infoRV$isNIndSiteSpecificInputInfo){
-				infoText <- i18n$t("Specify the number of individuals by site-specific.")
+				infoText <- i18n$t("Specify site-specific number of individuals. If 'Yes', choose variables from the restoration complementary data to define the range of individuals to be sampled per site. If 'No', a single total number of individuals is used for all sites.")
 				infoRV$isNIndSiteSpecificInputInfo <- input$isNIndSiteSpecificInputInfo
 			}
 		}
@@ -3240,13 +3227,13 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$nIndSiteSpecificSimInputInfo)){
 			if(input$nIndSiteSpecificSimInputInfo>infoRV$nIndSiteSpecificSimInputInfo){
-				infoText <- i18n$t("Variable to indicate the range of the number of individuals to be sampled in each community.")
+				infoText <- i18n$t("Variables to indicate the number of individuals to be sampled in each community. If a single column is selected, its values are used directly. If two columns are selected, they are interpreted as min and max for a uniform draw. ")
 				infoRV$nIndSiteSpecificSimInputInfo <- input$nIndSiteSpecificSimInputInfo
 			}
 		}
 		if(!is.null(input$isRichSiteSpecificInputInfo)){
 			if(input$isRichSiteSpecificInputInfo>infoRV$isRichSiteSpecificInputInfo){
-				infoText <- i18n$t("Specify the range of richness by site-specific.")
+				infoText <- i18n$t("Specify site-specific richness range. If 'Yes', choose variables from the restoration complementary data to define site specific richness ranges. If 'No', a single richness range is used for all sites.")
 				infoRV$isRichSiteSpecificInputInfo <- input$isRichSiteSpecificInputInfo
 			}
 		}
@@ -3258,7 +3245,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$richSiteSpecificSimInputInfo)){
 			if(input$richSiteSpecificSimInputInfo>infoRV$richSiteSpecificSimInputInfo){
-				infoText <- i18n$t("Variable to indicate the range of richness values in each community.")
+				infoText <- i18n$t("Variables to indicate the richness in each community. If a single column is selected, its values are used directly. If two columns are selected, they are interpreted as min and max for a uniform draw.")
 				infoRV$richSiteSpecificSimInputInfo <- input$richSiteSpecificSimInputInfo
 			}
 		}
@@ -3276,31 +3263,31 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$avaSimInputInfo)){
 			if(input$avaSimInputInfo>infoRV$avaSimInputInfo){
-				infoText <- i18n$t("Variable to indicate species availability in the market (1 or 0).")
+				infoText <- i18n$t("Binary variable to indicate species availability for restoration projects (1 or 0, 1 = available).")
 				infoRV$avaSimInputInfo <- input$avaSimInputInfo
 			}
 		}
 		if(!is.null(input$undSimInputInfo)){
 			if(input$undSimInputInfo>infoRV$undSimInputInfo){
-				infoText <- i18n$t("Variable to indicate undesired species (1 or 0). Undesired species may already be present in restoration or reference communities but are not appropriate in new restorations.")
+				infoText <- i18n$t("Binary variable to indicate undesired species (1 or 0, 1 = undesirable). Undesired species may already be present in restoration or reference communities but are not appropriate in new restorations.")
 				infoRV$undSimInputInfo <- input$undSimInputInfo
 			}
 		}
 		if(!is.null(input$constCWMSimInputInfo)){
 			if(input$constCWMSimInputInfo>infoRV$constCWMSimInputInfo){
-				infoText <- i18n$t("Traits names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the range of each trait and allow the creation of a wide range of means of those traits across the simulated communities.")
+				infoText <- i18n$t("Trait names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the full range of each trait, helping to explore functional space")
 				infoRV$constCWMSimInputInfo <- input$constCWMSimInputInfo
 			}
 		}
 		if(!is.null(input$isDistMaxDiverInputInfo)){
 			if(input$isDistMaxDiverInputInfo>infoRV$isDistMaxDiverInputInfo){
-				infoText <- i18n$t("Use species distance to maximise functional diversity (Rao Quadratic Entropy).")
+				infoText <- i18n$t("Use species distance to maximise functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to maximise functional diversity (Rao Quadratic Entropy). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated, and then used to maximise the diversity.")
 				infoRV$isDistMaxDiverInputInfo <- input$isDistMaxDiverInputInfo
 			}
 		}
 		if(!is.null(input$maxDiverSimInputInfo)){
 			if(input$maxDiverSimInputInfo>infoRV$maxDiverSimInputInfo){
-				infoText <- i18n$t("Traits names to indicate which traits are used to maximise functional diversity (Rao Quadratic Entropy).")
+				infoText <- i18n$t("Trait names to indicate which traits are used to maximise functional diversity (Rao Quadratic Entropy).")
 				infoRV$maxDiverSimInputInfo <- input$maxDiverSimInputInfo
 			}
 		}
@@ -3310,10 +3297,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				infoRV$setSeedSimInputInfo <- input$setSeedSimInputInfo
 			}
 		}
-		if(!is.null(input$speficyGroupsSimInputInfo)){
-			if(input$speficyGroupsSimInputInfo>infoRV$speficyGroupsSimInputInfo){
-				infoText <- i18n$t("The sampling process can be constrained inside species groups. That procedure can be conducted to draw abundances with or without constraints in species richness. First, set the variable which indicates the group to which the species belongs and the constraint method. Then, adjust the sliders to set the probabilities in each species group.")
-				infoRV$speficyGroupsSimInputInfo <- input$speficyGroupsSimInputInfo
+		if(!is.null(input$specifyGroupsSimInputInfo)){
+			if(input$specifyGroupsSimInputInfo>infoRV$specifyGroupsSimInputInfo){
+				infoText <- i18n$t("The sampling process can be constrained within species groups. That procedure can be conducted to draw abundances with or without constraints on species richness. First, choose a categorical variable to define groups. Then, adjust the sliders to assign the probabilities for richness and/or abundance to each group.")
+				infoRV$specifyGroupsSimInputInfo <- input$specifyGroupsSimInputInfo
 			}
 		}
 		if(!is.null(input$probGroupTypeSimInputInfo)){
@@ -3324,7 +3311,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$probSimInputInfo)){
 			if(input$probSimInputInfo>infoRV$probSimInputInfo){
-				infoText <- i18n$t("Variable to indicate the probabilities of individuals being drawn.")
+				infoText <- i18n$t("Variable from the trait table that contains the relative probabilities of each species being drawn.")
 				infoRV$probSimInputInfo <- input$probSimInputInfo
 			}
 		}
@@ -3334,10 +3321,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				infoRV$cvAbundSimInputInfo <- input$cvAbundSimInputInfo
 			}
 		}
-		if(!is.null(input$speficyCooccurSimInputInfo)){
-			if(input$speficyCooccurSimInputInfo>infoRV$speficyCooccurSimInputInfo){
-				infoText <- i18n$t("The sampling process can be constrained by co-occurrence probabilities.")
-				infoRV$speficyCooccurSimInputInfo <- input$speficyCooccurSimInputInfo
+		if(!is.null(input$specifyCooccurSimInputInfo)){
+			if(input$specifyCooccurSimInputInfo>infoRV$specifyCooccurSimInputInfo){
+				infoText <- i18n$t("Constrain the co-occurrence. If 'Yes', the co-occurrence matrix is used to constrain the sampling process of species in the simulated communities.")
+				infoRV$specifyCooccurSimInputInfo <- input$specifyCooccurSimInputInfo
 			}
 		}
 		if(!is.null(input$phiSimInputInfo)){
@@ -3362,37 +3349,37 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# computeTab
 		if(!is.null(input$avaComInputInfo)){
 			if(input$avaComInputInfo>infoRV$avaComInputInfo){
-				infoText <- i18n$t("Variable to indicate species availability in the market (1 or 0).")
+				infoText <- i18n$t("Binary variable to indicate species availability for restoration projects (1 or 0, 1 = available). This will be used to count unavailable species in each community.")
 				infoRV$avaComInputInfo <- input$avaComInputInfo
 			}
 		}
 		if(!is.null(input$cwmComInputInfo)){
 			if(input$cwmComInputInfo>infoRV$cwmComInputInfo){
-				infoText <- i18n$t("Traits names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.")
+				infoText <- i18n$t("Trait names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.")
 				infoRV$cwmComInputInfo <- input$cwmComInputInfo
 			}
 		}
 		if(!is.null(input$cwvComInputInfo)){
 			if(input$cwvComInputInfo>infoRV$cwvComInputInfo){
-				infoText <- i18n$t("Traits names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.")
+				infoText <- i18n$t("Trait names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.")
 				infoRV$cwvComInputInfo <- input$cwvComInputInfo
 			}
 		}
 		if(!is.null(input$isDistRaoComInputInfo)){
 			if(input$isDistRaoComInputInfo>infoRV$isDistRaoComInputInfo){
-				infoText <- i18n$t("Use species distance to calculate Rao Quadratic Entropy (rao).")
+				infoText <- i18n$t("Use species distance to calculate functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate Rao Quadratic Entropy (rao). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated, and then used in the calculation.")
 				infoRV$isDistRaoComInputInfo <- input$isDistRaoComInputInfo
 			}
 		}
 		if(!is.null(input$raoComInputInfo)){
 			if(input$raoComInputInfo>infoRV$raoComInputInfo){
-				infoText <- i18n$t("Traits names to calculate Rao Quadratic Entropy (rao). Only a single rao measure is calculated with the set input species traits.")
+				infoText <- i18n$t("Trait names to calculate Rao Quadratic Entropy (rao). Only a single rao measure is calculated with the set input species traits.")
 				infoRV$raoComInputInfo <- input$raoComInputInfo
 			}
 		}
 		if(!is.null(input$isDistDissComInputInfo)){
 			if(input$isDistDissComInputInfo>infoRV$isDistDissComInputInfo){
-				infoText <- i18n$t("Use species distance to calculate functional dissimilarity with the reference sites.")
+				infoText <- i18n$t("Use species distance to calculate functional dissimilarity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate functional dissimilarity with reference sites. If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated, and then used in the calculation.")
 				infoRV$isDistDissComInputInfo <- input$isDistDissComInputInfo
 			}
 		}	
@@ -3416,19 +3403,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$stanComParInputInfo)){
 			if(input$stanComParInputInfo>infoRV$stanComParInputInfo){
-				infoText <- i18n$t("Parameters name to standardisation.")
+				infoText <- i18n$t("Computed parameters name to standardise")
 				infoRV$stanComParInputInfo <- input$stanComParInputInfo
 			}
 		}
-		if(!is.null(input$speficyMethodStanInputInfo)){
-			if(input$speficyMethodStanInputInfo>infoRV$speficyMethodStanInputInfo){
+		if(!is.null(input$specifyMethodStanInputInfo)){
+			if(input$specifyMethodStanInputInfo>infoRV$specifyMethodStanInputInfo){
 				infoText <- i18n$t("Standardisation method. The method 'maximum' divides the values of each variable by its maximum. The method 'standardise' scales the calculated parameters to zero mean and unit variance in each variable.")
-				infoRV$speficyMethodStanInputInfo <- input$speficyMethodStanInputInfo
+				infoRV$specifyMethodStanInputInfo <- input$specifyMethodStanInputInfo
 			}
 		}
 		if(!is.null(input$testsMultiInputInfo)){
 			if(input$testsMultiInputInfo>infoRV$testsMultiInputInfo){
-				infoText <- i18n$t("Multifunctionality criteria. The multifunctionality is based on simple logical tests derived from thresholds to multiples calculated parameters.  The sum of individual tests true to a given threshold is the alpha multifunctionality index. First, select the parameters which will be used to test, then set the sliders as logical tests.")
+				infoText <- i18n$t("Multifunctionality criteria. The multifunctionality is based on simple logical tests derived from thresholds to multiple calculated parameters, returning a binary multifunctionality matrix. The sum of individual tests true to a given threshold is the alpha multifunctionality index. First, select the parameters which will be used to test, then set the sliders as logical tests.")
 				infoRV$testsMultiInputInfo <- input$testsMultiInputInfo
 			}
 		}
@@ -3441,14 +3428,14 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$testsPrioritySelInputInfo)){
 			if(input$testsPrioritySelInputInfo>infoRV$testsPrioritySelInputInfo){
-				infoText <- i18n$t("Priority selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the priority selection, the tests are evaluated hierarchically. If all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests. The Priority selection is more flexible, given that it includes additional arguments to the selection.")
+				infoText <- i18n$t("Priority selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the priority selection, the tests are evaluated hierarchically. If all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests.")
 				infoRV$testsPrioritySelInputInfo <- input$testsPrioritySelInputInfo
 			}
 		}
-		if(!is.null(input$speficyGroupsSelInputInfo)){
-			if(input$speficyGroupsSelInputInfo>infoRV$speficyGroupsSelInputInfo){
-				infoText <- i18n$t("Priority selection allows set site groups. Thus, selection criteria are applied inside a specific site group. Set a variable which determines the site groups for priority selection.")
-				infoRV$speficyGroupsSelInputInfo <- input$speficyGroupsSelInputInfo
+		if(!is.null(input$specifyGroupsSelInputInfo)){
+			if(input$specifyGroupsSelInputInfo>infoRV$specifyGroupsSelInputInfo){
+				infoText <- i18n$t("Priority selection allows setting site groups. If a variable is selected, the selection criteria are applied inside the site group determined by that variable. This ensures, for example, that one simulation is selected per site type.")
+				infoRV$specifyGroupsSelInputInfo <- input$specifyGroupsSelInputInfo
 			}
 		}
 		if(!is.null(input$singleSelectionInputInfo)){
@@ -3460,7 +3447,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# optimiseTab
 		if(!is.null(input$siteGroupOptInputInfo)){
 			if(input$siteGroupOptInputInfo>infoRV$siteGroupOptInputInfo){
-				infoText <- i18n$t("Set a variable which determines the site groups.")
+				infoText <- i18n$t("A variable from the restoration sites data that determines site groups. The optimisation will generate combinations of communities across groups.")
 				infoRV$siteGroupOptInputInfo <- input$siteGroupOptInputInfo
 			}
 		}
@@ -3490,19 +3477,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$isDistBetaOptInputInfo)){
 			if(input$isDistBetaOptInputInfo>infoRV$isDistBetaOptInputInfo){
-				infoText <- i18n$t("Use species distance to calculate beta diversity.")
+				infoText <- i18n$t("Use species distance to calculate beta diversity. If 'Yes', the species distance matrix is used to calculate beta diversity. If 'No', the selected traits are used.")
 				infoRV$isDistBetaOptInputInfo <- input$isDistBetaOptInputInfo
 			}
 		}
 		if(!is.null(input$betaOptInputInfo)){
 			if(input$betaOptInputInfo>infoRV$betaOptInputInfo){
-				infoText <- i18n$t("Traits names to calculate beta diversity.")
+				infoText <- i18n$t("Traits names to calculate beta diversity. If no traits are selected, functional beta diversity will not be calculated.")
 				infoRV$betaOptInputInfo <- input$betaOptInputInfo
 			}
 		}
 		if(!is.null(input$testsMultisiteOptInputInfo)){
 			if(input$testsMultisiteOptInputInfo>infoRV$testsMultisiteOptInputInfo){
-				infoText <- i18n$t("Multi-site selection criteria. Selections of the set of simulated communities are based on simple logical tests derived from thresholds to one or more calculated multi-site parameters. In the multi-site selection, only one set of communities is returned. The selection works hierarchically; if all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests.")
+				infoText <- i18n$t("Multi-site selection criteria. Selections of the set of simulated communities are based on simple logical tests derived from thresholds to one or more calculated multi-site parameters. In the multi-site selection, only one set of communities is returned. The selection works hierarchically; if all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests. To select the minimum or the maximum, move both sliders to the minimum or maximum.")
 				infoRV$testsMultisiteOptInputInfo <- input$testsMultisiteOptInputInfo
 			}
 		}
@@ -3541,7 +3528,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		# }
 	})
-	## Output ----
+	## Outputs ----
 	### Output diagram - diagramOutput ----
 	output$diagramOutput <- DiagrammeR::renderGrViz({
 		DiagrammeR::grViz(paste0(
@@ -3632,7 +3619,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		
 	})
-	### Update text - yvar -View tab ----
+	### Update text - yvar - View tab ----
 	shiny::observeEvent(input$yvarViewInput, ignoreNULL = FALSE, {
 		if(!is.null(input$yvarViewInput)){
 			shiny::updateTextInput(session = session,
@@ -3701,18 +3688,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		output$outputSimulateSummaryText <- shiny::renderUI({
 			if(!is.null(input$scenarioSimulateSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioSimulateSummaryInput]]
-				# str1 <- paste0("Species pool size: ", ncol(x$simulation$composition))
-				# str2 <- paste0("Number of simulations: ", nrow(x$simulation$composition))
-				# str3 <- paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes"))
-				# str4 <- paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes"))
-				# if(!is.null(x$simulation$results)) {
-				# 	str5 <- paste0("Parameters: ")
-				# 	str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
-				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
-				# } else{
-				# 	str5 <- paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes"))
-				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
-				# }
 				strTemp <- c()
 				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$simulation$composition)))
 				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$simulation$composition)))
@@ -3733,12 +3708,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				} else{
 					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$simulation$multifunctionality), "No", "Yes")))
 				}
-				# if(!is.null(x$simulation$multisite$results)) {
-				# 	strTemp <- c(strTemp, paste0("Multisite results: "))
-				# 	strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multisite$results), collapse = "<br/>"))
-				# } else{
-				# 	strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$simulation$multisite$results), "No", "Yes")))
-				# }
 				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
 		})
@@ -3748,18 +3717,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		output$outputComputeSummaryText <- shiny::renderUI({
 			if(!is.null(input$scenarioComputeSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioComputeSummaryInput]]
-				# str1 <- paste0(i18n$t("Species pool size: "), ncol(x$simulation$composition))
-				# str2 <- paste0(i18n$t("Number of simulations: "), nrow(x$simulation$composition))
-				# str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
-				# str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
-				# if(!is.null(x$simulation$results)) {
-				# 	str5 <- paste0(i18n$t("Parameters: "))
-				# 	str6 <- paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>")
-				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
-				# } else{
-				# 	str5 <- paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), "No", "Yes"))
-				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
-				# }
 				strTemp <- c()
 				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$simulation$composition)))
 				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$simulation$composition)))
@@ -3777,12 +3734,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				} else{
 					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$simulation$multifunctionality), "No", "Yes")))
 				}
-				# if(!is.null(x$simulation$multisite$results)) {
-				# 	strTemp <- c(strTemp, paste0("Multisite results: "))
-				# 	strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multisite$results), collapse = "<br/>"))
-				# } else{
-				# 	strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$simulation$multisite$results), "No", "Yes")))
-				# }
 				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
 		})
@@ -3792,18 +3743,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		output$outputSelectSummaryText <- shiny::renderUI({
 			if(!is.null(input$scenarioSelectSummaryInput)){
 				x <- resultsRV$select[[input$scenarioSelectSummaryInput]]
-				# str1 <- paste0(i18n$t("Species pool size: "), ncol(x$selection$composition))
-				# str2 <- paste0(i18n$t("Number of simulations selected: "), nrow(x$selection$composition))
-				# str3 <- paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), "No", "Yes"))
-				# str4 <- paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), "No", "Yes"))
-				# if(!is.null(x$selection$results)) {
-				# 	str5 <- paste0(i18n$t("Parameters: "))
-				# 	str6 <- paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>")
-				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, str6, sep = "<br/>"))
-				# } else{
-				# 	str5 <- paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes"))
-				# 	shiny::HTML(paste(str1, str2, str3, str4, str5, sep = "<br/>"))
-				# }
 				strTemp <- c()
 				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$selection$composition)))
 				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$selection$composition)))
@@ -3868,7 +3807,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(is.null(inputDataRV$traits)){
 			return(NULL)
 		}
-		# rhandsontable::rhandsontable(inputDataRV$traits, contextMenu =  FALSE, readOnly = TRUE, height = 550, stretchH = "all", rowHeaderWidth = 200)
 		rhandsontable::rhandsontable(inputDataRV$traits, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Traits class ----
