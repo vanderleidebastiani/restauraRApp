@@ -1,18 +1,9 @@
-#' @title app
+#' @title Create the restauraRApp User Interface
+#' @description Functions to define the user interface and server-side program for the restauraRApp.
 #' @name app
 #' @encoding UTF-8
 #' @import restauraR
 #' @import shiny
-# @import shinydashboard
-# @import shinydashboardPlus
-# @import shinyWidgets
-# @import rhandsontable
-# @import shinyjs
-# @import shinyalert
-# @import shiny.i18n
-# @import sortable
-# @import DiagrammeR
-# @importFrom shiny HTML actionButton column conditionalPanel downloadHandler fileInput fluidRow htmlOutput icon modalButton modalDialog numericInput observeEvent plotOutput reactive reactiveValues renderPlot renderText renderUI selectInput shinyServer showModal sliderInput tabPanel tabsetPanel textInput textOutput uiOutput updateActionButton updateTextInput removeModal
 #' @importFrom shinyalert shinyalert
 #' @importFrom htmltools br div h2 h4 h5 hr p strong tagList
 #' @importFrom shinydashboardPlus box controlbarItem controlbarMenu dashboardControlbar dashboardHeader dashboardPage dashboardSidebar updateControlbar

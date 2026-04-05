@@ -2,7 +2,11 @@
 
 export(appServer)
 export(appUI)
+export(body)
+export(controlbar)
+export(header)
 export(runRestauraR)
+export(sidebar)
 import(restauraR)
 import(shiny)
 importFrom(DiagrammeR,grViz)

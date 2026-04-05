@@ -15,4 +15,4 @@ runRestauraR(launchBrowser = TRUE, ...)
 \description{
 Launches a local version of the restauraR application.
 }
-\keyword{ApplicationFunction}
+\keyword{MainFunction}

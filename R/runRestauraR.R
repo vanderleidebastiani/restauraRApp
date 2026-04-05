@@ -4,7 +4,7 @@
 #' @importFrom shiny runApp
 #' @param launchBrowser Shiny application launch mode. See runApp function (default launchBrowser = TRUE).
 #' @param ... Arguments used in the runApp function.
-#' @keywords ApplicationFunction
+#' @keywords MainFunction
 #' @export
 runRestauraR <- function(launchBrowser = TRUE, ...){
   appDir <- system.file("app", package = "restauraRApp")

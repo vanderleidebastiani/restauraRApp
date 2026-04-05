@@ -5,13 +5,33 @@
 \name{app}
 \alias{app}
 \alias{appServer}
+\alias{header}
+\alias{sidebar}
+\alias{controlbar}
+\alias{body}
 \alias{appUI}
-\title{app}
+\title{Create the restauraRApp User Interface}
 \format{
+An object of class \code{shiny.tag} of length 3.
+
+An object of class \code{shiny.tag} of length 3.
+
+An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 2.
+
+An object of class \code{shiny.tag} of length 3.
+
 An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 2.
 }
 \usage{
 appServer(input, output, session)
+
+header
+
+sidebar
+
+controlbar
+
+body
 
 appUI
 }
@@ -23,6 +43,6 @@ appUI
 \item{session}{Environment for the UI.}
 }
 \description{
-app
+Functions to define the user interface and server-side program for the restauraRApp.
 }
 \keyword{datasets}
