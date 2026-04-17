@@ -4,7 +4,7 @@
 
 ### Description
 
-The restauraR package provides an integrative set of tools to create restoration solutions to assemble communities from a regional species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing restoration sites.
+The restauraR package provides an integrative set of tools for creating restoration solutions and assembling communities from a regional species pool. This package implements a user-friendly version of the restauraR package using Shiny.
 
 ### Installation
   

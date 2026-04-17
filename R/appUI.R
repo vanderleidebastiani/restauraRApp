@@ -1,8 +1,9 @@
-#' @rdname app
 # UI ----
 
 # ui : call this function once somewhere
-shinyWidgets::useSweetAlert()
+#' @rdname app
+#' @export
+sweetAlert <- shinyWidgets::useSweetAlert()
 
 i18n <- shiny.i18n::Translator$new(translation_json_path = system.file("app", "translation.json", package = "restauraRApp"))
 # i18n <- shiny.i18n::Translator$new(translation_json_path = "restauraRApp/inst/app/translation.json")

@@ -10,9 +10,8 @@
 Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 }
 \details{
-The restauraR package provides an integrative set of tools to create restoration solutions to assemble communities from a regional 
-species pool. The framework allows achieving functional targets following multiple approaches: either starting from empty communities or adding species to ongoing 
-restoration sites.
+The restauraR package provides an integrative set of tools for creating restoration solutions and assembling communities from a regional species 
+pool. This package implements a user-friendly version of the restauraR package using Shiny.
 }
 \references{
 Coutinho, A. G., Carlucci, M. B., & Cianciaruso, M. V. (2023). A framework to apply trait-based ecological 
