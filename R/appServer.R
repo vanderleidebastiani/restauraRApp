@@ -2294,10 +2294,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# 		type = "error"
 		# 	)
 		# } else {
-		print("inputParComRV$rao")
-		print(inputParComRV$rao)
-		print("inputParComRV$dissimilarity")
-		print(inputParComRV$dissimilarity)
+		# print("inputParComRV$rao")
+		# print(inputParComRV$rao)
+		# print("inputParComRV$dissimilarity")
+		# print(inputParComRV$dissimilarity)
 		shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
 		scenario <- tryCatch(restauraR::computeParameters(x = resultsRV$simulate[[input$scenarioComParInput]],
 														  traits = inputDataRV$traits,
@@ -2636,8 +2636,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
 		# print(input$siteGroupOptInput)
 		# print(resultsRV$select[[input$scenarioOptInput]])
-		print("inputParOptRV$beta")
-		print(inputParOptRV$beta)
+		# print("inputParOptRV$beta")
+		# print(inputParOptRV$beta)
 		scenario <- tryCatch(restauraR::optimiseSelection(x = resultsRV$select[[input$scenarioOptInput]],
 														  siteGroup = input$siteGroupOptInput, # straight input
 														  includeReference = as.logical(input$includeReferenceOptInput), # straight input
@@ -2938,7 +2938,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			else {
 				scenario$selection$multifunctionality  <- resMulti
 			}
-			print(resMulti)
+			# print(resMulti)
 			scenario <- tryCatch(restauraR::viewMultifunctionality(x = scenario,
 																   showReference = as.logical(input$showRefViewMultiInput)
 			), error = function(e) e)
