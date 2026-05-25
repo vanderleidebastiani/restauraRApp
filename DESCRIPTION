@@ -1,10 +1,24 @@
 Package: restauraRApp
 Type: Package
-Title: restauraRApp - App of restauraR Package
+Title: App of restauraR Package
 Version: 0.0.1
-Date: 2026-03-19
-Author: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>, André G. Coutinho <andreganemcoutinho@gmail.com>, Marcos B. Carlucci <carlucci@ufpr.br>, Marcus V. Cianciaruso <cianciaruso@gmail.com>
-Maintainer: Vanderlei J. Debastiani <vanderleidebastiani@yahoo.com.br>
+Date: 2026-05-05
+Authors@R: c(person(given = c("Vanderlei", "J."),
+                      family = "Debastiani",
+                      role = c("aut", "cre"),
+                      email = "vanderleidebastiani@yahoo.com.br"),
+               person(given = c("André", "G."),
+                      family = "Coutinho",
+                      role = "aut",
+                      email = "andreganemcoutinho@gmail.com"),
+               person(given = c("Marcos", "B."),
+                      family = "Carlucci",
+                      role = "aut",
+                      email = "carlucci@ufpr.br"),
+               person(given = c("Marcus", "V."),
+                      family = "Cianciaruso",
+                      role = "aut",
+                      email = "cianciaruso@gmail.com"))
 Depends: R (>= 3.5)
 Imports:
     restauraR,
@@ -22,11 +36,11 @@ Imports:
     shinydashboard,
     shinyWidgets,
     shinyjs,
-    shinydashboardPlus
+    shinydashboardPlus,
+    bslib
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 License: GPL (>= 3)
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 Collate: 
     'app.R'
     'appServer.R'
@@ -34,3 +48,4 @@ Collate:
     'restauraRApp-package.R'
     'globals.R'
     'runRestauraR.R'
+Config/roxygen2/version: 8.0.0
