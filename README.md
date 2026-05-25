@@ -8,11 +8,11 @@ The restauraR package provides an integrative set of tools for creating restorat
 
 ### Installation
   
-To install the latest version of this package, use [`devtools`](https://CRAN.R-project.org/package=devtools):
+To install the latest version of this package, use [`pak`](https://CRAN.R-project.org/package=pak):
 
 ```r
-require(devtools)
-install_github("vanderleidebastiani/restauraRApp")
+require(pak)
+pak::pak("vanderleidebastiani/restauraRApp")
 ```
 
 ### Launch the restauraR Shiny Application
