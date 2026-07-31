@@ -1,93 +1,764 @@
 {
-  "languages": ["en", "pt"],
-  "translation": [
-      {
-        "en": "Hello Shiny!", 
-        "pt": "Olá!"
-      },
-      {
-        "en": "Decimal places", 
-        "pt": "Casas decimais"
-      },      
-      {
-        "en": "Getting Started", 
-        "pt": "Começando"
-      },
-      {
-        "en": "Overview", 
-        "pt": "Visão geral"
-      },
-      {
-        "en": "About", 
-        "pt": "Sobre"
-      },
-      {
-        "en": "Data input", 
-        "pt": "Entrada de dados"
-      },
-      {
-        "en": "Simulate", 
-        "pt": "Simular"
-      },
-      {
-        "en": "Compute", 
-        "pt": "Calcular"
-      },
-      {
-        "en": "Select", 
-        "pt": "Selecionar"
-      },
-      {
-        "en": "View", 
-        "pt": "Visualizar"
-      },
-      {
-        "en": "Ongoing", 
-        "pt": "XXXXXX"
-      },
-      {
-        "en": "Load data, at least species trait data<br/><i>Data input tab",
-        "pt": "Carregar dados, pelo menos os dados dos atributos das espécies<br/><i>Aba entrada de dados"
-      },
-      {
-        "en": "Set simulation input parameters<br/><i>Simulate tab",
-        "pt": "Definir parâmetros de entrada de simulação<br/><i>Aba simular"
-      },
-      {
-        "en": "Compute basic parameters in each simulated community<br/><i>Compute tab",
-        "pt": "Calcular parâmetros básicos em cada comunidade simulada<br/><i>Aba calcular"
-      },
-      {
-        "en": "Calculated parameters can be standardised<br/><i>Compute tab",
-        "pt": "Os parâmetros calculados podem ser padronizados<br/><i>Aba calcular"
-      },
-      {
-        "en": "Calculate multiple restoration targets, called multifunctionality<br/><i>Compute tab",
-        "pt": "Calcular múltiplos objetivos de restauração, multifuncionalidade<br/><i>Aba calcular"
-      },
-      {
-        "en": "Selections of simulated communities<br/><i>Select tab",
-        "pt": "Seleções de comunidades simuladas<br/><i>Aba selecionar"
-      },
-      {
-        "en": "Basic results visualization<br/><i>View tab",
-        "pt": "Visualização básica dos resultados<br/><i>Aba visualizar"
-      },
-      {
-        "en": "Multifunctionality visualization<br/><i>View tab",
-        "pt": "Visualização da multifuncionalidade<br/><i>Aba visualizar"
-      },
-      {
-        "en": "Extract and save the results<br/><i>View tab",
-        "pt": "Extrair e salvar os resultados<br/><i>Aba visualizar"
-      },
-      {
-        "en": "Authors",
-        "pt": "Autores"
-      },
-      {
-        "en": "Test:", 
-        "pt": "áêç"
-      }
-    ]
+	"languages": [
+		"en",
+		"pt"
+	],
+	"translation": [
+		{
+			"en": "Global options",
+			"pt": "Opções globais"
+		},
+		{
+			"en": "Change language",
+			"pt": "Alterar idioma"
+		},
+		{
+			"en": "Separator character",
+			"pt": "Caractere separador"
+		},
+		{
+			"en": "Decimal places",
+			"pt": "Casas decimais"
+		},
+		{
+			"en": "Project options",
+			"pt": "Opções do projeto"
+		},
+		{
+			"en": "Project name",
+			"pt": "Nome do projeto"
+		},
+		{
+			"en": "Save project",
+			"pt": "Salvar projeto"
+		},
+		{
+			"en": "Load project",
+			"pt": "Carregar projeto"
+		},
+		{
+			"en": "Browse...",
+			"pt": "Procurar..."
+		},
+		{
+			"en": "Plot options",
+			"pt": "Opções para gráficos"
+		},
+		{
+			"en": "Width (mm)",
+			"pt": "Largura (mm)"
+		},
+		{
+			"en": "Height (mm)",
+			"pt": "Altura (mm)"
+		},
+		{
+			"en": "DPI",
+			"pt": "DPI"
+		},
+		{
+			"en": "Home",
+			"pt": "Início"
+		},
+		{
+			"en": "Data input",
+			"pt": "Entrada de dados"
+		},
+		{
+			"en": "Simulate",
+			"pt": "Simular"
+		},
+		{
+			"en": "Compute",
+			"pt": "Calcular"
+		},
+		{
+			"en": "Select",
+			"pt": "Selecionar"
+		},
+		{
+			"en": "Optimise",
+			"pt": "Otimizar"
+		},
+		{
+			"en": "Visualise",
+			"pt": "Visualizar"
+		},
+		{
+			"en": "Overview",
+			"pt": "Visão geral"
+		},
+		{
+			"en": "Description",
+			"pt": "Descrição"
+		},
+		{
+			"en": "Simulate species assembly solutions from a regional pool to achieve multiple restoration targets using a functional-based approach.",
+			"pt": "Simular composições de espécies a partir de um pool regional para atingir múltiplos objetivos de restauração usando uma abordagem baseada em funcionalidade."
+		},
+		{
+			"en": "Steps",
+			"pt": "Etapas"
+		},
+		{
+			"en": "Load species traits and composition data<br/><i>Data input tab",
+			"pt": "Carregar atributos e composição de espécies<br/><i>Aba Entrada de dados"
+		},
+		{
+			"en": "Define simulation parameters<br/><i>Simulate tab",
+			"pt": "Definir parâmetros da simulação<br/><i>Aba Simular"
+		},
+		{
+			"en": "Simulated communities can be adjusted<br/><i>Simulate tab",
+			"pt": "Comunidades simuladas podem ser ajustadas<br/><i>Aba Simular"
+		},
+		{
+			"en": "Compute functional metrics<br/><i>Compute tab",
+			"pt": "Calcular métricas funcionais<br/><i>Aba Calcular"
+		},
+		{
+			"en": "Standardise calculated metrics<br/><i>Compute tab",
+			"pt": "Padronizar métricas calculadas<br/><i>Aba Calcular"
+		},
+		{
+			"en": "Calculate multifunctionality<br/><i>Compute tab",
+			"pt": "Calcular multifuncionalidade<br/><i>Aba Calcular"
+		},
+		{
+			"en": "Select simulated communities<br/><i>Select tab",
+			"pt": "Selecionar comunidades simuladas<br/><i>Aba Selecionar"
+		},
+		{
+			"en": "Optimise multi-site selection<br/><i>Optimise tab",
+			"pt": "Otimizar seleção multisítios<br/><i>Aba Otimizar"
+		},
+		{
+			"en": "Visualise results<br/><i>Visualise tab",
+			"pt": "Visualizar resultados<br/><i>Aba Visualizar"
+		},
+		{
+			"en": "Visualise multifunctionality sets<br/><i>Visualise tab",
+			"pt": "Visualizar grupos de multifuncionalidade<br/><i>Aba Visualizar"
+		},
+		{
+			"en": "Extract and export results<br/><i>Visualise tab",
+			"pt": "Extrair e exportar resultados<br/><i>Aba Visualizar"
+		},
+		{
+			"en": "Details",
+			"pt": "Detalhes"
+		},
+		{
+			"en": "About",
+			"pt": "Sobre"
+		},
+		{
+			"en": "Authors",
+			"pt": "Autores"
+		},
+		{
+			"en": "References",
+			"pt": "Referências"
+		},
+		{
+			"en": "Load files",
+			"pt": "Carregar arquivos"
+		},
+		{
+			"en": "Clear",
+			"pt": "Limpar"
+		},
+		{
+			"en": "Species composition of restoration sites",
+			"pt": "Composição de espécies nos sítios para restauração"
+		},
+		{
+			"en": "Complementary information for restoration sites",
+			"pt": "Informações complementares dos sítios para restauração"
+		},
+		{
+			"en": "Species composition of reference sites",
+			"pt": "Composição de espécies nos sítios de referência"
+		},
+		{
+			"en": "Species composition of supplementary sites",
+			"pt": "Composição de espécies nos sítos suplementares"
+		},
+		{
+			"en": "Co-occurrence probabilities between species",
+			"pt": "Probabilidades de coocorrência entre espécies"
+		},
+		{
+			"en": "Species distance matrix",
+			"pt": "Matriz de distância entre espécies"
+		},
+		{
+			"en": "Check data",
+			"pt": "Conferir dados"
+		},
+		{
+			"en": "Clear all",
+			"pt": "Limpar tudo"
+		},
+		{
+			"en": "Traits class",
+			"pt": "Classe dos atributos"
+		},
+		{
+			"en": "Traits data",
+			"pt": "Dados dos atributos"
+		},
+		{
+			"en": "Restoration sites",
+			"pt": "Sítios para restauração"
+		},
+		{
+			"en": "Species composition",
+			"pt": "Composição de espécies"
+		},
+		{
+			"en": "Complementary information",
+			"pt": "Informações complementares"
+		},
+		{
+			"en": "Reference and supplementary sites",
+			"pt": "Sítios de referência e complementares"
+		},
+		{
+			"en": "Co-occurrence and species distance matrices",
+			"pt": "Matrizes de coocorrência e distância entre espécies"
+		},
+		{
+			"en": "Co-occurrence matrix",
+			"pt": "Matriz de coocorrências"
+		},
+		{
+			"en": "Simulated communities",
+			"pt": "Comunidades simuladas"
+		},
+		{
+			"en": "Restoration goals",
+			"pt": "Metas da restauração"
+		},
+		{
+			"en": "New",
+			"pt": "Nova"
+		},
+		{
+			"en": "Ongoing",
+			"pt": "Em andamento"
+		},
+		{
+			"en": "Method",
+			"pt": "Método"
+		},
+		{
+			"en": "Proportions",
+			"pt": "Proporções"
+		},
+		{
+			"en": "Individuals",
+			"pt": "Indivíduos"
+		},
+		{
+			"en": "Specify richness by site-specific",
+			"pt": "Especificar riqueza por sítio"
+		},
+		{
+			"en": "Minimal abundance or proportion threshold",
+			"pt": "Limiar mínimo para as abundâncias ou proporções"
+		},
+		{
+			"en": "Species availability",
+			"pt": "Disponibilidade das espécies"
+		},
+		{
+			"en": "Undesired species",
+			"pt": "Espécies indesejadas"
+		},
+		{
+			"en": "Traits to Community Weighted Mean",
+			"pt": "Atributos para Média dos Atributos na Comunidade"
+		},
+		{
+			"en": "Traits to Rao Quadratic Entropy",
+			"pt": "Atributos para Entropia Quadrática de Rao"
+		},
+		{
+			"en": "Yes",
+			"pt": "Sim"
+		},
+		{
+			"en": "No",
+			"pt": "Não"
+		},
+		{
+			"en": "Specify number of individuals by site-specific",
+			"pt": "Especificar número de indivíduos por sítio"
+		},
+		{
+			"en": "Specify diversity optimisation based on the distance matrix",
+			"pt": "Especificar otimização da diversidade com base na matriz de distâncias"
+		},
+		{
+			"en": "Specify probabilities for groups of species",
+			"pt": "Especificar probabilidades por grupos de espécies"
+		},
+		{
+			"en": "Specify co-occurrence probabilities",
+			"pt": "Especificar probabilidades de coocorrência"
+		},
+		{
+			"en": "Probabilities to draw species",
+			"pt": "Probabilidades de amostrar as espécies"
+		},
+		{
+			"en": "Abundance",
+			"pt": "Abundância"
+		},
+		{
+			"en": "Richness and abundance",
+			"pt": "Riqueza e abundância"
+		},
+		{
+			"en": "Weights of either quadratic entropy or entropy",
+			"pt": "Peso para entropia quadrática ou para entropia"
+		},
+		{
+			"en": "Probability to draw richness - Group: ",
+			"pt": "Probabilidade para obter riqueza – Grupo:"
+		},
+		{
+			"en": "Probability to draw abundance - Group: ",
+			"pt": "Probabilidade para obter abundância – Grupo:"
+		},
+		{
+			"en": "Exit",
+			"pt": "Sair"
+		},
+		{
+			"en": "Parameter:",
+			"pt": "Parâmetro:"
+		},
+		{
+			"en": "Label",
+			"pt": "Rótulo"
+		},
+		{
+			"en": "Reallocate removed individuals",
+			"pt": "Realocar indivíduos removidos"
+		},
+		{
+			"en": "Standardisation method",
+			"pt": "Método de padronização"
+		},
+		{
+			"en": "Maximum",
+			"pt": "Máximo"
+		},
+		{
+			"en": "Standardise",
+			"pt": "Padronizar"
+		},
+		{
+			"en": "Calculate diversity based on the distance matrix",
+			"pt": "Calcular diversidade baseada na matriz de distâncias"
+		},
+		{
+			"en": "Calculate dissimilarity based on the distance matrix",
+			"pt": "Calcular dissimilaridade baseada na matriz de distâncias"
+		},
+		{
+			"en": "Selection inside sites groups",
+			"pt": "Seleção dentro de grupos de sítios"
+		},
+		{
+			"en": "Selection method",
+			"pt": "Método de seleção"
+		},
+		{
+			"en": "Single",
+			"pt": "Única"
+		},
+		{
+			"en": "Multiple",
+			"pt": "Múltipla"
+		},
+		{
+			"en": "Include reference sites",
+			"pt": "Incluir sítios de referência"
+		},
+		{
+			"en": "Calculates taxonomic beta diversity",
+			"pt": "Calcular beta diversidade taxonômica"
+		},
+		{
+			"en": "Calculate beta diversity based on the distance matrix",
+			"pt": "Calcular beta diversidade baseada na matriz de distâncias"
+		},
+		{
+			"en": "Scenario type",
+			"pt": "Tipo de cenário"
+		},
+		{
+			"en": "All simulations",
+			"pt": "Todas simulações"
+		},
+		{
+			"en": "Selected",
+			"pt": "Seleção"
+		},
+		{
+			"en": "Show reference sites",
+			"pt": "Mostrar sítios de referência"
+		},
+		{
+			"en": "Plot results from the multisite analysis",
+			"pt": "Gerar gráficos dos resultados multisítios"
+		},
+		{
+			"en": "Database format",
+			"pt": "Formato da base de dados"
+		},
+		{
+			"en": "Type of result",
+			"pt": "Tipo de resultado"
+		},
+		{
+			"en": "Something went wrong!",
+			"pt": "Algo deu errado!"
+		},
+		{
+			"en": "Success!",
+			"pt": "Sucesso!"
+		},
+		{
+			"en": "Error!",
+			"pt": "Erro!"
+		},
+		{
+			"en": "Warning!",
+			"pt": "Aviso!"
+		},
+		{
+			"en": "Load the species traits data",
+			"pt": "Carregue os dados dos atributos das espécies"
+		},
+		{
+			"en": "Running",
+			"pt": "Correndo"
+		},
+		{
+			"en": "Done!",
+			"pt": "Pronto!"
+		},
+		{
+			"en": "Simulation scenarios: ",
+			"pt": "Cenários de simulação: "
+		},
+		{
+			"en": "Specify cost and density. Or none of them",
+			"pt": "Especifique o custo e a densidade. Ou nenhum deles."
+		},
+		{
+			"en": "Compute functional parameters in this scenario",
+			"pt": "Calcule os parâmetros funcionais neste cenário"
+		},
+		{
+			"en": "Select at least one variable for x-axes",
+			"pt": "Selecione pelo menos uma variável para o eixo x"
+		},
+		{
+			"en": "This may take a while!",
+			"pt": "Isso pode levar um tempo!"
+		},
+		{
+			"en": "Scenario must include multifunctionality results",
+			"pt": "O cenário deve incluir resultados de multifuncionalidade"
+		},
+		{
+			"en": "Set species availability",
+			"pt": "Definir a disponibilidade para as espécies"
+		},
+		{
+			"en": "Drag to rank parameters in desired order",
+			"pt": "Arraste para classificar os parâmetros na ordem desejada"
+		},
+		{
+			"en": "Total simulations: ",
+			"pt": "Total de simulações: "
+		},
+		{
+			"en": "Selected scenarios: ",
+			"pt": "Cenários simulados: "
+		},
+		{
+			"en": "Total simulations selected: ",
+			"pt": "Total de simulações selecionadas: "
+		},
+		{
+			"en": "Advanced options",
+			"pt": "Opções avançadas"
+		},
+		{
+			"en": "Specify a seed for the simulation",
+			"pt": "Especifique uma seed para a simulação"
+		},
+		{
+			"en": "Scenario management",
+			"pt": "Gestão de cenários"
+		},
+		{
+			"en": "Merged simulation name",
+			"pt": "Nome para simulações agrupadas"
+		},
+		{
+			"en": "Choose to merge",
+			"pt": "Escolha para agrupar"
+		},
+		{
+			"en": "Merge",
+			"pt": "Agrupar"
+		},
+		{
+			"en": "Remove",
+			"pt": "Remover"
+		},
+		{
+			"en": "Choose to remove",
+			"pt": "Escolha para remover"
+		},
+		{
+			"en": "Adjust Simulation",
+			"pt": "Ajustar simulações"
+		},
+		{
+			"en": "Choose scenario",
+			"pt": "Escolha o cenário"
+		},
+		{
+			"en": "Adjust options",
+			"pt": "Opções de ajustes"
+		},
+		{
+			"en": "Minimal abundance",
+			"pt": "Abundância mínima"
+		},
+		{
+			"en": "Traits",
+			"pt": "Atributos"
+		},
+		{
+			"en": "Simulation Summary",
+			"pt": "Resumo das simulações"
+		},
+		{
+			"en": "Select scenario",
+			"pt": "Cenário selecionado"
+		},
+		{
+			"en": "Compute parameters",
+			"pt": "Calcular parâmetros"
+		},
+		{
+			"en": "Ecological indicators",
+			"pt": "Indicadores ecológicos"
+		},
+		{
+			"en": "Traits to Community Weighted Variance",
+			"pt": "Atributos para Variância dos Atributos na Comunidade"
+		},
+		{
+			"en": "Traits to dissimilarity with reference sites",
+			"pt": "Atributos para dissimilaridade com sítios de referência"
+		},
+		{
+			"en": "Economic indicators",
+			"pt": "Indicadores econômicos"
+		},
+		{
+			"en": "Cost per individual",
+			"pt": "Custo por indivíduo"
+		},
+		{
+			"en": "Species planting density",
+			"pt": "Densidade de plantio por espécie"
+		},
+		{
+			"en": "Scenario",
+			"pt": "Cenário"
+		},
+		{
+			"en": "Simulation name",
+			"pt": "Nome da simulação"
+		},
+		{
+			"en": "Basic parameters",
+			"pt": "Parâmetros básicos"
+		},
+		{
+			"en": "Variables to specify the number of individuals to draw",
+			"pt": "Variável para especificar o número de indivíduos a serem selecionados"
+		},
+		{
+			"en": "The number of individuals to draw",
+			"pt": "Número de indivíduos para amostrar"
+		},
+		{
+			"en": "Variables to specify the range of richness",
+			"pt": "Variável para especificar a amplitude da riqueza"
+		},
+		{
+			"en": "Range of richness",
+			"pt": "Amplitude da riqueza"
+		},
+		{
+			"en": "Number of iterations",
+			"pt": "Número de iterações"
+		},
+		{
+			"en": "Species information",
+			"pt": "Informações sobre as espécies"
+		},
+		{
+			"en": "Functional traits constraints",
+			"pt": "Restrições de atributos funcionais"
+		},
+		{
+			"en": "Traits to functional diversity optimisation",
+			"pt": "Atributos para a otimização da diversidade funcional"
+		},
+		{
+			"en": "Constraints by species groups",
+			"pt": "Restrições por grupos de espécies"
+		},
+		{
+			"en": "Species group",
+			"pt": "Grupo de espécies"
+		},
+		{
+			"en": "Standardise parameters",
+			"pt": "Padronizar parâmetros"
+		},
+		{
+			"en": "Standardisation options",
+			"pt": "Opções de padronização"
+		},
+		{
+			"en": "Parameters to standardised",
+			"pt": "Parâmetros para padronizar"
+		},
+		{
+			"en": "Multifunctionality options",
+			"pt": "Opções de multifuncionalidade"
+		},
+		{
+			"en": "Parameters to multifunctionality",
+			"pt": "Parâmetros para multifuncionalidade"
+		},
+		{
+			"en": "Select communities",
+			"pt": "Selecionar comunidades"
+		},
+		{
+			"en": "Selection name",
+			"pt": "Nome da seleção"
+		},
+		{
+			"en": "Selection options",
+			"pt": "Opções de seleção"
+		},
+		{
+			"en": "Parameters to filter selection",
+			"pt": "Parâmetros para seleção de filtro"
+		},
+		{
+			"en": "Parameters to priority selection",
+			"pt": "Parâmetros para seleção prioritária"
+		},
+		{
+			"en": "Site groups",
+			"pt": "Grupo de sítios"
+		},
+		{
+			"en": "Merged selection name",
+			"pt": "Nome da mesclagem da seleção"
+		},
+		{
+			"en": "Select Summary",
+			"pt": "Resumo da seleção"
+		},
+		{
+			"en": "Optimise selection",
+			"pt": "Otimizar a seleção"
+		},
+		{
+			"en": "Optimise options",
+			"pt": "Opções de otimização"
+		},
+		{
+			"en": "Beta diversity",
+			"pt": "Beta diversidade"
+		},
+		{
+			"en": "Maximum number of simulation combinations",
+			"pt": "Número máximo de combinações de simulação"
+		},
+		{
+			"en": "Parameters to multi-site selection",
+			"pt": "Parâmetros para seleção multisítios"
+		},
+		{
+			"en": "Optimise Summary",
+			"pt": "Resumo da otimização"
+		},
+		{
+			"en": "Visualise results",
+			"pt": "Visualizar resultados"
+		},
+		{
+			"en": "Parameters",
+			"pt": "Parâmetros"
+		},
+		{
+			"en": "Multifunctionality",
+			"pt": "Multifuncionalidade"
+		},
+		{
+			"en": "Variable to x-axis",
+			"pt": "Variável para o eixo x"
+		},
+		{
+			"en": "Variable to y-axis",
+			"pt": "Variável para o eixo y"
+		},
+		{
+			"en": "Hide reference sites",
+			"pt": "Ocultar sítios de referência"
+		},
+		{
+			"en": "Label to x-axis",
+			"pt": "Rótulo para o eixo x"
+		},
+		{
+			"en": "Label to y-axis",
+			"pt": "Rótulo para o eixo y"
+		},
+		{
+			"en": "Plot",
+			"pt": "Exibir"
+		},
+		{
+			"en": "Download",
+			"pt": "Download"
+		},
+		{
+			"en": "Export",
+			"pt": "Exportar"
+		},
+		{
+			"en": "Preview",
+			"pt": "Prévia"
+		}
+	]
 }

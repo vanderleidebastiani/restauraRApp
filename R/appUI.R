@@ -105,6 +105,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 							 label = i18n$t("Load project"),
 							 accept = c(".rds"),
 							 buttonLabel = i18n$t("Browse...")
+							 # placeholder = i18n$t("No file selected")
 			)
 		),
 		shinydashboardPlus::controlbarItem(
@@ -121,7 +122,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 #' @export
 body <- shinydashboard::dashboardBody(
 	# Use shiny.i18n functions
-	# shiny.i18n::usei18n(i18n),
+	shiny.i18n::usei18n(i18n),
 	# Global CSS tags
 	tags$head(
 		tags$style(shiny::HTML(
@@ -137,7 +138,7 @@ body <- shinydashboard::dashboardBody(
 		#### startTab -----
 		# Getting Started tab
 		shinydashboard::tabItem(tabName = "startTab",
-								htmltools::h2(i18n$t("Getting Started")),
+								htmltools::h2(i18n$t("Home")),
 								shiny::fluidRow(
 									shiny::column(width = 12,
 												  shiny::tabsetPanel(
@@ -148,7 +149,7 @@ body <- shinydashboard::dashboardBody(
 												  									  htmltools::h4(htmltools::strong("restauraR - Restore Ecosystem Services and Biodiversity Through Trait-based Approaches")),
 												  									  htmltools::br(),
 												  									  htmltools::p(htmltools::strong(i18n$t("Description"))),
-												  									  htmltools::p(i18n$t("Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.")),
+												  									  htmltools::p(i18n$t("Simulate species assembly solutions from a regional pool to achieve multiple restoration targets using a functional-based approach.")),
 												  									  htmltools::br(), 
 												  									  htmltools::p(htmltools::strong(i18n$t("Steps"))),
 												  									  DiagrammeR::grVizOutput("diagramOutput", height = "550px")
@@ -231,7 +232,6 @@ body <- shinydashboard::dashboardBody(
 												  						shiny::column(width = 8, 
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "traitsInput",
-												  									  										 # label = "Traits",
 												  									  										 label = htmltools::p(i18n$t("Traits"), 
 												  									  										 					 shiny::actionButton("traitsInputInfo",
 												  									  										 					 					label = "",
@@ -239,6 +239,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearTraits", 
@@ -251,7 +252,6 @@ body <- shinydashboard::dashboardBody(
 												  									  ),
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "restCompInput",
-												  									  										 # label = "Species composition of restoration sites",
 												  									  										 label = htmltools::p(i18n$t("Species composition of restoration sites"), 
 												  									  										 					 shiny::actionButton("restCompInputInfo",
 												  									  										 					 					label = "",
@@ -259,6 +259,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearRestComp", 
@@ -271,7 +272,6 @@ body <- shinydashboard::dashboardBody(
 												  									  ),
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "restGroupInput",
-												  									  										 # label = "Complementary information for restoration sites",
 												  									  										 label = htmltools::p(i18n$t("Complementary information for restoration sites"), 
 												  									  										 					 shiny::actionButton("restGroupInputInfo",
 												  									  										 					 					label = "",
@@ -279,6 +279,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
@@ -291,7 +292,6 @@ body <- shinydashboard::dashboardBody(
 												  									  ),
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "referenceInput",
-												  									  										 # label = "Species composition of reference sites",
 												  									  										 label = htmltools::p(i18n$t("Species composition of reference sites"), 
 												  									  										 					 shiny::actionButton("referenceInputInfo",
 												  									  										 					 					label = "",
@@ -299,6 +299,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearReference", 
@@ -311,7 +312,6 @@ body <- shinydashboard::dashboardBody(
 												  									  ),
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "supplementaryInput",
-												  									  										 # label = "Species composition of supplementary sites",
 												  									  										 label = htmltools::p(i18n$t("Species composition of supplementary sites"), 
 												  									  										 					 shiny::actionButton("supplementaryInputInfo",
 												  									  										 					 					label = "",
@@ -319,6 +319,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
@@ -331,7 +332,6 @@ body <- shinydashboard::dashboardBody(
 												  									  ),
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "cooccurrenceInput",
-												  									  										 # label = "Co-occurrence probabilities between species",
 												  									  										 label = htmltools::p(i18n$t("Co-occurrence probabilities between species"), 
 												  									  										 					 shiny::actionButton("cooccurrenceInputInfo",
 												  									  										 					 					label = "",
@@ -339,6 +339,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearCooccurrence", 
@@ -351,7 +352,6 @@ body <- shinydashboard::dashboardBody(
 												  									  ),
 												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
 												  									  						shiny::fileInput(inputId = "sppDistInput",
-												  									  										 # label = "Species distance matrix",
 												  									  										 label = htmltools::p(i18n$t("Species distance matrix"), 
 												  									  										 					 shiny::actionButton("sppDistInputInfo",
 												  									  										 					 					label = "",
@@ -359,6 +359,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
+												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearSppDist", 
@@ -479,7 +480,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsed = FALSE,
 												  									  						shiny::uiOutput("radioGoalsSimOutput"),
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "goalsSimInput",
-												  									  						# 								 # label = "Restoration goals",
 												  									  						# 								 label = htmltools::p(i18n$t("Restoration goals"), 
 												  									  						# 								 					 shiny::actionButton("goalsSimInputInfo",
 												  									  						# 								 					 					label = "",
@@ -495,7 +495,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						# ),
 												  									  						shiny::uiOutput("radioMethodSimOutput"),
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "methodSimInput",
-												  									  						# 								 # label = "Method",
 												  									  						# 								 label = htmltools::p(i18n$t("Method"), 
 												  									  						# 								 					 shiny::actionButton("methodSimInputInfo",
 												  									  						# 								 					 					label = "",
@@ -514,7 +513,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::conditionalPanel(condition = "(input.methodSimInput == 'Individuals') && (input.isNIndSiteSpecificInput == 'TRUE')",
 												  									  												shinyWidgets::pickerInput(inputId = "nIndSiteSpecificSimInput",
-												  									  																		  # label = "Variables to specify the range of richness",
 												  									  																		  label = htmltools::p(i18n$t("Variables to specify the number of individuals to draw"), 
 												  									  																		  					 shiny::actionButton("nIndSiteSpecificSimInputInfo",
 												  									  																		  					 					label = "",
@@ -528,7 +526,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::conditionalPanel(condition = "(input.methodSimInput == 'Individuals') && (input.isNIndSiteSpecificInput == 'FALSE')",
 												  									  												shiny::numericInput(inputId = "nIndSimInput", 
-												  									  																	# label = "The number of individuals to draw",
 												  									  																	label = htmltools::p(i18n$t("The number of individuals to draw"), 
 												  									  																						 shiny::actionButton("nIndSimInputInfo",
 												  									  																						 					label = "",
@@ -540,7 +537,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioRichSiteSpecificSimOutput"),
 												  									  						shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  												shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  																		  # label = "Variables to specify the range of richness",
 												  									  																		  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
 												  									  																		  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  																		  					 					label = "",
@@ -554,7 +550,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'FALSE')",
 												  									  												shinyWidgets::sliderTextInput(inputId = "richSliderSimInput",
-												  									  																			  # label = "Range of richness",
 												  									  																			  label = htmltools::p(i18n$t("Range of richness"), 
 												  									  																			  					 shiny::actionButton("richSliderSimInputInfo",
 												  									  																			  					 					label = "",
@@ -565,7 +560,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												)
 												  									  						),
 												  									  						shiny::numericInput(inputId = "itSimInput", 
-												  									  											# label = "Number of iterations",
 												  									  											label = htmltools::p(i18n$t("Number of iterations"), 
 												  									  																 shiny::actionButton("itSimInputInfo",
 												  									  																 					label = "",
@@ -574,7 +568,6 @@ body <- shinydashboard::dashboardBody(
 												  									  											value = 1000,
 												  									  											min = 4),
 												  									  						shiny::numericInput(inputId = "minAbundSimInput", 
-												  									  											# label = "The number of individuals to draw",
 												  									  											label = htmltools::p(i18n$t("Minimal abundance or proportion threshold"), 
 												  									  																 shiny::actionButton("minAbundSimInputInfo",
 												  									  																 					label = "",
@@ -588,7 +581,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
 												  									  						shinyWidgets::pickerInput(inputId = "avaSimInput",
-												  									  												  # label = "Species availability",
 												  									  												  label = htmltools::p(i18n$t("Species availability"), 
 												  									  												  					 shiny::actionButton("avaSimInputInfo",
 												  									  												  					 					label = "",
@@ -600,7 +592,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						),
 												  									  						shinyWidgets::pickerInput(inputId = "undSimInput",
-												  									  												  # label = "Undesired species",
 												  									  												  label = htmltools::p(i18n$t("Undesired species"), 
 												  									  												  					 shiny::actionButton("undSimInputInfo",
 												  									  												  					 					label = "",
@@ -617,7 +608,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "constCWMSimInput",
-												  									  												  # label = "Traits to Community Weighted Mean",
 												  									  												  label = htmltools::p(i18n$t("Traits to Community Weighted Mean"), 
 												  									  												  					 shiny::actionButton("constCWMSimInputInfo",
 												  									  												  					 					label = "",
@@ -631,7 +621,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioDistMaxDiverSimOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isDistMaxDiverInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
 												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
@@ -645,7 +634,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						# ),
 												  									  						shiny::conditionalPanel(condition = "(input.isDistMaxDiverInput == 'FALSE')",
 												  									  												shinyWidgets::pickerInput(inputId = "maxDiverSimInput",
-												  									  																		  # label = "Traits to functional diversity optimisation",
 												  									  																		  label = htmltools::p(i18n$t("Traits to functional diversity optimisation"), 
 												  									  																		  					 shiny::actionButton("maxDiverSimInputInfo",
 												  									  																		  					 					label = "",
@@ -664,7 +652,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsed = TRUE,
 												  									  						shiny::uiOutput("radioSpecifyGroupsSimOutput"),
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSimInput",
-												  									  						# 								 # label = "Specify probabilities for groups of species",
 												  									  						# 								 label = htmltools::p(i18n$t("Specify probabilities for groups of species"), 
 												  									  						# 								 					 shiny::actionButton("specifyGroupsSimInputInfo",
 												  									  						# 								 					 					label = "",
@@ -688,7 +675,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												),
 												  									  												shiny::uiOutput("radioProbGroupTypeSimOutput"),
 												  									  												# shinyWidgets::prettyRadioButtons(inputId = "probGroupTypeSimInput",
-												  									  												# 								 # label = "Probabilities to draw species",
 												  									  												# 								 label = htmltools::p(i18n$t("Probabilities to draw species"), 
 												  									  												# 								 					 shiny::actionButton("probGroupTypeSimInputInfo",
 												  									  												# 								 					 					label = "",
@@ -719,7 +705,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
 												  									  						shiny::numericInput(inputId = "setSeedSimInput", 
-												  									  											# label = "Specify a seed for the simulation",
 												  									  											label = htmltools::p(i18n$t("Specify a seed for the simulation"), 
 												  									  																 shiny::actionButton("setSeedSimInputInfo",
 												  									  																 					label = "",
@@ -729,7 +714,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::conditionalPanel(condition = "(input.methodSimInput == 'Individuals')",
 												  									  												shinyWidgets::pickerInput(inputId = "probSimInput",
-												  									  																		  # label = "Probabilities to draw individuals",
 												  									  																		  label = htmltools::p(i18n$t("Probabilities to draw individuals"), 
 												  									  																		  					 shiny::actionButton("probSimInputInfo",
 												  									  																		  					 					label = "",
@@ -741,7 +725,6 @@ body <- shinydashboard::dashboardBody(
 												  									  																		  inline = FALSE
 												  									  												),
 												  									  												shiny::numericInput(inputId = "cvAbundSimInput", 
-												  									  																	# label = "Coefficient of variation of the relative abundances",
 												  									  																	label = htmltools::p(i18n$t("Coefficient of variation of the relative abundances"), 
 												  									  																						 shiny::actionButton("cvAbundSimInputInfo",
 												  									  																						 					label = "",
@@ -752,7 +735,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::uiOutput("radioSpecifyCooccurSimOutput"),
 												  									  						shiny::sliderInput(inputId = "phiSimInput", 
-												  									  										   # label = "Weights of either quadratic entropy or entropy",
 												  									  										   label = htmltools::p(i18n$t("Weights of either quadratic entropy or entropy"), 
 												  									  										   					 shiny::actionButton("phiSimInputInfo",
 												  									  										   					 					label = "",
@@ -848,7 +830,6 @@ body <- shinydashboard::dashboardBody(
 												  	#                                                         collapsible = TRUE,
 												  	#                                                         collapsed = FALSE,
 												  	#                                                         shiny::numericInput(inputId = "minAbuSliderSimAdjInput",
-												  	#                                                                             # label = "Range of richness",
 												  	#                                                                             label = htmltools::p(i18n$t("Minimal abundance"), 
 												  	#                                                                                                  shiny::actionButton("minAbuSliderSimAdjInputInfo",
 												  	#                                                                                                                      label = "",
@@ -856,7 +837,6 @@ body <- shinydashboard::dashboardBody(
 												  	#                                                                                                                      style = "padding:3px; font-size:60%")),
 												  	#                                                                             value = 0),
 												  	#                                                         # shinyWidgets::sliderTextInput(inputId = "minAbuSliderSimAdjInput",
-												  	#                                                         # 							  # label = "Range of richness",
 												  	#                                                         # 							  label = htmltools::p(i18n$t("Minimal abundance"), 
 												  	#                                                         # 							  					 shiny::actionButton("minAbuSliderSimAdjInputInfo",
 												  	#                                                         # 							  					 					label = "",
@@ -923,7 +903,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "avaComInput",
-												  									  												  # label = "Species availability",
 												  									  												  label = htmltools::p(i18n$t("Species availability"), 
 												  									  												  					 shiny::actionButton("avaComInputInfo",
 												  									  												  					 					label = "",
@@ -935,7 +914,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						),
 												  									  						shinyWidgets::pickerInput(inputId = "cwmComInput",
-												  									  												  # label = "Traits to Community Weighted Mean",
 												  									  												  label = htmltools::p(i18n$t("Traits to Community Weighted Mean"), 
 												  									  												  					 shiny::actionButton("cwmComInputInfo",
 												  									  												  					 					label = "",
@@ -947,7 +925,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						),
 												  									  						shinyWidgets::pickerInput(inputId = "cwvComInput",
-												  									  												  # label = "Traits to Community Weighted Variance",
 												  									  												  label = htmltools::p(i18n$t("Traits to Community Weighted Variance"), 
 												  									  												  					 shiny::actionButton("cwvComInputInfo",
 												  									  												  					 					label = "",
@@ -961,7 +938,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioDistRaoComOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
 												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
@@ -975,7 +951,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						# ),
 												  									  						shiny::conditionalPanel(condition = "(input.isDistRaoComInput == 'FALSE')",
 												  									  												shinyWidgets::pickerInput(inputId = "raoComInput",
-												  									  																		  # label = "Traits to Rao Quadratic Entropy",
 												  									  																		  label = htmltools::p(i18n$t("Traits to Rao Quadratic Entropy"), 
 												  									  																		  					 shiny::actionButton("raoComInputInfo",
 												  									  																		  					 					label = "",
@@ -990,7 +965,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioDistDissComOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
 												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
@@ -1004,8 +978,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						# ),
 												  									  						shiny::conditionalPanel(condition = "(input.isDistDissComInput == 'FALSE')",
 												  									  												shinyWidgets::pickerInput(inputId = "disComInput",
-												  									  																		  # label = "Traits to dissimilarity between reference sites",
-												  									  																		  label = htmltools::p(i18n$t("Traits to dissimilarity between reference sites"), 
+												  									  																		  label = htmltools::p(i18n$t("Traits to dissimilarity with reference sites"), 
 												  									  																		  					 shiny::actionButton("disComInputInfo",
 												  									  																		  					 					label = "",
 												  									  																		  					 					icon = shiny::icon("info"),
@@ -1022,7 +995,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
 												  									  						shinyWidgets::pickerInput(inputId = "costComInput",
-												  									  												  # label = "Cost per individual",
 												  									  												  label = htmltools::p(i18n$t("Cost per individual"), 
 												  									  												  					 shiny::actionButton("costComInputInfo",
 												  									  												  					 					label = "",
@@ -1034,7 +1006,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						),
 												  									  						shinyWidgets::pickerInput(inputId = "densComInput",
-												  									  												  # label = "Species planting density",
 												  									  												  label = htmltools::p(i18n$t("Species planting density"), 
 												  									  												  					 shiny::actionButton("densComInputInfo",
 												  									  												  					 					label = "",
@@ -1077,7 +1048,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "stanComParInput",
-												  									  												  # label = "Parameters to standardised",
 												  									  												  label = htmltools::p(i18n$t("Parameters to standardised"), 
 												  									  												  					 shiny::actionButton("stanComParInputInfo",
 												  									  												  					 					label = "",
@@ -1090,7 +1060,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::uiOutput("radioSpecifyMethodStanOutput")
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "specifyMethodStanInput",
-												  									  						# 								 # label = "Standardisation method",
 												  									  						# 								 label = htmltools::p(i18n$t("Standardisation method"), 
 												  									  						# 								 					 shiny::actionButton("specifyMethodStanInputInfo",
 												  									  						# 								 					 					label = "",
@@ -1136,7 +1105,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "testsMultiInput",
-												  									  												  # label = "Parameters to multifunctionality",
 												  									  												  label = htmltools::p(i18n$t("Parameters to multifunctionality"), 
 												  									  												  					 shiny::actionButton("testsMultiInputInfo",
 												  									  												  					 					label = "",
@@ -1212,7 +1180,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "testsFilterSelInput",
-												  									  												  # label = "Parameters to filter selection",
 												  									  												  label = htmltools::p(i18n$t("Parameters to filter selection"), 
 												  									  												  					 shiny::actionButton("testsFilterSelInputInfo",
 												  									  												  					 					label = "",
@@ -1229,7 +1196,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												htmltools::br()
 												  									  						),
 												  									  						shinyWidgets::pickerInput(inputId = "testsPrioritySelInput",
-												  									  												  # label = "Parameters to priority selection",
 												  									  												  label = htmltools::p(i18n$t("Parameters to priority selection"), 
 												  									  												  					 shiny::actionButton("testsPrioritySelInputInfo",
 												  									  												  					 					label = "",
@@ -1249,7 +1215,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						# radioSpecifyGroupsSelOutput
 												  									  						shiny::uiOutput("radioSpecifyGroupsSelOutput"),
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSelInput",
-												  									  						# 								 # label = "Selection inside sites groups",
 												  									  						# 								 label = htmltools::p(i18n$t("Selection inside sites groups"), 
 												  									  						# 								 					 shiny::actionButton("specifyGroupsSelInputInfo",
 												  									  						# 								 					 					label = "",
@@ -1276,7 +1241,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioSingleSelectionSelOutput")
 												  									  )
 												  									  # shinyWidgets::prettyRadioButtons(inputId = "singleSelectionInput",
-												  									  # 								 # label = "Selection method",
 												  									  # 								 label = htmltools::p(i18n$t("Selection method"), 
 												  									  # 								 					 shiny::actionButton("singleSelectionInputInfo",
 												  									  # 								 					 					label = "",
@@ -1400,7 +1364,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "siteGroupOptInput",
-												  									  												  # label = "Site groups",
 												  									  												  label = htmltools::p(i18n$t("Site groups"),
 												  									  												  					 shiny::actionButton("siteGroupOptInputInfo",
 												  									  												  					 					label = "",
@@ -1414,7 +1377,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						),
 												  									  						shiny::uiOutput("radioIncludeReferenceOptOutput"),
 												  									  						shiny::numericInput(inputId = "maxCombOptInput",
-												  									  											# label = "Maximum number of simulation combinations",
 												  									  											label = htmltools::p(i18n$t("Maximum number of simulation combinations"),
 												  									  																 shiny::actionButton("maxCombOptInputInfo",
 												  									  																 					label = "",
@@ -1427,7 +1389,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						shiny::uiOutput("radioDistBetaOptOutput"),
 												  									  						# shiny::conditionalPanel(condition = "(input.isRichSiteSpecificInput == 'TRUE')",
 												  									  						# 						shinyWidgets::pickerInput(inputId = "richSiteSpecificSimInput",
-												  									  						# 												  # label = "Variables to specify the range of richness",
 												  									  						# 												  label = htmltools::p(i18n$t("Variables to specify the range of richness"), 
 												  									  						# 												  					 shiny::actionButton("richSiteSpecificSimInputInfo",
 												  									  						# 												  					 					label = "",
@@ -1441,7 +1402,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						# ),
 												  									  						shiny::conditionalPanel(condition = "(input.isDistBetaOptInput == 'FALSE')",
 												  									  												shinyWidgets::pickerInput(inputId = "betaOptInput",
-												  									  																		  # label = "Beta diversity",
 												  									  																		  label = htmltools::p(i18n$t("Beta diversity"),
 												  									  																		  					 shiny::actionButton("betaOptInputInfo",
 												  									  																		  					 					label = "",
@@ -1489,7 +1449,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "testsMultisiteOptInput",
-												  									  												  # label = "Parameters to multi-site selection",
 												  									  												  label = htmltools::p(i18n$t("Parameters to multi-site selection"), 
 												  									  												  					 shiny::actionButton("testsMultisiteOptInputInfo",
 												  									  												  					 					label = "",
@@ -1831,3 +1790,4 @@ appUI <- shinydashboardPlus::dashboardPage(header = header,
 										   md = FALSE,
 										   scrollToTop = TRUE
 )
+

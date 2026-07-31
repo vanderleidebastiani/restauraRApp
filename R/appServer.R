@@ -38,11 +38,15 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			return(globalRV$digitsVal)
 		}
 	})
-	output$decimalPlaces <- shiny::renderUI(shiny::numericInput(inputId = "decimalPlaces", 
-														 label = i18n$t("Decimal places"),
-														 min = globalRV$digitsMin, 
-														 step = 1,
-														 value = numVal()))
+	output$decimalPlaces <- shiny::renderUI({
+		# Only to establish the reactive dependency with selectedLanguage
+		input$selectedLanguage
+		shiny::numericInput(inputId = "decimalPlaces", 
+							label = i18n$t("Decimal places"),
+							min = globalRV$digitsMin, 
+							step = 1,
+							value = numVal())
+	})
 	### inputDataRV ----
 	inputDataRV <- shiny::reactiveValues(traits = NULL,
 										 restComp = NULL,
@@ -190,8 +194,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$traitsInput
 		if (is.null(inFile)){
 			inputDataRV$traits <- NULL
+		} else{
+			inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = TRUE)	
 		}
-		inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = TRUE)
 	}) # End input file
 	### Input file - restComp ----
 	shiny::observeEvent(input$restCompInput, {
@@ -199,8 +204,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$restCompInput
 		if (is.null(inFile)){
 			inputDataRV$restComp <- NULL
+		} else{
+			inputDataRV$restComp <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
 		}
-		inputDataRV$restComp <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
 	}) # End input file
 	### Input file - restGroup ----
 	shiny::observeEvent(input$restGroupInput, {
@@ -208,8 +214,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$restGroupInput
 		if (is.null(inFile)){
 			inputDataRV$restGroup <- NULL
+		} else{
+			inputDataRV$restGroup <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
 		}
-		inputDataRV$restGroup <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
 	}) # End input file
 	### Input file - Reference ----
 	shiny::observeEvent(input$referenceInput, {
@@ -217,8 +224,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$referenceInput
 		if (is.null(inFile)){
 			inputDataRV$reference <- NULL
+		} else{
+			inputDataRV$reference <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
 		}
-		inputDataRV$reference <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
 	}) # End input file
 	### Input file - Supplementary ----
 	shiny::observeEvent(input$supplementaryInput, {
@@ -226,8 +234,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$supplementaryInput
 		if (is.null(inFile)){
 			inputDataRV$supplementary <- NULL
+		} else{
+			inputDataRV$supplementary <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
 		}
-		inputDataRV$supplementary <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
 	}) # End input file
 	### Input file - Cooccurrence ----
 	shiny::observeEvent(input$cooccurrenceInput, {
@@ -235,8 +244,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$cooccurrenceInput
 		if (is.null(inFile)){
 			inputDataRV$cooccurrence <- NULL
+		} else{
+			inputDataRV$cooccurrence <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
 		}
-		inputDataRV$cooccurrence <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
 	}) # End input file
 	### Input file - Species distance ----
 	shiny::observeEvent(input$sppDistInput, {
@@ -244,10 +254,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		inFile <- input$sppDistInput
 		if (is.null(inFile)){
 			inputDataRV$sppDist <- NULL
+		} else{
+			inputDataRV$sppDist <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
 		}
-		inputDataRV$sppDist <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1)
 	}) # End input file
 	### Input file - Project input ----
+	# VER AQUI ----
 	shiny::observeEvent(input$projectInput, {
 		# Read file
 		inFile <- input$projectInput
@@ -255,8 +267,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# 	inputDataRV$sppDist <- NULL
 		# }
 		# print(inFile)
-		inputList <- readRDS(inFile$datapath)
+		
 		if (!is.null(inFile)){
+			# Read RDS
+			inputList <- readRDS(inFile$datapath)
 			# Project name
 			shiny::updateTextInput(session = session,
 								   inputId = "projectName",
@@ -483,7 +497,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Selected language ----
 	shiny::observeEvent(input$selectedLanguage, {
 		shiny.i18n::update_lang(input$selectedLanguage, session)
-	})
+	}, ignoreInit = TRUE)
 	## Update pickers - Scenarios ----
 	### Scenarios pickers ----
 	# Observe changes in any scenario
@@ -753,9 +767,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				res <- scenario$selection$results
 			}
 			# if(!is.null(viewRV$showMultisiteViewParInput)){
-				if(viewRV$showMultisiteViewParInput){
-					res <- scenario$selection$multisite$results
-				}
+			if(viewRV$showMultisiteViewParInput){
+				res <- scenario$selection$multisite$results
+			}
 			# }
 			if(!is.null(res)){
 				shinyWidgets::updatePickerInput(session, inputId = "xvarViewInput", choices = colnames(res))
@@ -821,7 +835,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
 																# shiny::actionButton("xxx", label = "A"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -854,7 +868,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton("Dismiss"),
+																footer = shiny::modalButton("Exit"),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -897,7 +911,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -930,7 +944,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -973,7 +987,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -1006,7 +1020,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -1049,7 +1063,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -1082,7 +1096,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									restauraR:::themeRestauraR(baseSize = 15)
 							})
 							shiny::showModal(shiny::modalDialog(shiny::plotOutput("plotVarModal"),
-																footer = shiny::modalButton(i18n$t("Dismiss")),
+																footer = shiny::modalButton(i18n$t("Exit")),
 																fade = FALSE,
 																easyClose = TRUE,
 																size = "xl"), session = session)
@@ -1142,7 +1156,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### goalsSimInput ----
 	output$radioGoalsSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "goalsSimInput",
-										 # label = "Restoration goals",
 										 label = htmltools::p(i18n$t("Restoration goals"),
 										 					 shiny::actionButton("goalsSimInputInfo",
 										 					 					label = "",
@@ -1160,7 +1173,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### methodSimInput ----
 	output$radioMethodSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "methodSimInput",
-										 # label = "Method",
 										 label = htmltools::p(i18n$t("Method"), 
 										 					 shiny::actionButton("methodSimInputInfo",
 										 					 					label = "",
@@ -1178,7 +1190,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### isRichSiteSpecificInput ----
 	output$radioRichSiteSpecificSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isRichSiteSpecificInput",
-										 # label = "Specify richness by site-specific",
 										 label = htmltools::p(i18n$t("Specify richness by site-specific"),
 										 					 shiny::actionButton("isRichSiteSpecificInputInfo",
 										 					 					label = "",
@@ -1196,7 +1207,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### isNIndSiteSpecificInput ----
 	output$radioNIndSiteSpecificSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isNIndSiteSpecificInput",
-										 # label = "Specify number of individuals by site-specific",
 										 label = htmltools::p(i18n$t("Specify number of individuals by site-specific"),
 										 					 shiny::actionButton("isNIndSiteSpecificInputInfo",
 										 					 					label = "",
@@ -1214,7 +1224,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### isDistMaxDiverInput ----
 	output$radioDistMaxDiverSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistMaxDiverInput",
-										 # label = "Specify diversity optimisation based on the distance matrix",
 										 label = htmltools::p(i18n$t("Specify diversity optimisation based on the distance matrix"),
 										 					 shiny::actionButton("isDistMaxDiverInputInfo",
 										 					 					label = "",
@@ -1232,7 +1241,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### specifyGroupsSimInput ----
 	output$radioSpecifyGroupsSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSimInput",
-										 # label = "Specify probabilities for groups of species",
 										 label = htmltools::p(i18n$t("Specify probabilities for groups of species"), 
 										 					 shiny::actionButton("specifyGroupsSimInputInfo",
 										 					 					label = "",
@@ -1250,7 +1258,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### specifyCooccurSimInput ----
 	output$radioSpecifyCooccurSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyCooccurSimInput",
-										 # label = "Specify co-occurrence probabilities",
 										 label = htmltools::p(i18n$t("Specify co-occurrence probabilities"), 
 										 					 shiny::actionButton("specifyCooccurSimInputInfo",
 										 					 					label = "",
@@ -1268,7 +1275,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### probGroupTypeSimInput ----
 	output$radioProbGroupTypeSimOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "probGroupTypeSimInput",
-										 # label = "Probabilities to draw species",
 										 label = htmltools::p(i18n$t("Probabilities to draw species"), 
 										 					 shiny::actionButton("probGroupTypeSimInputInfo",
 										 					 					label = "",
@@ -1285,7 +1291,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	# output$radioScenarioSimAdjOutput <- renderUI({
 	#   shinyWidgets::prettyRadioButtons(inputId = "reallocateAdjSimInput",
-	#                                    # label = "Reallocate removed individuals",
 	#                                    label = htmltools::p(i18n$t("Reallocate removed individuals"),
 	#                                                         shiny::actionButton("reallocateAdjSimInputInfo",
 	#                                                                             label = "",
@@ -1303,7 +1308,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### specifyMethodStanInput ----
 	output$radioSpecifyMethodStanOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyMethodStanInput",
-										 # label = "Standardisation method",
 										 label = htmltools::p(i18n$t("Standardisation method"), 
 										 					 shiny::actionButton("specifyMethodStanInputInfo",
 										 					 					label = "",
@@ -1321,7 +1325,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### isDistRaoComInput ----
 	output$radioDistRaoComOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistRaoComInput",
-										 # label = "Calculate diversity based on the distance matrix",
 										 label = htmltools::p(i18n$t("Calculate diversity based on the distance matrix"),
 										 					 shiny::actionButton("isDistRaoComInputInfo",
 										 					 					label = "",
@@ -1339,7 +1342,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### isDistDissComInput ----
 	output$radioDistDissComOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistDissComInput",
-										 # label = "Calculate dissimilarity based on the distance matrix",
 										 label = htmltools::p(i18n$t("Calculate dissimilarity based on the distance matrix"),
 										 					 shiny::actionButton("isDistDissComInputInfo",
 										 					 					label = "",
@@ -1357,7 +1359,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### specifyGroupsSelInput ----
 	output$radioSpecifyGroupsSelOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSelInput",
-										 # label = "Selection inside sites groups",
 										 label = htmltools::p(i18n$t("Selection inside sites groups"), 
 										 					 shiny::actionButton("specifyGroupsSelInputInfo",
 										 					 					label = "",
@@ -1375,7 +1376,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### singleSelectionInput ----
 	output$radioSingleSelectionSelOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "singleSelectionInput",
-										 # label = "Selection method",
 										 label = htmltools::p(i18n$t("Selection method"), 
 										 					 shiny::actionButton("singleSelectionInputInfo",
 										 					 					label = "",
@@ -1393,7 +1393,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### includeReferenceOptInput ----
 	output$radioIncludeReferenceOptOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "includeReferenceOptInput",
-										 # label = "Include reference sites",
 										 label = htmltools::p(i18n$t("Include reference sites"), 
 										 					 shiny::actionButton("includeReferenceOptInputInfo",
 										 					 					label = "",
@@ -1411,7 +1410,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### methodOptInput ----
 	output$pickerMethodOptOutput <- renderUI({
 		shinyWidgets::pickerInput(inputId = "methodOptInput",
-								  # label = i18n$t("Method"),
 								  label = htmltools::p(i18n$t("Method"),
 								  					 shiny::actionButton("methodOptInputInfo",
 								  					 					label = "",
@@ -1434,7 +1432,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### calcTaxonomicBetaOptInput ----
 	output$radioCalcTaxonomicBetaOptOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "calcTaxonomicBetaOptInput",
-										 # label = "Calculates taxonomic beta diversity",
 										 label = htmltools::p(i18n$t("Calculates taxonomic beta diversity"), 
 										 					 shiny::actionButton("calcTaxonomicBetaOptInputInfo",
 										 					 					label = "",
@@ -1452,7 +1449,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### isDistBetaOptInput ----
 	output$radioDistBetaOptOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistBetaOptInput",
-										 # label = "Calculate beta diversity based on the distance matrix",
 										 label = htmltools::p(i18n$t("Calculate beta diversity based on the distance matrix"),
 										 					 shiny::actionButton("isDistBetaOptInputInfo",
 										 					 					label = "",
@@ -1714,7 +1710,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
 		}
 	})
-	
 	### Simulate tab - rich ----
 	obsListRich <- shiny::reactive({
 		list(input$isRichSiteSpecificInput, input$richSliderSimInput, input$richSiteSpecificSimInput)
@@ -1778,7 +1773,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	
 	
-
+	
 	# if(!is.null(input$isRichSiteSpecificInput)){
 	# 	if(input$isRichSiteSpecificInput == "TRUE"){
 	# 		if(!is.null(input$richSiteSpecificSimInput)){
@@ -1888,7 +1883,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			inputParSimRV$minAbund <- NULL
 		}
 	})
-
+	
 	### Simulate tab - maxDiver ----
 	obsListDistMaxDiverSim <- shiny::reactive({
 		list(input$isDistMaxDiverInput, input$maxDiverSimInput, inputDataRV$sppDist)
@@ -2162,7 +2157,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				shinyWidgets::sendSweetAlert(
 					session = session,
 					title = i18n$t("Done!"),
-					text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+					text = paste0(i18n$t("Simulation scenarios: "), resultsRV$nSce),
 					type = "success"
 				)
 			}
@@ -2189,7 +2184,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# 	shinyWidgets::sendSweetAlert(
 	# 		session = session,
 	# 		title = i18n$t("Done!"),
-	# 		text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+	# 		text = paste0(i18n$t("Simulation scenarios: "), resultsRV$nSce),
 	# 		type = "success"
 	# 	)
 	# })
@@ -2224,7 +2219,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				shinyWidgets::sendSweetAlert(
 					session = session,
 					title = i18n$t("Done!"),
-					text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+					text = paste0(i18n$t("Simulation scenarios: "), resultsRV$nSce),
 					type = "success"
 				)
 			}
@@ -2248,7 +2243,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shinyWidgets::sendSweetAlert(
 			session = session,
 			title = i18n$t("Done!"),
-			text = paste0(i18n$t("Simulations scenarios: "), resultsRV$nSce),
+			text = paste0(i18n$t("Simulation scenarios: "), resultsRV$nSce),
 			type = "success"
 		)
 	})
@@ -2483,7 +2478,6 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestPrioritySelInput", inVars[i])]]
 					valueTest <- paste("'", valueTest, "'", sep = "")
-					valueTest
 					testTemp <- paste(paste(nameTest, "==", valueTest), collapse = " | ")
 					testList <- c(testList, testTemp)
 				}
@@ -3160,7 +3154,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		# DataInputTab
 		if(!is.null(input$traitsInputInfo)){
 			if(input$traitsInputInfo>infoRV$traitsInputInfo){
-				infoText <- i18n$t("Data table with species-by-features containing trait information for all species in the pool. Rows are species, columns are variables. Traits can be numeric or categorical. This table could include any species information that can be used to calculate functional metrics, costs or any information that can be used as parameters to simulate and select simulated communities. This table should include all species from the reference sites and restoration sites. Missing data (NA) are not allowed.")
+				infoText <- i18n$t("Data table with species-by-features containing trait information for all species in the pool. Rows are species, columns are variables. Traits can be numeric or categorical. This table could include any species information that can be used to calculate functional metrics, costs, or any information that can be used as parameters to simulate and select simulated communities. This table should include all species from the reference sites and restoration sites. Missing data (NA) are not allowed.")
 				infoRV$traitsInputInfo <- input$traitsInputInfo
 			}
 		}
@@ -3281,7 +3275,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$isDistMaxDiverInputInfo)){
 			if(input$isDistMaxDiverInputInfo>infoRV$isDistMaxDiverInputInfo){
-				infoText <- i18n$t("Use species distance to maximise functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to maximise functional diversity (Rao Quadratic Entropy). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated, and then used to maximise the diversity.")
+				infoText <- i18n$t("Use species distance to maximise functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to maximise functional diversity (Rao Quadratic Entropy). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated and then used to maximise the diversity.")
 				infoRV$isDistMaxDiverInputInfo <- input$isDistMaxDiverInputInfo
 			}
 		}
@@ -3367,7 +3361,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$isDistRaoComInputInfo)){
 			if(input$isDistRaoComInputInfo>infoRV$isDistRaoComInputInfo){
-				infoText <- i18n$t("Use species distance to calculate functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate Rao Quadratic Entropy (rao). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated, and then used in the calculation.")
+				infoText <- i18n$t("Use species distance to calculate functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate Rao Quadratic Entropy (rao). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated and then used in the calculation.")
 				infoRV$isDistRaoComInputInfo <- input$isDistRaoComInputInfo
 			}
 		}
@@ -3379,13 +3373,13 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$isDistDissComInputInfo)){
 			if(input$isDistDissComInputInfo>infoRV$isDistDissComInputInfo){
-				infoText <- i18n$t("Use species distance to calculate functional dissimilarity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate functional dissimilarity with reference sites. If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated, and then used in the calculation.")
+				infoText <- i18n$t("Use species distance to calculate functional dissimilarity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate functional dissimilarity with reference sites. If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated and then used in the calculation.")
 				infoRV$isDistDissComInputInfo <- input$isDistDissComInputInfo
 			}
 		}	
 		if(!is.null(input$disComInputInfo)){
 			if(input$disComInputInfo>infoRV$disComInputInfo){
-				infoText <- i18n$t("Traits names to calculate functional dissimilarity with the reference sites.")
+				infoText <- i18n$t("Trait names to calculate functional dissimilarity with the reference sites.")
 				infoRV$disComInputInfo <- input$disComInputInfo
 			}
 		}
@@ -3403,7 +3397,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$stanComParInputInfo)){
 			if(input$stanComParInputInfo>infoRV$stanComParInputInfo){
-				infoText <- i18n$t("Computed parameters name to standardise")
+				infoText <- i18n$t("Computed parameter names to standardise.")
 				infoRV$stanComParInputInfo <- input$stanComParInputInfo
 			}
 		}
@@ -3483,7 +3477,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		if(!is.null(input$betaOptInputInfo)){
 			if(input$betaOptInputInfo>infoRV$betaOptInputInfo){
-				infoText <- i18n$t("Traits names to calculate beta diversity. If no traits are selected, functional beta diversity will not be calculated.")
+				infoText <- i18n$t("Trait names to calculate beta diversity. If no traits are selected, functional beta diversity will not be calculated.")
 				infoRV$betaOptInputInfo <- input$betaOptInputInfo
 			}
 		}
@@ -3496,7 +3490,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(!is.null(infoText)){
 			# shiny::showModal(shiny::modalDialog(title = NULL,
 			# 									infoText, 
-			# 									footer = shiny::modalButton(i18n$t("Dismiss")),
+			# 									footer = shiny::modalButton(i18n$t("Exit")),
 			# 									fade = FALSE,
 			# 									size = "s",
 			# 									easyClose = TRUE), session = session)
@@ -3531,6 +3525,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Outputs ----
 	### Output diagram - diagramOutput ----
 	output$diagramOutput <- DiagrammeR::renderGrViz({
+		# Only to establish the reactive dependency with selectedLanguage
+		input$selectedLanguage
 		DiagrammeR::grViz(paste0(
 			"digraph restauraRFlowchart {
       # define node aesthetics
@@ -3669,7 +3665,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	outputOptions(output, "showSppDist", suspendWhenHidden = FALSE)
 	### Output text - countScenariosText ----
 	output$countScenariosText <- shiny::renderText({
-		paste0(i18n$t("Simulations scenarios: "),  resultsRV[["nSce"]])
+		paste0(i18n$t("Simulation scenarios: "),  resultsRV[["nSce"]])
 	})
 	### Output text - countSimulationText ----
 	output$countSimulationText <- shiny::renderText({

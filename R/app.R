@@ -33,7 +33,10 @@ NULL
 #                                            md = FALSE,
 #                                            scrollToTop = TRUE
 # )
+# source("R/appServer.R")
+# source("R/appUI.R")
 # shinyApp(
 #   ui = appUI,
 #   server = appServer
 # )
+# system.file("app", "translation.json", package = "restauraRApp")
