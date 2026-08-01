@@ -6,7 +6,6 @@
 sweetAlert <- shinyWidgets::useSweetAlert()
 
 i18n <- shiny.i18n::Translator$new(translation_json_path = system.file("app", "translation.json", package = "restauraRApp"))
-# i18n <- shiny.i18n::Translator$new(translation_json_path = "restauraRApp/inst/app/translation.json")
 i18n$set_translation_language("en")
 i18n$use_js()
 
@@ -105,7 +104,6 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 							 label = i18n$t("Load project"),
 							 accept = c(".rds"),
 							 buttonLabel = i18n$t("Browse...")
-							 # placeholder = i18n$t("No file selected")
 			)
 		),
 		shinydashboardPlus::controlbarItem(
@@ -136,7 +134,6 @@ body <- shinydashboard::dashboardBody(
 	shinyjs::useShinyjs(),
 	shinydashboard::tabItems(
 		#### startTab -----
-		# Getting Started tab
 		shinydashboard::tabItem(tabName = "startTab",
 								htmltools::h2(i18n$t("Home")),
 								shiny::fluidRow(
@@ -219,10 +216,8 @@ body <- shinydashboard::dashboardBody(
 								) # End row
 		), # End startTab
 		#### dataInputTab ----
-		# Data input tab
 		shinydashboard::tabItem(tabName = "dataInputTab",
 								htmltools::h2(i18n$t("Data input")),
-								# hr(),
 								shiny::fluidRow(
 									shiny::column(width = 12,
 												  shiny::tabsetPanel(
@@ -239,7 +234,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearTraits", 
@@ -259,7 +253,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearRestComp", 
@@ -279,7 +272,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
@@ -299,7 +291,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearReference", 
@@ -319,7 +310,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
@@ -339,7 +329,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearCooccurrence", 
@@ -359,7 +348,6 @@ body <- shinydashboard::dashboardBody(
 												  									  										 					 					style = "padding:3px; font-size:60%")),
 												  									  										 accept = c(".csv"),
 												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  										 # placeholder = i18n$t("No file selected")
 												  									  						),
 												  									  						htmltools::div(
 												  									  							shinyWidgets::actionBttn(inputId = "doClearSppDist", 
@@ -456,7 +444,6 @@ body <- shinydashboard::dashboardBody(
 		#### simulateTab ----
 		shinydashboard::tabItem(tabName = "simulateTab",
 								htmltools::h2(i18n$t("Simulated communities")),
-								# htmltools::hr(),
 								shiny::fluidRow(
 									shiny::column(width = 12,
 												  shiny::tabsetPanel(
@@ -464,7 +451,6 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  
 												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
@@ -761,8 +747,6 @@ body <- shinydashboard::dashboardBody(
 												  									  						title = i18n$t("Scenario management"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
-												  									  						# htmltools::h4(i18n$t("Merge")),
-												  									  						# htmltools::hr(),
 												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Merge"), 
 												  									  												collapsible = FALSE,
@@ -771,7 +755,7 @@ body <- shinydashboard::dashboardBody(
 												  									  																 label = i18n$t("Merged simulation name"),
 												  									  																 value = "Sim_Merged_1"),
 												  									  												shinyWidgets::pickerInput(inputId = "mergeSimulateInput",
-												  									  																		  label = i18n$t("Choose to merge"),
+												  									  																		  label = i18n$t("Choose the scenarios to merge"),
 												  									  																		  choices = NULL,
 												  									  																		  multiple = TRUE,
 												  									  																		  inline = FALSE
@@ -782,17 +766,12 @@ body <- shinydashboard::dashboardBody(
 												  									  																		 size = "md",
 												  									  																		 color = "success")
 												  									  						),
-												  									  						# htmltools::br(),
-												  									  						# htmltools::br(),
-												  									  						# htmltools::br(),
-												  									  						# htmltools::h4(i18n$t("Remove")),
-												  									  						# htmltools::hr(),
 												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Remove"), 
 												  									  												collapsible = FALSE,
 												  									  												collapsed = FALSE,
 												  									  												shinyWidgets::pickerInput(inputId = "removeSimulateInput",
-												  									  																		  label = i18n$t("Choose to remove"),
+												  									  																		  label = i18n$t("Choose the scenarios to remove"),
 												  									  																		  choices = NULL,
 												  									  																		  multiple = TRUE,
 												  									  																		  inline = FALSE
@@ -978,7 +957,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						# ),
 												  									  						shiny::conditionalPanel(condition = "(input.isDistDissComInput == 'FALSE')",
 												  									  												shinyWidgets::pickerInput(inputId = "disComInput",
-												  									  																		  label = htmltools::p(i18n$t("Traits to dissimilarity with reference sites"), 
+												  									  																		  label = htmltools::p(i18n$t("Traits for dissimilarity with reference sites"), 
 												  									  																		  					 shiny::actionButton("disComInputInfo",
 												  									  																		  					 					label = "",
 												  									  																		  					 					icon = shiny::icon("info"),
@@ -1048,7 +1027,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
 												  									  						shinyWidgets::pickerInput(inputId = "stanComParInput",
-												  									  												  label = htmltools::p(i18n$t("Parameters to standardised"), 
+												  									  												  label = htmltools::p(i18n$t("Parameters to standardise"), 
 												  									  												  					 shiny::actionButton("stanComParInputInfo",
 												  									  												  					 					label = "",
 												  									  												  					 					icon = shiny::icon("info"),
@@ -1212,7 +1191,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												htmltools::br(),
 												  									  						),
 												  									  						htmltools::br(),
-												  									  						# radioSpecifyGroupsSelOutput
 												  									  						shiny::uiOutput("radioSpecifyGroupsSelOutput"),
 												  									  						# shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSelInput",
 												  									  						# 								 label = htmltools::p(i18n$t("Selection inside sites groups"), 
@@ -1267,8 +1245,6 @@ body <- shinydashboard::dashboardBody(
 												  									  shiny::textOutput(outputId = "countSimulationSelText"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
-												  									  # htmltools::h4(i18n$t("Merge")),
-												  									  # htmltools::hr(),
 												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Scenario management"), 
 												  									  						collapsible = TRUE,
@@ -1281,7 +1257,7 @@ body <- shinydashboard::dashboardBody(
 												  									  																 label = i18n$t("Merged selection name"),
 												  									  																 value = "Sel_Merged_1"),
 												  									  												shinyWidgets::pickerInput(inputId = "mergeSelectInput",
-												  									  																		  label = i18n$t("Choose to merge"),
+												  									  																		  label = i18n$t("Choose the scenarios to merge"),
 												  									  																		  choices = NULL,
 												  									  																		  multiple = TRUE,
 												  									  																		  inline = FALSE
@@ -1292,17 +1268,12 @@ body <- shinydashboard::dashboardBody(
 												  									  																		 size = "md",
 												  									  																		 color = "success")
 												  									  						),
-												  									  						# htmltools::br(),
-												  									  						# htmltools::br(),
-												  									  						# htmltools::br(),
-												  									  						# htmltools::h4(i18n$t("Remove")),
-												  									  						# htmltools::hr(),
 												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Remove"), 
 												  									  												collapsible = FALSE,
 												  									  												collapsed = FALSE,
 												  									  												shinyWidgets::pickerInput(inputId = "removeSelectInput",
-												  									  																		  label = i18n$t("Choose to remove"),
+												  									  																		  label = i18n$t("Choose the scenarios to remove"),
 												  									  																		  choices = NULL,
 												  									  																		  multiple = TRUE,
 												  									  																		  inline = FALSE
@@ -1372,7 +1343,6 @@ body <- shinydashboard::dashboardBody(
 												  									  												  choices = NULL,
 												  									  												  multiple = TRUE,
 												  									  												  options = list(`actions-box` = TRUE),
-												  									  												  # options = list("max-options" = 1),
 												  									  												  inline = FALSE
 												  									  						),
 												  									  						shiny::uiOutput("radioIncludeReferenceOptOutput"),
@@ -1743,38 +1713,6 @@ body <- shinydashboard::dashboardBody(
 									) # End column
 								) # End row
 		) # End viewTab
-		#### exportTab
-		# shinydashboard::tabItem(tabName = "exportTab",
-		# 						h2("Export results"),
-		# 						fluidRow(
-		# 							shiny::column(width = 12,
-		# 										  shiny::tabsetPanel(
-		# 										  	shiny::tabPanel("Raw", 
-		# 										  					shiny::fluidRow(
-		# 										  						htmltools::br(),
-		# 										  						shiny::column(width = 4,
-		# 										  									  # htmltools::h4("Set basic parameters"),
-		# 										  									  # hr(),
-		# 										  									  # shinyDirButton(id = "choseDirectory", label = "Chose directory", title = "Chose directory", class = "action-button bttn bttn-fill bttn-md bttn-default bttn-no-outline shiny-bound-input"),
-		# 										  									  
-		# 										  						), # End column
-		# 										  						shiny::column(width = 8,
-		# 										  									  # htmltools::h4("Select"),
-		# 										  									  # hr()
-		# 										  									  shiny::sliderInput("bins3", 
-		# 										  									  				   label = htmltools::p(i18n$t("Hello Shiny!"), 
-		# 										  									  				   					 shiny::actionButton("titleBtId", 
-		# 										  									  				   					 					label = "", 
-		# 										  									  				   					 					icon = shiny::icon("info"), 
-		# 										  									  				   					 					style = "padding:4px; font-size:60%")), 
-		# 										  									  				   min = 1, max = 50, value = 30)
-		# 										  						) # End column
-		# 										  					) # End row
-		# 										  	) # End tabPanel
-		# 										  ) # End tabsetPanel
-		# 							) # End column
-		# 						) # End row
-		# ) # End exportTab
 	) # End tabItems
 )
 

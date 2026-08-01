@@ -42,7 +42,7 @@
 		},
 		{
 			"en": "Plot options",
-			"pt": "Opções para gráficos"
+			"pt": "Opções de gráficos"
 		},
 		{
 			"en": "Width (mm)",
@@ -138,7 +138,7 @@
 		},
 		{
 			"en": "Visualise multifunctionality sets<br/><i>Visualise tab",
-			"pt": "Visualizar grupos de multifuncionalidade<br/><i>Aba Visualizar"
+			"pt": "Visualizar conjuntos de multifuncionalidade<br/><i>Aba Visualizar"
 		},
 		{
 			"en": "Extract and export results<br/><i>Visualise tab",
@@ -170,19 +170,19 @@
 		},
 		{
 			"en": "Species composition of restoration sites",
-			"pt": "Composição de espécies nos sítios para restauração"
+			"pt": "Composição de espécies dos sítios de restauração"
 		},
 		{
 			"en": "Complementary information for restoration sites",
-			"pt": "Informações complementares dos sítios para restauração"
+			"pt": "Informações complementares dos sítios de restauração"
 		},
 		{
 			"en": "Species composition of reference sites",
-			"pt": "Composição de espécies nos sítios de referência"
+			"pt": "Composição de espécies dos sítios de referência"
 		},
 		{
 			"en": "Species composition of supplementary sites",
-			"pt": "Composição de espécies nos sítos suplementares"
+			"pt": "Composição de espécies dos sítios suplementares"
 		},
 		{
 			"en": "Co-occurrence probabilities between species",
@@ -210,7 +210,7 @@
 		},
 		{
 			"en": "Restoration sites",
-			"pt": "Sítios para restauração"
+			"pt": "Sítios de restauração"
 		},
 		{
 			"en": "Species composition",
@@ -222,7 +222,7 @@
 		},
 		{
 			"en": "Reference and supplementary sites",
-			"pt": "Sítios de referência e complementares"
+			"pt": "Sítios de referência e suplementares"
 		},
 		{
 			"en": "Co-occurrence and species distance matrices",
@@ -266,7 +266,7 @@
 		},
 		{
 			"en": "Minimal abundance or proportion threshold",
-			"pt": "Limiar mínimo para as abundâncias ou proporções"
+			"pt": "Limiar mínimo de abundância ou proporção"
 		},
 		{
 			"en": "Species availability",
@@ -326,11 +326,11 @@
 		},
 		{
 			"en": "Probability to draw richness - Group: ",
-			"pt": "Probabilidade para obter riqueza – Grupo:"
+			"pt": "Probabilidade de amostrar riqueza – Grupo:"
 		},
 		{
 			"en": "Probability to draw abundance - Group: ",
-			"pt": "Probabilidade para obter abundância – Grupo:"
+			"pt": "Probabilidade de amostrar abundância – Grupo:"
 		},
 		{
 			"en": "Exit",
@@ -389,12 +389,12 @@
 			"pt": "Incluir sítios de referência"
 		},
 		{
-			"en": "Calculates taxonomic beta diversity",
-			"pt": "Calcular beta diversidade taxonômica"
+			"en": "Calculate taxonomic beta diversity",
+			"pt": "Calcular diversidade beta taxonômica"
 		},
 		{
 			"en": "Calculate beta diversity based on the distance matrix",
-			"pt": "Calcular beta diversidade baseada na matriz de distâncias"
+			"pt": "Calcular diversidade beta baseada na matriz de distâncias"
 		},
 		{
 			"en": "Scenario type",
@@ -402,11 +402,11 @@
 		},
 		{
 			"en": "All simulations",
-			"pt": "Todas simulações"
+			"pt": "Todas as simulações"
 		},
 		{
 			"en": "Selected",
-			"pt": "Seleção"
+			"pt": "Selecionadas"
 		},
 		{
 			"en": "Show reference sites",
@@ -446,11 +446,11 @@
 		},
 		{
 			"en": "Running",
-			"pt": "Correndo"
+			"pt": "Executando"
 		},
 		{
 			"en": "Done!",
-			"pt": "Pronto!"
+			"pt": "Concluído!"
 		},
 		{
 			"en": "Simulation scenarios: ",
@@ -478,7 +478,7 @@
 		},
 		{
 			"en": "Set species availability",
-			"pt": "Definir a disponibilidade para as espécies"
+			"pt": "Definir a disponibilidade das espécies"
 		},
 		{
 			"en": "Drag to rank parameters in desired order",
@@ -490,7 +490,7 @@
 		},
 		{
 			"en": "Selected scenarios: ",
-			"pt": "Cenários simulados: "
+			"pt": "Cenários selecionados: "
 		},
 		{
 			"en": "Total simulations selected: ",
@@ -510,23 +510,23 @@
 		},
 		{
 			"en": "Merged simulation name",
-			"pt": "Nome para simulações agrupadas"
+			"pt": "Nome para simulações mescladas"
 		},
 		{
-			"en": "Choose to merge",
-			"pt": "Escolha para agrupar"
+			"en": "Choose the scenarios to merge",
+			"pt": "Escolha os cenários para mesclar"
 		},
 		{
 			"en": "Merge",
-			"pt": "Agrupar"
+			"pt": "Mesclar"
 		},
 		{
 			"en": "Remove",
 			"pt": "Remover"
 		},
 		{
-			"en": "Choose to remove",
-			"pt": "Escolha para remover"
+			"en": "Choose the scenarios to remove",
+			"pt": "Escolha os cenários para remover"
 		},
 		{
 			"en": "Adjust Simulation",
@@ -538,7 +538,7 @@
 		},
 		{
 			"en": "Adjust options",
-			"pt": "Opções de ajustes"
+			"pt": "Opções de ajuste"
 		},
 		{
 			"en": "Minimal abundance",
@@ -554,7 +554,7 @@
 		},
 		{
 			"en": "Select scenario",
-			"pt": "Cenário selecionado"
+			"pt": "Selecionar cenário"
 		},
 		{
 			"en": "Compute parameters",
@@ -569,7 +569,7 @@
 			"pt": "Atributos para Variância dos Atributos na Comunidade"
 		},
 		{
-			"en": "Traits to dissimilarity with reference sites",
+			"en": "Traits for dissimilarity with reference sites",
 			"pt": "Atributos para dissimilaridade com sítios de referência"
 		},
 		{
@@ -598,11 +598,11 @@
 		},
 		{
 			"en": "Variables to specify the number of individuals to draw",
-			"pt": "Variável para especificar o número de indivíduos a serem selecionados"
+			"pt": "Variável para especificar o número de indivíduos a amostrar"
 		},
 		{
 			"en": "The number of individuals to draw",
-			"pt": "Número de indivíduos para amostrar"
+			"pt": "Número de indivíduos a amostrar"
 		},
 		{
 			"en": "Variables to specify the range of richness",
@@ -645,7 +645,7 @@
 			"pt": "Opções de padronização"
 		},
 		{
-			"en": "Parameters to standardised",
+			"en": "Parameters to standardise",
 			"pt": "Parâmetros para padronizar"
 		},
 		{
@@ -670,7 +670,7 @@
 		},
 		{
 			"en": "Parameters to filter selection",
-			"pt": "Parâmetros para seleção de filtro"
+			"pt": "Parâmetros para seleção por filtro"
 		},
 		{
 			"en": "Parameters to priority selection",
@@ -678,11 +678,11 @@
 		},
 		{
 			"en": "Site groups",
-			"pt": "Grupo de sítios"
+			"pt": "Grupos de sítios"
 		},
 		{
 			"en": "Merged selection name",
-			"pt": "Nome da mesclagem da seleção"
+			"pt": "Nome da seleção mesclada"
 		},
 		{
 			"en": "Select Summary",
@@ -698,7 +698,7 @@
 		},
 		{
 			"en": "Beta diversity",
-			"pt": "Beta diversidade"
+			"pt": "Diversidade beta"
 		},
 		{
 			"en": "Maximum number of simulation combinations",
@@ -746,7 +746,7 @@
 		},
 		{
 			"en": "Plot",
-			"pt": "Exibir"
+			"pt": "Gerar"
 		},
 		{
 			"en": "Download",
@@ -759,6 +759,222 @@
 		{
 			"en": "Preview",
 			"pt": "Prévia"
+		},
+		{
+			"en": "Data table with species-by-features containing trait information for all species in the pool. Rows are species, columns are variables. Traits can be numeric or categorical. This table could include any species information that can be used to calculate functional metrics, costs, or any information that can be used as parameters to simulate and select simulated communities. This table should include all species from the reference sites and restoration sites. Missing data (NA) are not allowed.",
+			"pt": "Tabela com os dados das espécies contendo informações dos atributos para todas as espécies do pool. As linhas são espécies, as colunas são variáveis. Os atributos podem ser numéricos ou categóricos. A tabela pode incluir quaisquer informações sobre as espécies que possam ser usadas para calcular métricas funcionais, custos ou informações que possam ser usadas como parâmetros para simular e selecionar comunidades. A tabela deve incluir todas as espécies dos sítios de referência e dos sítios de restauração. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Data table with species composition from the restoration sites. Rows are sites, columns are species names. The values should represent the abundance of the species (counts) or the relative proportion. Missing data (NA) are not allowed.",
+			"pt": "Tabela com a composição de espécies dos sítios de restauração. As linhas são sítios, as colunas são espécies. Os valores devem representar a abundância das espécies (contagens) ou a proporção relativa. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Data table with complementary information for restoration sites. Rows are sites, columns are variables. These can be used to group sites during selection or to define site-specific simulation parameters. Missing data (NA) are not allowed.",
+			"pt": "Tabela com informações complementares dos sítios de restauração. As linhas são sítios, as colunas são variáveis. As variáveis podem ser usadas para agrupar sítios durante a seleção ou para definir parâmetros da simulação para cada sítio. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Data table with species composition from the reference sites. Rows are sites, columns are species names. The values should represent the abundance of the species (counts) or the relative proportion. Missing data (NA) are not allowed.",
+			"pt": "Tabela com a composição de espécies dos sítios de referência. As linhas são sítios, as colunas são espécies. Os valores devem representar a abundância das espécies (contagens) ou a proporção relativa. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Data table with species composition from supplementary sites. Rows are sites, columns are species names. The values should represent the abundance of the species (counts) or the relative proportion. Missing data (NA) are not allowed.",
+			"pt": "Tabela com a composição de espécies dos sítios suplementares. As linhas são sítios, as colunas são espécies. Os valores devem representar a abundância das espécies (contagens) ou a proporção relativa. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Matrix with co-occurrence probabilities between species to constrain ecological assembly patterns. Must be square, symmetric, and include all species from the trait table. Missing data (NA) are not allowed.",
+			"pt": "Matriz com as probabilidades de coocorrência entre espécies para restringir a amostragem das espécies. A matriz deve ser quadrada, simétrica e incluir todas as espécies da tabela dos atributos. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Distance matrix between species, usually based on trait values or phylogenetic relationships. Must be square, symmetric, and include all species from the trait table. Missing data (NA) are not allowed.",
+			"pt": "Matriz de distância entre espécies, geralmente baseada nos valores dos atributos ou relações filogenéticas. Deve ser quadrada, simétrica e incluir todas as espécies da tabela dos atributos. Dados faltantes (NA) não são permitidos."
+		},
+		{
+			"en": "Restoration goals. If 'New', the simulated communities are set as empty communities. The sites to restore start with no species and no initial composition needed. If 'Ongoing', the species composition in the restoration sites must be informed. Thus, the new species and individuals are added to the current composition. The sites to restore can start with established species.",
+			"pt": "Metas da restauração. Se 'Nova', as comunidades simuladas são definidas a partir de comunidades vazias. Os sítios para restaurar começam sem espécie e sem composição inicial. Se 'Em andamento', a composição de espécies nos sítios de restauração deve ser informada. Assim, as novas espécies e indivíduos são adicionados à composição atual. Desta forma, os sítios para restaurar podem começar com espécies já estabelecidas."
+		},
+		{
+			"en": "Method to obtain the samples. The 'proportions' method simulates the species composition sampled from a log-normal distribution. Species composition is given in proportions of the total number of individuals. The 'individuals' method simulates abundances using a multinomial distribution. The probabilities to draw each individual can be supplied by the user or taken from a log-normal distribution. However, the number of individuals to sample in each community must be supplied. In this method, the species composition is absolute abundance, given by counting individuals.",
+			"pt": "Método para obter as amostras. O método 'proporções' simula a composição de espécies a partir de uma distribuição log-normal. A composição de espécies é dada em proporções relativas do número total de indivíduos. O método 'indivíduos' simula abundâncias usando uma distribuição multinomial. As probabilidades de amostrar cada indivíduo podem ser fornecidas pelo usuário ou obtidas a partir de uma distribuição log-normal. No entanto, o número de indivíduos a amostrar em cada comunidade deve ser fornecido. Neste método, a composição de espécies é a abundância absoluta, dada pela contagem de indivíduos."
+		},
+		{
+			"en": "Specify site-specific number of individuals. If 'Yes', choose variables from the restoration complementary data to define the range of individuals to be sampled per site. If 'No', a single total number of individuals is used for all sites.",
+			"pt": "Especificar o número de indivíduos por sítio. Se 'Sim', escolha as variáveis nos dados complementares para definir o intervalo de indivíduos a serem amostrados por sítio. Se 'Não', um único número de indivíduos é usado para todos os sítios."
+		},
+		{
+			"en": "The number of individuals to be sampled in each community.",
+			"pt": "Número de indivíduos a serem amostrados em cada comunidade."
+		},
+		{
+			"en": "Variables to indicate the number of individuals to be sampled in each community. If a single column is selected, its values are used directly. If two columns are selected, they are interpreted as min and max for a uniform draw. ",
+			"pt": "Variáveis para indicar o número de indivíduos a serem amostrados em cada comunidade. Se uma única variável for selecionada, seus valores são usados diretamente. Se duas variáveis forem selecionadas, elas são interpretadas como o mínimo e o máximo em uma amostragem uniforme."
+		},
+		{
+			"en": "Specify site-specific richness range. If 'Yes', choose variables from the restoration complementary data to define site specific richness ranges. If 'No', a single richness range is used for all sites.",
+			"pt": "Especificar o intervalo de riqueza por sítio. Se 'Sim', escolha as variáveis nos dados complementares para definir o intervalo de riqueza por sítio. Se 'Não', um único intervalo de riqueza é usado para todos os sítios."
+		},
+		{
+			"en": "The range of richness values in each community.",
+			"pt": "Intervalo de valores de riqueza em cada comunidade."
+		},
+		{
+			"en": "Variables to indicate the richness in each community. If a single column is selected, its values are used directly. If two columns are selected, they are interpreted as min and max for a uniform draw.",
+			"pt": "Variáveis para indicar a riqueza em cada comunidade. Se uma única variável for selecionada, seus valores são usados diretamente. Se duas variáveis forem selecionadas, elas são interpretadas como o mínimo e o máximo em uma amostragem uniforme."
+		},
+		{
+			"en": "Minimal abundance or proportion threshold to maintain for each species in simulated communities.",
+			"pt": "Limiar mínimo de abundância ou proporção para manter em cada espécie nas comunidades simuladas."
+		},
+		{
+			"en": "The number of communities to simulate.",
+			"pt": "Número de comunidades para simular."
+		},
+		{
+			"en": "Binary variable to indicate species availability for restoration projects (1 or 0, 1 = available).",
+			"pt": "Variável binária para indicar a disponibilidade das espécies para uso nos projetos de restauração (1 ou 0, 1 = disponível)."
+		},
+		{
+			"en": "Binary variable to indicate undesired species (1 or 0, 1 = undesirable). Undesired species may already be present in restoration or reference communities but are not appropriate in new restorations.",
+			"pt": "Variável binária para indicar espécies indesejadas (1 ou 0, 1 = indesejável). Espécies indesejadas podem já estar presentes em comunidades de restauração ou de referência, mas não são apropriadas nas novas restaurações."
+		},
+		{
+			"en": "Trait names to indicate which traits are used to constrain Community Weighted Mean (CWM) while maximising functional diversity. Constraints are driven over the full range of each trait, helping to explore functional space",
+			"pt": "Nomes dos atributos usados para restringir a Média dos Atributos na Comunidade (CWM) enquanto maximizam a diversidade funcional. As restrições são aplicadas sobre toda a amplitude do atributo a fim de explorar o espaço funcional."
+		},
+		{
+			"en": "Use species distance to maximise functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to maximise functional diversity (Rao Quadratic Entropy). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated and then used to maximise the diversity.",
+			"pt": "Usar distância entre espécies para maximizar a diversidade funcional. Se 'Sim', a matriz de distância entre espécies, fornecida na entrada de dados, é usada para maximizar a diversidade funcional (Entropia Quadrática de Rao). Se 'Não', os atributos selecionados são usados. Esses atributos são padronizados para média zero e variância um, para evitar viés de escala, e uma distância euclidiana é calculada e então usada para maximizar a diversidade."
+		},
+		{
+			"en": "Trait names to indicate which traits are used to maximise functional diversity (Rao Quadratic Entropy).",
+			"pt": "Nomes dos atributos usados para maximizar a diversidade funcional (Entropia Quadrática de Rao)."
+		},
+		{
+			"en": "An integer seed for random number generation. The same seed reproduces the same simulation results. The seed is re-initialised after each run.",
+			"pt": "Número inteiro com a seed de geração de números aleatórios. A mesma seed reproduz os mesmos resultados de simulação. A seed é reinicializada após cada execução."
+		},
+		{
+			"en": "The sampling process can be constrained within species groups. That procedure can be conducted to draw abundances with or without constraints on species richness. First, choose a categorical variable to define groups. Then, adjust the sliders to assign the probabilities for richness and/or abundance to each group.",
+			"pt": "O processo de amostragem pode ser restringido dentro de grupos de espécies. Esse procedimento pode ser conduzido para amostrar abundâncias com ou sem restrições na riqueza de espécies. Primeiro, escolha uma variável categórica para definir os grupos. Em seguida, ajuste os controles deslizantes para atribuir as probabilidades de riqueza e/ou abundância a cada grupo."
+		},
+		{
+			"en": "Sampling constraint method. The method 'abundance' constrains only the simulation of species abundance. The method 'Richness and abundance' constrains species abundance and species richness in the communities simulation.",
+			"pt": "Método de restrição de amostragem. O método 'abundância' restringe apenas a simulação da abundância de espécies. O método 'Riqueza e abundância' restringe a abundância de espécies e a riqueza de espécies na simulação das comunidades."
+		},
+		{
+			"en": "Variable from the trait table that contains the relative probabilities of each species being drawn.",
+			"pt": "Variável para especificar as probabilidades relativas de amostragem de cada espécie."
+		},
+		{
+			"en": "Coefficient of variation (CV) of the relative abundances in the species pool.",
+			"pt": "Coeficiente de variação (CV) das abundâncias relativas no pool de espécies."
+		},
+		{
+			"en": "Constrain the co-occurrence. If 'Yes', the co-occurrence matrix is used to constrain the sampling process of species in the simulated communities.",
+			"pt": "Restringir a coocorrência das espécies. Se 'Sim', a matriz de coocorrência é usada para restringir o processo de amostragem de espécies nas comunidades simuladas."
+		},
+		{
+			"en": "A parameter bounded between 0 and 1 that weights the importance of either quadratic entropy or entropy.",
+			"pt": "Um parâmetro limitado entre 0 e 1 que pondera a importância da entropia quadrática ou da entropia."
+		},
+		{
+			"en": "Minimal abundance or proportion to keep in simulated communities.",
+			"pt": "Abundância ou proporção mínima a manter nas comunidades simuladas."
+		},
+		{
+			"en": "Reallocate removed individuals to species with some abundance.",
+			"pt": "Realocar indivíduos removidos para espécies com alguma abundância."
+		},
+		{
+			"en": "Binary variable to indicate species availability for restoration projects (1 or 0, 1 = available). This will be used to count unavailable species in each community.",
+			"pt": "Variável binária para indicar a disponibilidade de espécies para projetos de restauração (1 ou 0, 1 = disponível). Será usada para contar espécies indisponíveis em cada comunidade."
+		},
+		{
+			"en": "Trait names to calculate Community Weighted Mean (CWM). One CWM is calculated for each trait.",
+			"pt": " Nomes dos atributos usados para calcular a Média dos Atributos na Comunidade (CWM). Um CWM é calculado para cada atributo."
+		},
+		{
+			"en": "Trait names to calculate Community Weighted Variance (CWV). One CWV is calculated for each trait.",
+			"pt": "Nomes dos atributos usados para calcular a Variância dos Atributos na Comunidade (CWV). Um CWV é calculado para cada atributo."
+		},
+		{
+			"en": "Use species distance to calculate functional diversity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate Rao Quadratic Entropy (rao). If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated and then used in the calculation.",
+			"pt": "Usar distância entre espécies para calcular a diversidade funcional. Se 'Sim', a matriz de distância entre espécies, fornecida na entrada de dados, é usada para calcular a Entropia Quadrática de Rao (rao). Se 'Não', os atributos selecionados são usados. Esses atributos são padronizados para média zero e variância um, para evitar viés de escala, e uma distância euclidiana é calculada e então usada no cálculo."
+		},
+		{
+			"en": "Trait names to calculate Rao Quadratic Entropy (rao). Only a single rao measure is calculated with the set input species traits.",
+			"pt": "Nomes dos atributos usados para calcular a Entropia Quadrática de Rao (rao). Apenas uma única medida rao é calculada com o conjunto de atributos fornecidos."
+		},
+		{
+			"en": "Use species distance to calculate functional dissimilarity. If 'Yes', the species distance matrix, provided in the data input, is used to calculate functional dissimilarity with reference sites. If 'No', the selected traits are used. Those traits are standardised to a zero mean and unit variance, to avoid scale bias, and an Euclidean distance is calculated and then used in the calculation.",
+			"pt": "Usar distância entre espécies para calcular a dissimilaridade funcional. Se 'Sim', a matriz de distância entre espécies, fornecida na entrada de dados, é usada para calcular a dissimilaridade funcional das simulações com os sítios de referência. Se 'Não', os atributos selecionados são usados. Esses atributos são padronizados para média zero e variância um, para evitar viés de escala, e uma distância euclidiana é calculada e então usada no cálculo."
+		},
+		{
+			"en": "Trait names to calculate functional dissimilarity with the reference sites.",
+			"pt": "Nomes de atributos usados para calcular a dissimilaridade funcional entre as simulações e os sítios de referência."
+		},
+		{
+			"en": "Variable to indicate the species cost per individual.",
+			"pt": "Variável para indicar o custo por indivíduo da espécie."
+		},
+		{
+			"en": "Variable to indicate the species planting density.",
+			"pt": "Variável para indicar a densidade de plantio das espécies."
+		},
+		{
+			"en": "Computed parameter names to standardise.",
+			"pt": "Nomes dos parâmetros calculados para padronizar."
+		},
+		{
+			"en": "Standardisation method. The method 'maximum' divides the values of each variable by its maximum. The method 'standardise' scales the calculated parameters to zero mean and unit variance in each variable.",
+			"pt": "Método de padronização. O método 'máximo' divide os valores de cada variável pelo seu máximo. O método 'Padronizar' escala os parâmetros calculados para média zero e variância um em cada variável."
+		},
+		{
+			"en": "Multifunctionality criteria. The multifunctionality is based on simple logical tests derived from thresholds to multiple calculated parameters, returning a binary multifunctionality matrix. The sum of individual tests true to a given threshold is the alpha multifunctionality index. First, select the parameters which will be used to test, then set the sliders as logical tests.",
+			"pt": "Critérios da multifuncionalidade. A multifuncionalidade é baseada em testes lógicos simples derivados de limiares para múltiplos parâmetros calculados, retornando uma matriz binária de multifuncionalidade. A soma dos testes individuais verdadeiros para um dado limiar é o índice alfa de multifuncionalidade. Primeiro, selecione os parâmetros que serão usados no teste, em seguida, ajuste os controles deslizantes como testes lógicos."
+		},
+		{
+			"en": "Filter selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the filter selection, only simulations that are true for all tests are returned. First, select the parameters which will be used to test, then set the sliders as logical tests.",
+			"pt": "Critérios da seleção por filtro. As seleções de comunidades simuladas são baseadas em testes lógicos simples derivados de limiares para um ou mais parâmetros calculados. Na seleção por filtro, apenas as simulações que são verdadeiras para todos os testes são retornadas. Primeiro, selecione os parâmetros que serão usados no teste, em seguida, ajuste os controles deslizantes como testes lógicos."
+		},
+		{
+			"en": "Priority selection criteria. Selections of simulated communities are based on simple logical tests derived from thresholds to one or more calculated parameters. In the priority selection, the tests are evaluated hierarchically. If all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests.",
+			"pt": "Critérios da seleção por prioridade. As seleções de comunidades simuladas são baseadas em testes lógicos simples derivados de limiares para um ou mais parâmetros calculados. Na seleção por prioridade, os testes são avaliados hierarquicamente. Se todas as simulações falharem no primeiro teste, a função tenta o próximo teste. Primeiro, selecione os parâmetros que serão usados no teste, em seguida, ajuste os controles deslizantes como testes lógicos."
+		},
+		{
+			"en": "Priority selection allows setting site groups. If a variable is selected, the selection criteria are applied inside the site group determined by that variable. This ensures, for example, that one simulation is selected per site type.",
+			"pt": "A seleção por prioridade permite definir grupos de sítios. Se uma variável for selecionada, os critérios de seleção são aplicados dentro do grupo de sítios determinado por essa variável. Isso garante, por exemplo, que uma simulação seja selecionada dentro do grupo."
+		},
+		{
+			"en": "Selection method in priority selection. The method 'single' returns only one simulation or one by site group. In the last step, the function samples only one simulation from among those that passed all the tests. The method 'multiple' returns all simulations that passed all the tests.",
+			"pt": "Método de seleção por prioridade. O método 'única' retorna apenas uma simulação ou uma por grupo de sítios. Na última etapa, a função sorteia apenas uma simulação entre aquelas que passaram em todos os testes. O método 'múltipla' retorna todas as simulações que passaram em todos os testes."
+		},
+		{
+			"en": "A variable from the restoration sites data that determines site groups. The optimisation will generate combinations of communities across groups.",
+			"pt": "Variável dos sítios de restauração que determina grupos de sítios. A otimização gerará combinações de comunidades entre os grupos."
+		},
+		{
+			"en": "Include reference sites in index calculations.",
+			"pt": "Incluir sítios de referência nos cálculos dos índices."
+		},
+		{
+			"en": "Maximum number of simulation combinations to generate.",
+			"pt": "Número máximo de combinações de simulações."
+		},
+		{
+			"en": "Method to calculate the beta diversity.",
+			"pt": "Método para calcular a diversidade beta."
+		},
+		{
+			"en": "Use species distance to calculate beta diversity. If 'Yes', the species distance matrix is used to calculate beta diversity. If 'No', the selected traits are used.",
+			"pt": "Usar distância entre espécies para calcular a diversidade beta. Se 'Sim', a matriz de distância entre espécies é usada para calcular a diversidade beta. Se 'Não', os atributos selecionados serão usados."
+		},
+		{
+			"en": "Trait names to calculate beta diversity. If no traits are selected, functional beta diversity will not be calculated.",
+			"pt": "Atributos para calcular a diversidade beta. Se nenhum atributo for selecionado, a diversidade beta funcional não será calculada."
+		},
+		{
+			"en": "Multi-site selection criteria. Selections of the set of simulated communities are based on simple logical tests derived from thresholds to one or more calculated multi-site parameters. In the multi-site selection, only one set of communities is returned. The selection works hierarchically; if all simulations fail in the first test, the function tries the next test. First, select the parameters which will be used to test, then set the sliders as logical tests. To select the minimum or the maximum, move both sliders to the minimum or maximum.",
+			"pt": "Critérios da seleção multisítio. As seleções de conjuntos de comunidades simuladas são baseadas em testes lógicos simples derivados de limiares para um ou mais parâmetros multisítio calculados. Na seleção multisítio, apenas um conjunto de comunidades é retornado. A seleção funciona hierarquicamente; se todas as simulações falharem no primeiro teste, a função tenta o próximo teste. Primeiro, selecione os parâmetros que serão usados no teste, em seguida, ajuste os controles deslizantes como testes lógicos. Para selecionar o valor mínimo ou máximo, mova ambos os controles para o mínimo ou o máximo."
 		}
 	]
 }

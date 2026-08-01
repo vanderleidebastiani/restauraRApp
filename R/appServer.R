@@ -1432,7 +1432,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### calcTaxonomicBetaOptInput ----
 	output$radioCalcTaxonomicBetaOptOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "calcTaxonomicBetaOptInput",
-										 label = htmltools::p(i18n$t("Calculates taxonomic beta diversity"), 
+										 label = htmltools::p(i18n$t("Calculate taxonomic beta diversity"), 
 										 					 shiny::actionButton("calcTaxonomicBetaOptInputInfo",
 										 					 					label = "",
 										 					 					icon = shiny::icon("info"),
