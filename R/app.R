@@ -18,6 +18,8 @@
 #' @importFrom sortable rank_list
 #' @importFrom rhandsontable rHandsontableOutput renderRHandsontable rhandsontable
 #' @importFrom shinydashboard dashboardBody menuItem sidebarMenu tabItem tabItems
+#' @importFrom stringi stri_trans_general
+#' @importFrom fs path_sanitize
 #' @param input Input list for the UI.
 #' @param output Output list for the UI.
 #' @param session Environment for the UI.
