@@ -17,6 +17,10 @@
 			"pt": "Caractere separador"
 		},
 		{
+			"en": "Decimal character",
+			"pt": "Caractere decimal"
+		},
+		{
 			"en": "Decimal places",
 			"pt": "Casas decimais"
 		},
@@ -197,8 +201,8 @@
 			"pt": "Conferir dados"
 		},
 		{
-			"en": "Clear all",
-			"pt": "Limpar tudo"
+			"en": "Clear input data",
+			"pt": "Limpar dados de entrada"
 		},
 		{
 			"en": "Traits class",
@@ -759,6 +763,34 @@
 		{
 			"en": "Preview",
 			"pt": "Prévia"
+		},
+		{
+			"en": "Species pool size: ",
+			"pt": "Tamanho do pool de espécies: "
+		},
+		{
+			"en": "Number of simulations: ",
+			"pt": "Número de simulações: "
+		},
+		{
+			"en": "Reference communities: ",
+			"pt": "Comunidades de referência: "
+		},
+		{
+			"en": "Supplementary communities: ",
+			"pt": "Comunidades suplementares: "
+		},
+		{
+			"en": "Parameters: ",
+			"pt": "Parâmetros: "
+		},
+		{
+			"en": "Multifunctionality: ",
+			"pt": "Multifuncionalidade: "
+		},
+		{
+			"en": "Multisite results: ",
+			"pt": "Resultados multisítios: "
 		},
 		{
 			"en": "Data table with species-by-features containing trait information for all species in the pool. Rows are species, columns are variables. Traits can be numeric or categorical. This table could include any species information that can be used to calculate functional metrics, costs, or any information that can be used as parameters to simulate and select simulated communities. This table should include all species from the reference sites and restoration sites. Missing data (NA) are not allowed.",
