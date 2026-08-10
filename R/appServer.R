@@ -14,6 +14,17 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 						   animation = FALSE,
 						   timer = 3000,
 						   session = session)
+	# Auxiliary function to normalise names
+	safeName <- function(x, fallback){
+		safe <- stringi::stri_trans_general(x, "Latin-ASCII")
+		safe <- trimws(safe)
+		safe <- fs::path_sanitize(safe, replacement = "_")
+		safe <- gsub("\\s+", "_", safe)
+		if (!nzchar(safe)){
+			safe <- fallback
+		}
+		return(safe)
+	}
 	# Collapse controlbar when changing the language
 	observeEvent(input$selectedLanguage, {
 		shinydashboardPlus::updateControlbar(id = "controlbar", session = session)
@@ -22,7 +33,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### Global variables ----
 	globalRV <- shiny::reactiveValues(digitsVal = 5, 
 									  digitsMin = 3,
-									  currentDate = format(Sys.Date(), "%Y%m%d"),
+									  # currentDate = format(Sys.Date(), "%Y%m%d"),
 									  probs = c(0, 0.25, 0.5, 0.75, 1))
 	#### Set the minimal decimal places ----
 	numVal <- shiny::reactive({
@@ -124,6 +135,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									  table = NULL,
 									  summaryTable = NULL
 	)
+	### Dinamic observes for plots ----
+	# obsChartRV <- shiny::reactiveValues(
+	# 	priority = list(),
+	# 	filter = list(),
+	# 	multi = list(),
+	# 	multisite = list()
+	# )
+	obsChartRV <- new.env()
+	obsChartRV$priority = list()
+	obsChartRV$filter = list()
+	obsChartRV$multi = list()
+	obsChartRV$multisite = list()
 	### infoRV ----
 	infoRV <- shiny::reactiveValues(
 		# DataInputTab
@@ -195,7 +218,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$traits <- NULL
 		} else{
-			inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = TRUE)	
+			# inputDataRV$traits <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = TRUE)
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = TRUE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$traits <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - restComp ----
@@ -205,7 +239,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$restComp <- NULL
 		} else{
-			inputDataRV$restComp <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			# inputDataRV$restComp <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = FALSE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$restComp <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - restGroup ----
@@ -215,7 +260,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$restGroup <- NULL
 		} else{
-			inputDataRV$restGroup <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			# inputDataRV$restGroup <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = FALSE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$restGroup <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - Reference ----
@@ -225,7 +281,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$reference <- NULL
 		} else{
-			inputDataRV$reference <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			# inputDataRV$reference <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = FALSE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$reference <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - Supplementary ----
@@ -235,7 +302,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$supplementary <- NULL
 		} else{
-			inputDataRV$supplementary <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			# inputDataRV$supplementary <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = FALSE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$supplementary <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - Cooccurrence ----
@@ -245,7 +323,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$cooccurrence <- NULL
 		} else{
-			inputDataRV$cooccurrence <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			# inputDataRV$cooccurrence <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = FALSE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$cooccurrence <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - Species distance ----
@@ -255,54 +344,119 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if (is.null(inFile)){
 			inputDataRV$sppDist <- NULL
 		} else{
-			inputDataRV$sppDist <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)	
+			# inputDataRV$sppDist <- utils::read.csv(inFile$datapath, sep = input$fileSep, row.names = 1, stringsAsFactors = FALSE)
+			loadFile <- tryCatch(utils::read.csv(inFile$datapath, sep = input$fileSep, dec = input$fileDec, row.names = 1, stringsAsFactors = FALSE), 
+								 error = function(e) e)
+			if(inherits(loadFile, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				inputDataRV$sppDist <- loadFile
+			}
 		}
 	}) # End input file
 	### Input file - Project input ----
-	# VER AQUI ----
 	shiny::observeEvent(input$projectInput, {
 		# Read file
 		inFile <- input$projectInput
-		# if (is.null(inFile)){
-		# 	inputDataRV$sppDist <- NULL
-		# }
-		# print(inFile)
-		
-		if (!is.null(inFile)){
-			# Read RDS
-			inputList <- readRDS(inFile$datapath)
-			# Project name
-			shiny::updateTextInput(session = session,
-								   inputId = "projectName",
-								   value = inputList$projectName)
-			# inputDataRV
-			inputDataRV$traits <- inputList$inputDataTraits
-			inputDataRV$restComp <- inputList$inputDataRestComp
-			inputDataRV$restGroup <- inputList$inputDataRestGroup
-			inputDataRV$reference <- inputList$inputDataReference
-			inputDataRV$supplementary <- inputList$inputDataSupplementary
-			inputDataRV$cooccurrence <- inputList$inputDataCooccurrence
-			inputDataRV$sppDist <- inputList$inputDataSppDist
-			inputDataRV$auxTraitsClass <- inputList$inputDataAuxTraitsClass
-			inputDataRV$auxTraitsVariables <- inputList$inputDataAuxTraitsVariables
-			inputDataRV$auxRestGroupClass <- inputList$inputDataAuxRestGroupClass
-			inputDataRV$auxRestGroupVariables <- inputList$inputDataAuxRestGroupVariables
-			# Force update
-			inputDataRV$updateData <- ifelse(inputDataRV$updateData == 1, 0, 1)
-			# resultsRV
-			resultsRV$nSce <- inputList$resultsDataNSce
-			resultsRV$nSim <- inputList$resultsDataNSim
-			resultsRV$simulate <- inputList$resultsDataSimulate
-			resultsRV$nSel <- inputList$resultsDataNSel
-			resultsRV$nSimSel <- inputList$resultsDataNSimSel
-			resultsRV$select <- inputList$resultsDataSelect
-			resultsRV$plotPar <- inputList$resultsDataPlotPar
-			resultsRV$plotMulti <- inputList$resultsDataPlotMulti
-			# Force update
-			resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+		if (is.null(inFile)){
+			shinyWidgets::sendSweetAlert(
+				session = session,
+				title = i18n$t("No file loaded!"),
+				type = "warning"
+			)
+		} else{
+			inputList <- tryCatch(readRDS(inFile$datapath), 
+								  error = function(e) e)
+			if(inherits(inputList, what = "error")){
+				shinyWidgets::sendSweetAlert(
+					session = session,
+					title = i18n$t("Something went wrong!"),
+					type = "error"
+				)
+			} else{
+				# Check if it is a restauraR object
+				if(is.null(inputList$fileClass) || inputList$fileClass != "restauraR"){
+					shinyWidgets::sendSweetAlert(
+						session = session,
+						title = i18n$t("Not a restauraR object. No file loaded!"),
+						type = "error"
+					)
+				} else{
+					# Project name
+					shiny::updateTextInput(session = session,
+										   inputId = "projectName",
+										   value = inputList$projectName)
+					# inputDataRV
+					inputDataRV$traits <- inputList$inputDataTraits
+					inputDataRV$restComp <- inputList$inputDataRestComp
+					inputDataRV$restGroup <- inputList$inputDataRestGroup
+					inputDataRV$reference <- inputList$inputDataReference
+					inputDataRV$supplementary <- inputList$inputDataSupplementary
+					inputDataRV$cooccurrence <- inputList$inputDataCooccurrence
+					inputDataRV$sppDist <- inputList$inputDataSppDist
+					inputDataRV$auxTraitsClass <- inputList$inputDataAuxTraitsClass
+					inputDataRV$auxTraitsVariables <- inputList$inputDataAuxTraitsVariables
+					inputDataRV$auxRestGroupClass <- inputList$inputDataAuxRestGroupClass
+					inputDataRV$auxRestGroupVariables <- inputList$inputDataAuxRestGroupVariables
+					# Force update
+					inputDataRV$updateData <- ifelse(inputDataRV$updateData == 1, 0, 1)
+					# resultsRV
+					resultsRV$nSce <- inputList$resultsDataNSce
+					resultsRV$nSim <- inputList$resultsDataNSim
+					resultsRV$simulate <- inputList$resultsDataSimulate
+					resultsRV$nSel <- inputList$resultsDataNSel
+					resultsRV$nSimSel <- inputList$resultsDataNSimSel
+					resultsRV$select <- inputList$resultsDataSelect
+					resultsRV$plotPar <- inputList$resultsDataPlotPar
+					resultsRV$plotMulti <- inputList$resultsDataPlotMulti
+					# Force update
+					resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+					shinyWidgets::sendSweetAlert(
+						session = session,
+						title = i18n$t("Done!"),
+						text = paste0(i18n$t("Project loaded: "), inputList$projectName),
+						type = "success"
+					)
+				}
+			}
 		}
-		
-		
+		# if (!is.null(inFile)){
+		# 	# Read RDS
+		# 	inputList <- readRDS(inFile$datapath)
+		# 	# Project name
+		# 	shiny::updateTextInput(session = session,
+		# 						   inputId = "projectName",
+		# 						   value = inputList$projectName)
+		# 	# inputDataRV
+		# 	inputDataRV$traits <- inputList$inputDataTraits
+		# 	inputDataRV$restComp <- inputList$inputDataRestComp
+		# 	inputDataRV$restGroup <- inputList$inputDataRestGroup
+		# 	inputDataRV$reference <- inputList$inputDataReference
+		# 	inputDataRV$supplementary <- inputList$inputDataSupplementary
+		# 	inputDataRV$cooccurrence <- inputList$inputDataCooccurrence
+		# 	inputDataRV$sppDist <- inputList$inputDataSppDist
+		# 	inputDataRV$auxTraitsClass <- inputList$inputDataAuxTraitsClass
+		# 	inputDataRV$auxTraitsVariables <- inputList$inputDataAuxTraitsVariables
+		# 	inputDataRV$auxRestGroupClass <- inputList$inputDataAuxRestGroupClass
+		# 	inputDataRV$auxRestGroupVariables <- inputList$inputDataAuxRestGroupVariables
+		# 	# Force update
+		# 	inputDataRV$updateData <- ifelse(inputDataRV$updateData == 1, 0, 1)
+		# 	# resultsRV
+		# 	resultsRV$nSce <- inputList$resultsDataNSce
+		# 	resultsRV$nSim <- inputList$resultsDataNSim
+		# 	resultsRV$simulate <- inputList$resultsDataSimulate
+		# 	resultsRV$nSel <- inputList$resultsDataNSel
+		# 	resultsRV$nSimSel <- inputList$resultsDataNSimSel
+		# 	resultsRV$select <- inputList$resultsDataSelect
+		# 	resultsRV$plotPar <- inputList$resultsDataPlotPar
+		# 	resultsRV$plotMulti <- inputList$resultsDataPlotMulti
+		# 	# Force update
+		# 	resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+		# }
 	}) # End input file
 	
 	
@@ -329,8 +483,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	
 	
 	## doClear buttons ----
-	# doClear CONTINUAR
-	# remover tambem outros elementos da interface
+	# remover tambem outros elementos da interface?
 	shiny::observeEvent(input$doClear, {
 		inputDataRV$traits <- NULL
 		inputDataRV$restComp <- NULL
@@ -815,6 +968,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Priority selection sliders ----
 	shiny::observeEvent(input$testsPrioritySelInput, {
+		# Destroys the observers from the previous round
+		lapply(obsChartRV$priority, function(obs) obs$destroy())
+		# Create new ones
+		obsChartRV$priority <- list()
 		output$slidersTestsPrioritySel <- shiny::renderUI({
 			inVars <- input$testsPrioritySelInput
 			pvars <- length(inVars)
@@ -823,7 +980,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
-						shiny::observeEvent(input[[paste0("logicalTestPrioritySelInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestPrioritySelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
 								df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
@@ -840,6 +997,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$priority[[length(obsChartRV$priority) + 1]] <- newObs
 						# If integers
 						if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
 							choicesTemp <- seq(min(scenario[,inVars[i]], na.rm = TRUE), max(scenario[,inVars[i]], na.rm = TRUE))
@@ -860,7 +1018,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 													  selected = selectedTemp
 						)
 					} else {
-						shiny::observeEvent(input[[paste0("logicalTestPrioritySelInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestPrioritySelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -873,6 +1031,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$priority[[length(obsChartRV$priority) + 1]] <- newObs
 						shinyWidgets::pickerInput(inputId = paste0("logicalTestPrioritySelInput", inVars[i]),
 												  label = htmltools::p(i18n$t("Parameter:"),
 												  					 inVars[i],
@@ -892,6 +1051,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Filter selection sliders ----
 	shiny::observeEvent(input$testsFilterSelInput, {
+		# Destroys the observers from the previous round
+		lapply(obsChartRV$filter, function(obs) obs$destroy())
+		# Create new ones
+		obsChartRV$filter <- list()
 		output$slidersTestsFilterSel <- shiny::renderUI({
 			inVars <- input$testsFilterSelInput
 			pvars <- length(inVars)
@@ -900,7 +1063,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
-						shiny::observeEvent(input[[paste0("logicalTestFilterSelInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestFilterSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
 								df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
@@ -916,6 +1079,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$filter[[length(obsChartRV$filter) + 1]] <- newObs
 						# If integers
 						if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
 							choicesTemp <- seq(min(scenario[,inVars[i]], na.rm = TRUE), max(scenario[,inVars[i]], na.rm = TRUE))
@@ -936,7 +1100,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 													  selected = selectedTemp
 						)
 					} else {
-						shiny::observeEvent(input[[paste0("logicalTestFilterSelInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestFilterSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -949,6 +1113,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$filter[[length(obsChartRV$filter) + 1]] <- newObs
 						shinyWidgets::pickerInput(inputId = paste0("logicalTestFilterSelInput", inVars[i]),
 												  label = htmltools::p(i18n$t("Parameter:"),
 												  					 inVars[i],
@@ -968,6 +1133,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Multifunctionality sliders ----
 	shiny::observeEvent(input$testsMultiInput, {
+		# Destroys the observers from the previous round
+		lapply(obsChartRV$multi, function(obs) obs$destroy())
+		# Create new ones
+		obsChartRV$multi <- list()
 		output$slidersMulti <- shiny::renderUI({
 			inVars <- input$testsMultiInput
 			pvars <- length(inVars)
@@ -976,7 +1145,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
-						shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
 								df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
@@ -992,6 +1161,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$multi[[length(obsChartRV$multi) + 1]] <- newObs
 						# If integers
 						if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
 							choicesTemp <- seq(min(scenario[,inVars[i]], na.rm = TRUE), max(scenario[,inVars[i]], na.rm = TRUE))
@@ -1012,7 +1182,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 													  selected = selectedTemp
 						)
 					} else {
-						shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -1025,6 +1195,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$multi[[length(obsChartRV$multi) + 1]] <- newObs
 						shinyWidgets::pickerInput(inputId = paste0("logicalTestMultiInput", inVars[i]),
 												  label = htmltools::p(i18n$t("Parameter:"),
 												  					 inVars[i],
@@ -1044,6 +1215,10 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Multisite selection sliders ----
 	shiny::observeEvent(input$testsMultisiteOptInput, {
+		# Destroys the observers from the previous round
+		lapply(obsChartRV$multisite, function(obs) obs$destroy())
+		# Create new ones
+		obsChartRV$multisite <- list()
 		output$slidersTestsMultisiteSel <- shiny::renderUI({
 			inVars <- input$testsMultisiteOptInput
 			pvars <- length(inVars)
@@ -1052,7 +1227,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if (pvars > 0) {
 				lapply(seq(pvars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
-						shiny::observeEvent(input[[paste0("logicalTestMultisiteSelInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestMultisiteSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								quantiles <- stats::quantile(scenario[[inVars[i]]], prob = globalRV$probs, na.rm = TRUE)
 								df.quantiles <- data.frame(q = quantiles, label = paste0(round(quantiles, 3), " \n q = ", globalRV$probs))
@@ -1068,6 +1243,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$multisite[[length(obsChartRV$multisite) + 1]] <- newObs
 						# If integers
 						if(all(scenario[,inVars[i]] == floor(scenario[,inVars[i]]), na.rm = TRUE)){
 							choicesTemp <- seq(min(scenario[,inVars[i]], na.rm = TRUE), max(scenario[,inVars[i]], na.rm = TRUE))
@@ -1088,7 +1264,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 													  selected = selectedTemp
 						)
 					} else {
-						shiny::observeEvent(input[[paste0("logicalTestMultisiteSelInput", inVars[i], "chart")]], {
+						newObs <- shiny::observeEvent(input[[paste0("logicalTestMultisiteSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
 								ggplot2::ggplot(data = scenario) +
 									ggplot2::aes(x = .data[[inVars[i]]]) +
@@ -1101,6 +1277,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																easyClose = TRUE,
 																size = "xl"), session = session)
 						})
+						obsChartRV$multisite[[length(obsChartRV$multisite) + 1]] <- newObs
 						shinyWidgets::pickerInput(inputId = paste0("logicalTestMultisiteSelInput", inVars[i]),
 												  label = htmltools::p(i18n$t("Parameter:"),
 												  					 inVars[i],
@@ -1196,7 +1373,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1213,7 +1391,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1230,7 +1409,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1331,7 +1511,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1348,7 +1529,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1382,7 +1564,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Single"), i18n$t("Multiple")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1399,7 +1582,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = TRUE,
@@ -1438,7 +1622,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = TRUE,
@@ -1455,7 +1640,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 					 					icon = shiny::icon("info"),
 										 					 					style = "padding:3px; font-size:60%")),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1481,7 +1667,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shinyWidgets::prettyRadioButtons(inputId = "showRefViewParInput",
 										 label = i18n$t("Show reference sites"),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = TRUE,
@@ -1507,7 +1694,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shinyWidgets::prettyRadioButtons(inputId = "showRefViewMultiInput",
 										 label = i18n$t("Show reference sites"),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = TRUE,
@@ -1520,7 +1708,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shinyWidgets::prettyRadioButtons(inputId = "showMultisiteViewParInput",
 										 label = i18n$t("Plot results from the multisite analysis"),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1546,7 +1735,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
 										 label = i18n$t("Database format"),
 										 choices = stats::setNames(
-										 	c(TRUE, FALSE),
+										 	# c(TRUE, FALSE),
+										 	c("TRUE", "FALSE"),
 										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
 										 ),
 										 selected = FALSE,
@@ -1596,6 +1786,112 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	## Check buttons - OK ----
+	### Check doSimulate button ----
+	# shiny::observeEvent(input$prefixSimInput, {
+	# 	if(!input$prefixSimInput == ""){
+	# 		shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+	# 	} else{
+	# 		shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+	# 	}
+	# 	
+	# })
+	obsListDoSimulate <- shiny::reactive({
+		list(input$prefixSimInput, 
+			 input$isRichSiteSpecificInput, input$richSiteSpecificSimInput,
+			 input$itSimInput,
+			 input$methodSimInput, 
+			 input$isNIndSiteSpecificInput, input$nIndSiteSpecificSimInput, input$nIndSimInput, input$cvAbundSimInput,
+			 input$minAbundSimInput,
+			 input$isDistMaxDiverInput, input$maxDiverSimInput, inputDataRV$sppDist
+		)
+	})
+	shiny::observeEvent(obsListDoSimulate(), ignoreNULL = FALSE, {
+		noPrefix   <- isTRUE(input$prefixSimInput == "")
+		noRich <- TRUE
+		noItSim <- TRUE
+		noMethod <- TRUE
+		noMinAbun <- TRUE
+		noMaxDiver <- TRUE
+		if(!is.null(input$isRichSiteSpecificInput)){
+			if(input$isRichSiteSpecificInput == "TRUE" && is.null(input$richSiteSpecificSimInput)){
+				noRich <- TRUE
+			} else{
+				noRich <- FALSE
+			}
+		} 
+		if(!is.na(input$itSimInput)){
+			if(input$itSimInput>=4){
+				noItSim <- FALSE
+			} else{
+				noItSim <- TRUE
+			}
+		} 
+		if(!is.null(input$methodSimInput)){
+			if(tolower(input$methodSimInput) == "individuals"){
+				if(!is.null(input$isNIndSiteSpecificInput)){
+					if(input$isNIndSiteSpecificInput == "FALSE"){
+						if(is.na(input$nIndSimInput) || is.na(input$cvAbundSimInput)){
+							noMethod <- TRUE
+						} else{
+							noMethod <- FALSE
+						}
+					} else{
+						if(is.null(input$nIndSiteSpecificSimInput) || is.na(input$cvAbundSimInput)){
+							noMethod <- TRUE
+						} else{
+							noMethod <- FALSE
+						}
+					}
+				}
+			} else{
+				noMethod <- FALSE
+			}
+		}
+		if(!is.null(input$minAbundSimInput)){
+			if(!is.na(input$minAbundSimInput)){
+				if(!is.null(input$methodSimInput)){
+					if(tolower(input$methodSimInput) == "individuals"){
+						if(input$minAbundSimInput%%1 == 0){
+							noMinAbun <- FALSE
+						} else{
+							noMinAbun <- TRUE
+						}
+					} else{
+						if(input$minAbundSimInput>1){
+							noMinAbun <- TRUE
+						} else{
+							noMinAbun <- FALSE
+						}
+					}
+				}
+			} else{
+				noMinAbun <- FALSE
+			}
+		} else{
+			noMinAbun <- FALSE
+		}
+		
+		if(!is.null(input$isDistMaxDiverInput)){
+			if(input$isDistMaxDiverInput == "TRUE"){
+				if(is.null(inputDataRV$sppDist)){
+					noMaxDiver <- TRUE
+				} else{
+					noMaxDiver <- FALSE
+				}
+			} else{
+				noMaxDiver <- FALSE
+			}
+			
+		} else{
+			noMaxDiver <- FALSE
+		}
+		
+		if(noPrefix || noRich || noItSim || noMethod || noMinAbun || noMaxDiver){
+			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+		} else{
+			shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+		}
+	})
 	### Check doAdjustSim button ----
 	# shiny::observeEvent(input$scenarioSimAdjInput, ignoreNULL = FALSE, {
 	#   if(is.null(input$scenarioSimAdjInput)){
@@ -1605,12 +1901,34 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	#   )
 	# })
 	### Check doCompute button ----
-	shiny::observeEvent(input$scenarioComParInput, ignoreNULL = FALSE, {
-		if(is.null(input$scenarioComParInput)){
+	# shiny::observeEvent(input$scenarioComParInput, ignoreNULL = FALSE, {
+	# 	print(input$scenarioComParInput)
+	# 	if(is.null(input$scenarioComParInput)){
+	# 		shiny::updateActionButton(session, "doCompute", disabled = TRUE)
+	# 	} else(
+	# 		shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+	# 	)
+	# })
+	obsListDoCompute <- shiny::reactive({
+		list(input$scenarioComParInput, 
+			 input$isDistRaoComInput, inputDataRV$sppDist,
+			 input$isDistDissComInput, inputDataRV$sppDist)
+	})
+	shiny::observeEvent(obsListDoCompute(), ignoreNULL = FALSE, {
+		noScenario   <- is.null(input$scenarioComParInput)
+		noDistRao <- FALSE
+		noDistDiss <- FALSE
+		if(!is.null(input$isDistRaoComInput)){
+			noDistRao <- isTRUE(input$isDistRaoComInput == "TRUE")  && is.null(inputDataRV$sppDist)	
+		}
+		if(!is.null(input$isDistDissComInput)){
+			noDistDiss <- isTRUE(input$isDistDissComInput == "TRUE") && is.null(inputDataRV$sppDist)	
+		}
+		if(noScenario || noDistRao || noDistDiss){
 			shiny::updateActionButton(session, "doCompute", disabled = TRUE)
-		} else(
+		} else{
 			shiny::updateActionButton(session, "doCompute", disabled = FALSE)
-		)
+		}
 	})
 	### Check doStandardise button ----
 	shiny::observeEvent(input$scenarioComStandParInput, ignoreNULL = FALSE, {
@@ -1637,6 +1955,41 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			shiny::updateActionButton(session, "doSelect", disabled = TRUE)
 		} else(
 			shiny::updateActionButton(session, "doSelect", disabled = FALSE)
+		)
+	})
+	### Check doOptimise button ----
+	# shiny::observeEvent(input$scenarioOptInput, ignoreNULL = FALSE, {
+	# 	if(is.null(input$scenarioOptInput)){
+	# 		shiny::updateActionButton(session, "doOptimise", disabled = TRUE)
+	# 	} else(
+	# 		shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
+	# 	)
+	# })
+	obsListDoOptimise <- shiny::reactive({
+		list(input$scenarioOptInput,
+			 input$isDistBetaOptInput, inputDataRV$sppDist)
+	})
+	shiny::observeEvent(obsListDoOptimise(), ignoreNULL = FALSE, {
+		noScenario   <- is.null(input$scenarioOptInput)
+		noDistBeta <- FALSE
+		if(!is.null(input$isDistBetaOptInput)){
+			noDistBeta <- isTRUE(input$isDistBetaOptInput == "TRUE")  && is.null(inputDataRV$sppDist)	
+		}
+		if(noScenario || noDistBeta){
+			shiny::updateActionButton(session, "doOptimise", disabled = TRUE)
+		} else{
+			shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
+		}
+	})
+	### Check doSelectMultisite button ----
+	obsListDoSelectMultisite <- shiny::reactive({
+		list(input$prefixSelOptInput, input$scenarioSelOptInput)
+	})
+	shiny::observeEvent(obsListDoSelectMultisite(), ignoreNULL = FALSE, {
+		if(is.null(input$scenarioSelOptInput) || input$prefixSelOptInput == ""){
+			shiny::updateActionButton(session, "doSelectMultisite", disabled = TRUE)
+		} else(
+			shiny::updateActionButton(session, "doSelectMultisite", disabled = FALSE)
 		)
 	})
 	### Check doPlotPar button ----
@@ -1701,15 +2054,42 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			shiny::updateActionButton(session, "doSimulateRemove", disabled = FALSE)
 		)
 	})
+	### Check doDownloadParPlot button ----
+	# github shinyWidgets/issues/301
+	shiny::observeEvent(resultsRV$plotPar, ignoreNULL = FALSE, {
+		if(is.null(resultsRV$plotPar)){
+			shiny::updateActionButton(session, "doDownloadParPlot_bttn", disabled = TRUE)
+		} else(
+			shiny::updateActionButton(session, "doDownloadParPlot_bttn", disabled = FALSE)
+		)
+	})
+	### Check doDownloadMultiPlot button ----
+	# github shinyWidgets/issues/301
+	shiny::observeEvent(resultsRV$plotMulti, ignoreNULL = FALSE, {
+		if(is.null(resultsRV$plotMulti)){
+			shiny::updateActionButton(session, "doDownloadMultiPlot_bttn", disabled = TRUE)
+		} else(
+			shiny::updateActionButton(session, "doDownloadMultiPlot_bttn", disabled = FALSE)
+		)
+	})
+	### Check doDownloadExport button ----
+	# github shinyWidgets/issues/301
+	shiny::observeEvent(exportRV$table, ignoreNULL = FALSE, {
+		if(is.null(exportRV$table)){
+			shiny::updateActionButton(session, "doDownloadExport_bttn", disabled = TRUE)
+		} else(
+			shiny::updateActionButton(session, "doDownloadExport_bttn", disabled = FALSE)
+		)
+	})
 	## Input aux ----
 	### Simulate tab - prefixSimInput ----
-	shiny::observeEvent(input$prefixSimInput, {
-		if(!input$prefixSimInput == ""){
-			shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
-		} else{
-			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
-		}
-	})
+	# shiny::observeEvent(input$prefixSimInput, {
+	# 	if(!input$prefixSimInput == ""){
+	# 		shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+	# 	} else{
+	# 		shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+	# 	}
+	# })
 	### Simulate tab - rich ----
 	obsListRich <- shiny::reactive({
 		list(input$isRichSiteSpecificInput, input$richSliderSimInput, input$richSiteSpecificSimInput)
@@ -1719,18 +2099,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(input$isRichSiteSpecificInput == "TRUE"){
 				if(!is.null(input$richSiteSpecificSimInput)){
 					inputParSimRV$rich <- input$richSiteSpecificSimInput
-					shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+					# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 				} else{
 					inputParSimRV$rich <- NULL
-					shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+					# shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
 				}
 			} else{
 				inputParSimRV$rich <- input$richSliderSimInput
-				shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+				# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 			}
 		} else{
 			inputParSimRV$rich <- NULL
-			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+			# shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
 		}
 	})
 	
@@ -1744,13 +2124,13 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	shiny::observeEvent(input$itSimInput, {
 		if(!is.na(input$itSimInput)){
 			inputParSimRV$it <- input$itSimInput
-			if(input$itSimInput>=4){
-				shiny::updateActionButton(session, "doSimulate", disabled = FALSE)	
-			} else{
-				shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
-			}
+			# if(input$itSimInput>=4){
+			# 	shiny::updateActionButton(session, "doSimulate", disabled = FALSE)	
+			# } else{
+			# 	shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+			# }
 		} else{
-			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+			# shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
 			inputParSimRV$it <- NULL
 		}
 	})
@@ -1802,31 +2182,31 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(tolower(input$methodSimInput) == "individuals"){
 				if(!is.null(input$isNIndSiteSpecificInput)){
 					if(input$isNIndSiteSpecificInput == "FALSE"){
-						if(is.na(input$nIndSimInput) || is.na(input$cvAbundSimInput)){
-							shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
-						} else{
-							inputParSimRV$nInd <- input$nIndSimInput
-							inputParSimRV$cvAbund <- input$cvAbundSimInput
-							shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
-						}
+						# if(is.na(input$nIndSimInput) || is.na(input$cvAbundSimInput)){
+						# 	# shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+						# } else{
+						inputParSimRV$nInd <- input$nIndSimInput
+						inputParSimRV$cvAbund <- input$cvAbundSimInput
+						# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+						# }
 					} else{
-						if(is.null(input$nIndSiteSpecificSimInput) || is.na(input$cvAbundSimInput)){
-							shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
-						} else{
-							inputParSimRV$nInd <- input$nIndSiteSpecificSimInput
-							inputParSimRV$cvAbund <- input$cvAbundSimInput
-							shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
-						}
+						# if(is.null(input$nIndSiteSpecificSimInput) || is.na(input$cvAbundSimInput)){
+						# 	# shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+						# } else{
+						inputParSimRV$nInd <- input$nIndSiteSpecificSimInput
+						inputParSimRV$cvAbund <- input$cvAbundSimInput
+						# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+						# }
 					}
 				}
 			} else{
-				shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+				# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 				inputParSimRV$nInd <- NULL
 				inputParSimRV$cvAbund <- NULL
 			}
 		}
 	})
-	# ### Simulate tab - nInd  ----
+	# ### Simulate tab - nInd
 	# obsListRich <- shiny::reactive({
 	# 	list(input$isRichSiteSpecificInput, input$richSliderSimInput, input$richSiteSpecificSimInput)
 	# })
@@ -1858,28 +2238,28 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	shiny::observeEvent(obsListMinAbund(), {
 		if(!is.null(input$minAbundSimInput)){
 			if(!is.na(input$minAbundSimInput)){
-				if(!is.null(input$methodSimInput)){
-					if(tolower(input$methodSimInput) == "individuals"){
-						if(input$minAbundSimInput%%1 == 0){
-							shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
-						} else{
-							shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
-						}
-					} else{
-						if(input$minAbundSimInput>1){
-							shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
-						} else{
-							shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
-						}
-					}
-				}
+				# if(!is.null(input$methodSimInput)){
+				# 	if(tolower(input$methodSimInput) == "individuals"){
+				# 		if(input$minAbundSimInput%%1 == 0){
+				# 			shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+				# 		} else{
+				# 			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+				# 		}
+				# 	} else{
+				# 		if(input$minAbundSimInput>1){
+				# 			shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+				# 		} else{
+				# 			shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+				# 		}
+				# 	}
+				# }
 				inputParSimRV$minAbund <- input$minAbundSimInput	
 			} else{
-				shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+				# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 				inputParSimRV$minAbund <- NULL
 			}
 		} else{
-			shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+			# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 			inputParSimRV$minAbund <- NULL
 		}
 	})
@@ -1893,19 +2273,19 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(input$isDistMaxDiverInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
 					inputParSimRV$maxDiver <- NULL
-					shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
+					# shiny::updateActionButton(session, "doSimulate", disabled = TRUE)
 				} else{
 					inputParSimRV$maxDiver <- stats::as.dist(inputDataRV$sppDist)
-					shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+					# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 				}
 				# }
 			} else{
-				shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+				# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 				inputParSimRV$maxDiver <- input$maxDiverSimInput
 			}
 			
 		} else{
-			shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
+			# shiny::updateActionButton(session, "doSimulate", disabled = FALSE)
 			inputParSimRV$maxDiver <- NULL
 		}
 	})
@@ -1919,20 +2299,20 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(input$isDistRaoComInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
 					inputParComRV$rao <- NULL
-					shiny::updateActionButton(session, "doCompute", disabled = TRUE)
+					# shiny::updateActionButton(session, "doCompute", disabled = TRUE)
 				} else{
 					inputParComRV$rao <- stats::as.dist(inputDataRV$sppDist)
-					shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+					# shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				}
 				
 				# }
 			} else{
-				shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+				# shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				inputParComRV$rao <- input$raoComInput
 			}
 			
 		} else{
-			shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+			# shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 			inputParComRV$rao <- NULL
 		}
 	})
@@ -1946,18 +2326,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(input$isDistBetaOptInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
 					inputParOptRV$beta <- NULL
-					shiny::updateActionButton(session, "doOptimise", disabled = TRUE)
+					# shiny::updateActionButton(session, "doOptimise", disabled = TRUE)
 				} else{
 					inputParOptRV$beta <- stats::as.dist(inputDataRV$sppDist)
-					shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
+					# shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
 				}
 				# }
 			} else{
-				shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
+				# shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
 				inputParOptRV$beta <- input$betaOptInput
 			}
 		} else{
-			shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
+			# shiny::updateActionButton(session, "doOptimise", disabled = FALSE)
 			inputParOptRV$beta <- NULL
 		}
 	})
@@ -1971,18 +2351,18 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(input$isDistDissComInput == "TRUE"){
 				if(is.null(inputDataRV$sppDist)){
 					inputParComRV$dissimilarity <- NULL
-					shiny::updateActionButton(session, "doCompute", disabled = TRUE)
+					# shiny::updateActionButton(session, "doCompute", disabled = TRUE)
 				} else{
 					inputParComRV$dissimilarity <- stats::as.dist(inputDataRV$sppDist)
-					shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+					# shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				}
 				# }
 			} else{
-				shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+				# shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 				inputParComRV$dissimilarity <- input$disComInput
 			}
 		} else{
-			shiny::updateActionButton(session, "doCompute", disabled = FALSE)
+			# shiny::updateActionButton(session, "doCompute", disabled = FALSE)
 			inputParComRV$dissimilarity <- NULL
 		}
 	})
@@ -1999,7 +2379,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### View tab - dbFormatExpInput ----
 	shiny::observeEvent(input$dbFormatExpInput, ignoreNULL = FALSE, {
 		if(!is.null(input$dbFormatExpInput)){
-			exportRV$dbFormat <- input$dbFormatExpInput
+			exportRV$dbFormat <- as.logical(input$dbFormatExpInput)
 		} else{
 			exportRV$dbFormat <- FALSE
 		}
@@ -2102,9 +2482,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			} else{
 				inputParSimRV$cooccurrence <- NULL
 			}
-			# CONTINUAR
 			if(input$goalsSimInput != "New" || input$isRichSiteSpecificInput == "TRUE" || (input$isNIndSiteSpecificInput == "TRUE" && tolower(input$methodSimInput) == "individuals")){
-				# if(input$goalsSimInput != "New" || input$isRichSiteSpecificInput == "TRUE" || input$isNIndSiteSpecificInput == "TRUE"){
 				inputParSimRV$restGroup <- inputDataRV$restGroup
 			} else{
 				inputParSimRV$restGroup <- NULL
@@ -2113,6 +2491,16 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(!is.na(input$setSeedSimInput)){
 				set.seed(input$setSeedSimInput)
 			}
+			scenarioName <- safeName(input$prefixSimInput, paste0("Sim_", resultsRV$nSce+1))
+			
+			# if(scenarioName %in% names(resultsRV$simulate)){
+			# 	shinyWidgets::confirmSweetAlert(
+			# 		session = session, 
+			# 		inputId = "confirmSimOverwrite",
+			# 		btn_labels = c("Cancel", "Confirm"),
+			# 	)
+			# }
+			# print(input$confirmSimOverwrite)
 			scenario <- tryCatch(restauraR::simulateCommunities(traits = inputDataRV$traits,
 																restComp = inputParSimRV$restComp, # Ok
 																restGroup = inputParSimRV$restGroup, # Ok
@@ -2128,7 +2516,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 																phi = input$phiSimInput, # straight input
 																nInd = inputParSimRV$nInd, # Ok
 																cvAbund = inputParSimRV$cvAbund, # Ok
-																prefix = input$prefixSimInput, # straigth input
+																prefix = scenarioName, # Ok
 																method = tolower(input$methodSimInput), # straight input
 																cooccur = inputParSimRV$cooccurrence, # ok
 																minAbund = inputParSimRV$minAbund, # ok
@@ -2150,7 +2538,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 					set.seed(NULL)
 					shinyjs::reset("setSeedSimInput")
 				}
-				resultsRV$simulate[[input$prefixSimInput]] <- scenario
+				# resultsRV$simulate[[input$prefixSimInput]] <- scenario
+				resultsRV$simulate[[scenarioName]] <- scenario
 				# Update basic informations
 				resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
 				resultsRV$nSce <- length(resultsRV$simulate)
@@ -2211,8 +2600,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 					resultsRV$simulate[[input$mergeSimulateInput[i]]] <- NULL
 				}
 				# Merge
-				resultsRV$simulate[[input$mergeSimulateNameInput]] <- scenario
-				resultsRV$simulate[[input$mergeSimulateNameInput]]$call <- "Call" # Remove long call
+				scenarioName <- safeName(input$mergeSimulateNameInput, paste0("Sim_Merged_", resultsRV$nSce+1))
+				# resultsRV$simulate[[input$mergeSimulateNameInput]] <- scenario
+				# resultsRV$simulate[[input$mergeSimulateNameInput]]$call <- "Call" # Remove long call
+				resultsRV$simulate[[scenarioName]] <- scenario
+				resultsRV$simulate[[scenarioName]]$call <- "Call" # Remove long call
 				# Update basic informations
 				resultsRV$nSim <- sum(sapply(resultsRV$simulate, function(x) nrow(x$simulation$composition)))
 				resultsRV$nSce <- length(resultsRV$simulate)
@@ -2514,6 +2906,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		} else{
 			inputParSelRV$group <- NULL
 		}
+		scenarioName <- safeName(input$prefixSelInput, paste0("Sel_", resultsRV$nSel+1))
 		scenario <- tryCatch(restauraR::selectCommunities(x = resultsRV$simulate[[input$scenarioSelInput]],
 														  testsFilter = inputParSelRV$testsFilter,
 														  testsPriority = inputParSelRV$testsPriority,
@@ -2529,7 +2922,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				type = "error"
 			)
 		} else{
-			resultsRV$select[[input$prefixSelInput]] <- scenario
+			# resultsRV$select[[input$prefixSelInput]] <- scenario
+			resultsRV$select[[scenarioName]] <- scenario
 			# Update basic informations
 			resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
 			resultsRV$nSel <- length(resultsRV$select)
@@ -2589,8 +2983,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 					resultsRV$select[[input$mergeSelectInput[i]]] <- NULL
 				}
 				# Merge
-				resultsRV$select[[input$mergeSelectNameInput]] <- scenario
-				resultsRV$select[[input$mergeSelectNameInput]]$call <- "Call" # Remove long call
+				scenarioName <- safeName(input$mergeSelectNameInput, paste0("Sel_Merged_", resultsRV$nSel+1))
+				# resultsRV$select[[input$mergeSelectNameInput]] <- scenario
+				# resultsRV$select[[input$mergeSelectNameInput]]$call <- "Call" # Remove long call
+				resultsRV$select[[scenarioName]] <- scenario
+				resultsRV$select[[scenarioName]]$call <- "Call" # Remove long call
 				# Update basic informations
 				resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
 				resultsRV$nSel <- length(resultsRV$select)
@@ -2704,6 +3101,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			# inputParSelRV$testsFilter <- NULL
 			testList <- NULL
 		}
+		scenarioName <- safeName(input$prefixSelOptInput, paste0("SelOpt_", resultsRV$nSel+1))
 		scenario <- tryCatch(restauraR::selectCommunities(x = resultsRV$select[[input$scenarioSelOptInput]],
 														  testsMultisite = testList
 														  
@@ -2717,7 +3115,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				type = "error"
 			)
 		} else{
-			resultsRV$select[[input$prefixSelOptInput]] <- scenario
+			# resultsRV$select[[input$prefixSelOptInput]] <- scenario
+			resultsRV$select[[scenarioName]] <- scenario
 			# Update basic informations
 			resultsRV$nSimSel <- sum(sapply(resultsRV$select, function(x) nrow(x$selection$composition)))
 			resultsRV$nSel <- length(resultsRV$select)
@@ -3025,8 +3424,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### doDownloadParPlot ----
 	output$doDownloadParPlot <- shiny::downloadHandler(
-		filename <- function() {paste0(input$projectName, "_", input$scenarioViewParInput, "_", input$xvarViewInput, input$yvarViewInput, "_", globalRV$currentDate, ".png")},
-		content <- function(file) {
+		filename = function() {paste0(safeName(input$projectName, "Project"), "_", input$scenarioViewParInput, "_", input$xvarViewInput, input$yvarViewInput, "_", format(Sys.Date(), "%Y%m%d"), ".png")},
+		content = function(file) {
 			ggplot2::ggsave(file,
 							width = input$saveWidth,
 							height = input$saveHeight,
@@ -3037,8 +3436,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	)
 	### doDownloadMultiPlot ----
 	output$doDownloadMultiPlot <- shiny::downloadHandler(
-		filename <- function() {paste0(input$projectName, "_", input$scenarioViewMultiInput, "_Multifunctionality_", globalRV$currentDate, ".png")},
-		content <- function(file) {
+		filename = function() {paste0(safeName(input$projectName, "Project"), "_", input$scenarioViewMultiInput, "_Multifunctionality_", format(Sys.Date(), "%Y%m%d"), ".png")},
+		content = function(file) {
 			ggplot2::ggsave(file,
 							width = input$saveWidth,
 							height = input$saveHeight,
@@ -3049,16 +3448,17 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	)
 	### doDownloadExport ----
 	output$doDownloadExport <- shiny::downloadHandler(
-		filename <- function() {paste0(input$projectName, "_", input$scenarioExportInput, "_", input$typeExportInput, "_", globalRV$currentDate, ".csv")},
-		content <- function(file) {
+		filename = function() {paste0(safeName(input$projectName, "Project"), "_", input$scenarioExportInput, "_", input$typeExportInput, "_", format(Sys.Date(), "%Y%m%d"), ".csv")},
+		content = function(file) {
 			utils::write.csv(exportRV$table, file = file)
 		}
 	)
 	### doSaveProject ----
 	output$doSaveProject <- shiny::downloadHandler(
-		filename <- function() {paste0(input$projectName, "_", globalRV$currentDate, ".rds")},
-		content <- function(file) {
-			exportList <- list(projectName = input$projectName,
+		filename = function() {paste0(safeName(input$projectName, "Project"), "_", format(Sys.Date(), "%Y%m%d"), ".rds")},
+		content = function(file) {
+			exportList <- list(fileClass = "restauraR",
+							   projectName = safeName(input$projectName, "Project"),
 							   inputDataTraits = inputDataRV$traits,
 							   inputDataRestComp = inputDataRV$restComp,
 							   inputDataRestGroup  = inputDataRV$restGroup,
@@ -3685,24 +4085,22 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(!is.null(input$scenarioSimulateSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioSimulateSummaryInput]]
 				strTemp <- c()
-				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$simulation$composition)))
-				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$simulation$composition)))
-				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
-				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
+				strTemp <- c(strTemp, paste0(i18n$t("Species pool size: "), ncol(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Number of simulations: "), nrow(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), i18n$t("No"), i18n$t("Yes"))))
+				strTemp <- c(strTemp, paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), i18n$t("No"), i18n$t("Yes"))))
 				if(!is.null(x$simulation$results)) {
-					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>"))
-					
 					# strTemp <- c(strTemp, tableHTML::tableHTML(restauraR:::resSummary(x$simulation$results), rownames = TRUE))
-					
 				} else{
-					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), i18n$t("No"), i18n$t("Yes"))))
 				}
 				if(!is.null(x$simulation$multifunctionality)) {
-					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multifunctionality)[-1], collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$simulation$multifunctionality), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: "), ifelse(is.null(x$simulation$multifunctionality), i18n$t("No"), i18n$t("Yes"))))
 				}
 				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
@@ -3714,21 +4112,21 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(!is.null(input$scenarioComputeSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioComputeSummaryInput]]
 				strTemp <- c()
-				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$simulation$composition)))
-				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$simulation$composition)))
-				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
-				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
+				strTemp <- c(strTemp, paste0(i18n$t("Species pool size: "), ncol(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Number of simulations: "), nrow(x$simulation$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), i18n$t("No"), i18n$t("Yes"))))
+				strTemp <- c(strTemp, paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), i18n$t("No"), i18n$t("Yes"))))
 				if(!is.null(x$simulation$results)) {
-					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$results), collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$simulation$results), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: "), ifelse(is.null(x$simulation$results), i18n$t("No"), i18n$t("Yes"))))
 				}
 				if(!is.null(x$simulation$multifunctionality)) {
-					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$simulation$multifunctionality)[-1], collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$simulation$multifunctionality), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: "), ifelse(is.null(x$simulation$multifunctionality), i18n$t("No"), i18n$t("Yes"))))
 				}
 				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
@@ -3740,27 +4138,27 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(!is.null(input$scenarioSelectSummaryInput)){
 				x <- resultsRV$select[[input$scenarioSelectSummaryInput]]
 				strTemp <- c()
-				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$selection$composition)))
-				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$selection$composition)))
-				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
-				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
+				strTemp <- c(strTemp, paste0(i18n$t("Species pool size: "), ncol(x$selection$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Number of simulations: "), nrow(x$selection$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), i18n$t("No"), i18n$t("Yes"))))
+				strTemp <- c(strTemp, paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), i18n$t("No"), i18n$t("Yes"))))
 				if(!is.null(x$selection$results)) {
-					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: "), ifelse(is.null(x$selection$results), i18n$t("No"), i18n$t("Yes"))))
 				}
 				if(!is.null(x$selection$multifunctionality)) {
-					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multifunctionality)[-1], collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$selection$multifunctionality), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: "), ifelse(is.null(x$selection$multifunctionality), i18n$t("No"), i18n$t("Yes"))))
 				}
 				if(!is.null(x$selection$multisite$results)) {
-					strTemp <- c(strTemp, paste0("Multisite results: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Multisite results: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multisite$results), collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$selection$multisite$results), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Multisite results: "), ifelse(is.null(x$selection$multisite$results), i18n$t("No"), i18n$t("Yes"))))
 				}
 				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}
@@ -3772,27 +4170,27 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(!is.null(input$scenarioOptimiseSummaryInput)){
 				x <- resultsRV$select[[input$scenarioOptimiseSummaryInput]]
 				strTemp <- c()
-				strTemp <- c(strTemp, paste0("Species pool size: ", ncol(x$selection$composition)))
-				strTemp <- c(strTemp, paste0("Number of simulations: ", nrow(x$selection$composition)))
-				strTemp <- c(strTemp, paste0("Reference communities: ", ifelse(is.null(x$reference), "No", "Yes")))
-				strTemp <- c(strTemp, paste0("Supplementary communities: ", ifelse(is.null(x$supplementary), "No", "Yes")))
+				strTemp <- c(strTemp, paste0(i18n$t("Species pool size: "), ncol(x$selection$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Number of simulations: "), nrow(x$selection$composition)))
+				strTemp <- c(strTemp, paste0(i18n$t("Reference communities: "), ifelse(is.null(x$reference), i18n$t("No"), i18n$t("Yes"))))
+				strTemp <- c(strTemp, paste0(i18n$t("Supplementary communities: "), ifelse(is.null(x$supplementary), i18n$t("No"), i18n$t("Yes"))))
 				if(!is.null(x$selection$results)) {
-					strTemp <- c(strTemp, paste0("Parameters: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$results), collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Parameters: ", ifelse(is.null(x$selection$results), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Parameters: "), ifelse(is.null(x$selection$results), i18n$t("No"), i18n$t("Yes"))))
 				}
 				if(!is.null(x$selection$multifunctionality)) {
-					strTemp <- c(strTemp, paste0("Multifunctionality: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multifunctionality)[-1], collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Multifunctionality: ", ifelse(is.null(x$selection$multifunctionality), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Multifunctionality: "), ifelse(is.null(x$selection$multifunctionality), i18n$t("No"), i18n$t("Yes"))))
 				}
 				if(!is.null(x$selection$multisite$results)) {
-					strTemp <- c(strTemp, paste0("Multisite results: "))
+					strTemp <- c(strTemp, paste0(i18n$t("Multisite results: ")))
 					strTemp <- c(strTemp, paste0("&emsp;", colnames(x$selection$multisite$results), collapse = "<br/>"))
 				} else{
-					strTemp <- c(strTemp, paste0("Multisite results: ", ifelse(is.null(x$selection$multisite$results), "No", "Yes")))
+					strTemp <- c(strTemp, paste0(i18n$t("Multisite results: "), ifelse(is.null(x$selection$multisite$results), i18n$t("No"), i18n$t("Yes"))))
 				}
 				shiny::HTML(paste(strTemp, collapse = "<br/>"))
 			}

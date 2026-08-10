@@ -18,6 +18,8 @@ header <- shinydashboardPlus::dashboardHeader(
 		# Use shiny.i18n functions
 		# stackoverflow.com/questions/73509710
 		shiny.i18n::usei18n(i18n),
+		# Use shinyalert functions
+		# shinyalert::useShinyalert(),
 		# Use shinyjs functions
 		shinyjs::useShinyjs(),
 		tags$span(
@@ -74,6 +76,13 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 											 inline = TRUE,
 											 status = "primary"
 			),
+			shinyWidgets::prettyRadioButtons(inputId = "fileDec",
+											 label = i18n$t("Decimal character"),
+											 choices = c(".", ","),
+											 selected = ".",
+											 inline = TRUE,
+											 status = "primary"
+			),
 			shiny::uiOutput("decimalPlaces"),
 			# shiny::numericInput(inputId = "decimalPlaces",
 			# 					label = "Decimal places",
@@ -121,17 +130,19 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 body <- shinydashboard::dashboardBody(
 	# Use shiny.i18n functions
 	shiny.i18n::usei18n(i18n),
+	# Use shinyalert functions
+	# shinyalert::useShinyalert(),
+	# Use shinyjs functions
+	shinyjs::useShinyjs(),
 	# Global CSS tags
 	tags$head(
 		tags$style(shiny::HTML(
 			"hr {border-top: 1px solid #000000;}",
-			"#boxNH .box-header{display: none}",
 			".alertStartup {background-color:transparent !important;}",
-			".box-header .box-title {font-size: 16px; font-weight: normal;}"
+			".box-header .box-title {font-size: 16px; font-weight: normal;}",
+			".no-header-box .box-header {display: none;}"
 		))
 	),
-	# Use shinyjs functions
-	shinyjs::useShinyjs(),
 	shinydashboard::tabItems(
 		#### startTab -----
 		shinydashboard::tabItem(tabName = "startTab",
@@ -225,138 +236,152 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8, 
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "traitsInput",
-												  									  										 label = htmltools::p(i18n$t("Traits"), 
-												  									  										 					 shiny::actionButton("traitsInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearTraits", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "traitsInput",
+												  									  		 										 label = htmltools::p(i18n$t("Traits"), 
+												  									  		 										 					 shiny::actionButton("traitsInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearTraits", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  ),
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "restCompInput",
-												  									  										 label = htmltools::p(i18n$t("Species composition of restoration sites"), 
-												  									  										 					 shiny::actionButton("restCompInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearRestComp", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "restCompInput",
+												  									  		 										 label = htmltools::p(i18n$t("Species composition of restoration sites"), 
+												  									  		 										 					 shiny::actionButton("restCompInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearRestComp", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  ),
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "restGroupInput",
-												  									  										 label = htmltools::p(i18n$t("Complementary information for restoration sites"), 
-												  									  										 					 shiny::actionButton("restGroupInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "restGroupInput",
+												  									  		 										 label = htmltools::p(i18n$t("Complementary information for restoration sites"), 
+												  									  		 										 					 shiny::actionButton("restGroupInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearRestGroup", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  ),
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "referenceInput",
-												  									  										 label = htmltools::p(i18n$t("Species composition of reference sites"), 
-												  									  										 					 shiny::actionButton("referenceInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearReference", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "referenceInput",
+												  									  		 										 label = htmltools::p(i18n$t("Species composition of reference sites"), 
+												  									  		 										 					 shiny::actionButton("referenceInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearReference", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  ),
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "supplementaryInput",
-												  									  										 label = htmltools::p(i18n$t("Species composition of supplementary sites"), 
-												  									  										 					 shiny::actionButton("supplementaryInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "supplementaryInput",
+												  									  		 										 label = htmltools::p(i18n$t("Species composition of supplementary sites"), 
+												  									  		 										 					 shiny::actionButton("supplementaryInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearSupplementary", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  ),
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "cooccurrenceInput",
-												  									  										 label = htmltools::p(i18n$t("Co-occurrence probabilities between species"), 
-												  									  										 					 shiny::actionButton("cooccurrenceInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearCooccurrence", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "cooccurrenceInput",
+												  									  		 										 label = htmltools::p(i18n$t("Co-occurrence probabilities between species"), 
+												  									  		 										 					 shiny::actionButton("cooccurrenceInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearCooccurrence", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  ),
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::fileInput(inputId = "sppDistInput",
-												  									  										 label = htmltools::p(i18n$t("Species distance matrix"), 
-												  									  										 					 shiny::actionButton("sppDistInputInfo",
-												  									  										 					 					label = "",
-												  									  										 					 					icon = shiny::icon("info"),
-												  									  										 					 					style = "padding:3px; font-size:60%")),
-												  									  										 accept = c(".csv"),
-												  									  										 buttonLabel = i18n$t("Browse...")
-												  									  						),
-												  									  						htmltools::div(
-												  									  							shinyWidgets::actionBttn(inputId = "doClearSppDist", 
-												  									  													 label = i18n$t("Clear"),
-												  									  													 style = "fill",
-												  									  													 size = "sm",
-												  									  													 color = "default"),
-												  									  							style = "margin-top:0px"
-												  									  						)
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::fileInput(inputId = "sppDistInput",
+												  									  		 										 label = htmltools::p(i18n$t("Species distance matrix"), 
+												  									  		 										 					 shiny::actionButton("sppDistInputInfo",
+												  									  		 										 					 					label = "",
+												  									  		 										 					 					icon = shiny::icon("info"),
+												  									  		 										 					 					style = "padding:3px; font-size:60%")),
+												  									  		 										 accept = c(".csv"),
+												  									  		 										 buttonLabel = i18n$t("Browse...")
+												  									  		 						),
+												  									  		 						htmltools::div(
+												  									  		 							shinyWidgets::actionBttn(inputId = "doClearSppDist", 
+												  									  		 													 label = i18n$t("Clear"),
+												  									  		 													 style = "fill",
+												  									  		 													 size = "sm",
+												  									  		 													 color = "default"),
+												  									  		 							style = "margin-top:0px"
+												  									  		 						)
+												  									  		 )
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 4, 
@@ -367,7 +392,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						 size = "md",
 												  									  						 color = "success"),
 												  									  shinyWidgets::actionBttn(inputId = "doClear", 
-												  									  						 label = i18n$t("Clear all"),
+												  									  						 label = i18n$t("Clear input data"),
 												  									  						 style = "fill",
 												  									  						 size = "md",
 												  									  						 color = "danger")
@@ -451,7 +476,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -460,7 +485,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 value = "Sim_1"
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Basic parameters"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -562,7 +587,7 @@ body <- shinydashboard::dashboardBody(
 												  									  											value = NULL
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Species information"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
@@ -589,7 +614,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Functional traits constraints"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -632,7 +657,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												)
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Constraints by species groups"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
@@ -686,7 +711,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												)
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Advanced options"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
@@ -743,11 +768,11 @@ body <- shinydashboard::dashboardBody(
 												  									  shiny::textOutput(outputId = "countSimulationText"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Scenario management"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
-												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  						shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Merge"), 
 												  									  												collapsible = FALSE,
 												  									  												collapsed = FALSE,
@@ -766,7 +791,7 @@ body <- shinydashboard::dashboardBody(
 												  									  																		 size = "md",
 												  									  																		 color = "success")
 												  									  						),
-												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  						shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Remove"), 
 												  									  												collapsible = FALSE,
 												  									  												collapsed = FALSE,
@@ -792,7 +817,7 @@ body <- shinydashboard::dashboardBody(
 												  	#                 shiny::fluidRow(
 												  	#                   htmltools::br(),
 												  	#                   shiny::column(width = 8,
-												  	#                                 shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  	#                                 shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  	#                                                         title = i18n$t("Scenario"), 
 												  	#                                                         collapsible = TRUE,
 												  	#                                                         collapsed = FALSE,
@@ -804,7 +829,7 @@ body <- shinydashboard::dashboardBody(
 												  	#                                                                                   inline = FALSE
 												  	#                                                         )
 												  	#                                 ),
-												  	#                                 shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  	#                                 shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  	#                                                         title = i18n$t("Adjust options"), 
 												  	#                                                         collapsible = TRUE,
 												  	#                                                         collapsed = FALSE,
@@ -865,7 +890,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -877,7 +902,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Ecological indicators"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -969,7 +994,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												)
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Economic indicators"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
@@ -1010,7 +1035,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1022,7 +1047,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Standardisation options"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1067,7 +1092,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1079,7 +1104,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Multifunctionality options"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1138,7 +1163,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1154,7 +1179,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 value = "Sel_1"
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Selection options"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1245,11 +1270,11 @@ body <- shinydashboard::dashboardBody(
 												  									  shiny::textOutput(outputId = "countSimulationSelText"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Scenario management"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = TRUE,
-												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  						shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Merge"), 
 												  									  												collapsible = FALSE,
 												  									  												collapsed = FALSE,
@@ -1268,7 +1293,7 @@ body <- shinydashboard::dashboardBody(
 												  									  																		 size = "md",
 												  									  																		 color = "success")
 												  									  						),
-												  									  						shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  						shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  												title = i18n$t("Remove"), 
 												  									  												collapsible = FALSE,
 												  									  												collapsed = FALSE,
@@ -1318,7 +1343,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Scenario"),
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1330,7 +1355,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												  inline = FALSE
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE,
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
 												  									  						title = i18n$t("Optimise options"),
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1398,7 +1423,7 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 8,
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Scenario"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1414,7 +1439,7 @@ body <- shinydashboard::dashboardBody(
 												  									  										 value = "SelOpt_1"
 												  									  						)
 												  									  ),
-												  									  shinydashboardPlus::box(id = "box", width = 12, headerBorder = FALSE, 
+												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE, 
 												  									  						title = i18n$t("Selection options"), 
 												  									  						collapsible = TRUE,
 												  									  						collapsed = FALSE,
@@ -1475,70 +1500,72 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 4,
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::uiOutput("radioScenarioTypeViewParOutput"),
-												  									  						# shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewParInput",
-												  									  						# 								 label = i18n$t("Scenario type"),
-												  									  						# 								 choices = stats::setNames(
-												  									  						# 								 	c("Raw", "Selected"),
-												  									  						# 								 	c("Raw", "Selected") # Set labels
-												  									  						# 								 ),
-												  									  						# 								 selected = "Raw",
-												  									  						# 								 inline = TRUE,
-												  									  						# 								 status = "primary"
-												  									  						# ),
-												  									  						shinyWidgets::pickerInput(inputId = "scenarioViewParInput",
-												  									  												  label = i18n$t("Choose scenario"),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list("max-options" = 1),
-												  									  												  inline = FALSE
-												  									  						),
-												  									  						shiny::conditionalPanel(condition = "(input.scenarioTypeViewParInput == 'Selected')",
-												  									  												shiny::uiOutput("radioShowMultisiteViewParOutput")
-												  									  						),
-												  									  						shinyWidgets::pickerInput(inputId = "xvarViewInput",
-												  									  												  label = i18n$t("Variable to x-axis"),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list("max-options" = 1),
-												  									  												  inline = FALSE
-												  									  						),
-												  									  						shinyWidgets::pickerInput(inputId = "yvarViewInput",
-												  									  												  label = i18n$t("Variable to y-axis"),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list("max-options" = 1),
-												  									  												  inline = FALSE
-												  									  						),
-												  									  						shiny::uiOutput("radioShowRefViewParOutput"),
-												  									  						# shinyWidgets::prettyRadioButtons(inputId = "hideRefViewParInput",
-												  									  						# 								 label = i18n$t("Hide reference sites"),
-												  									  						# 								 choices = stats::setNames(
-												  									  						# 								 	c(TRUE, FALSE),
-												  									  						# 								 	c("Yes", "No") # Set labels
-												  									  						# 								 ),
-												  									  						# 								 selected = FALSE,
-												  									  						# 								 inline = TRUE,
-												  									  						# 								 status = "primary"
-												  									  						# ),
-												  									  						# hr(),
-												  									  						shiny::textInput(inputId = "xvarLab", 
-												  									  										 label = i18n$t("Label to x-axis"), 
-												  									  										 value = ""),
-												  									  						shiny::textInput(inputId = "yvarLab", 
-												  									  										 label = i18n$t("Label to y-axis"), 
-												  									  										 value = ""),
-												  									  						shinyWidgets::actionBttn(inputId = "doPlotPar", 
-												  									  												 label = i18n$t("Plot"),
-												  									  												 style = "fill",
-												  									  												 size = "md",
-												  									  												 color = "success"),
-												  									  						shinyWidgets::actionBttn(inputId = "doPlotParClear", 
-												  									  												 label = i18n$t("Clear"),
-												  									  												 style = "fill",
-												  									  												 size = "md",
-												  									  												 color = "default")
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::uiOutput("radioScenarioTypeViewParOutput"),
+												  									  		 						# shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewParInput",
+												  									  		 						# 								 label = i18n$t("Scenario type"),
+												  									  		 						# 								 choices = stats::setNames(
+												  									  		 						# 								 	c("Raw", "Selected"),
+												  									  		 						# 								 	c("Raw", "Selected") # Set labels
+												  									  		 						# 								 ),
+												  									  		 						# 								 selected = "Raw",
+												  									  		 						# 								 inline = TRUE,
+												  									  		 						# 								 status = "primary"
+												  									  		 						# ),
+												  									  		 						shinyWidgets::pickerInput(inputId = "scenarioViewParInput",
+												  									  		 												  label = i18n$t("Choose scenario"),
+												  									  		 												  choices = NULL,
+												  									  		 												  multiple = TRUE,
+												  									  		 												  options = list("max-options" = 1),
+												  									  		 												  inline = FALSE
+												  									  		 						),
+												  									  		 						shiny::conditionalPanel(condition = "(input.scenarioTypeViewParInput == 'Selected')",
+												  									  		 												shiny::uiOutput("radioShowMultisiteViewParOutput")
+												  									  		 						),
+												  									  		 						shinyWidgets::pickerInput(inputId = "xvarViewInput",
+												  									  		 												  label = i18n$t("Variable to x-axis"),
+												  									  		 												  choices = NULL,
+												  									  		 												  multiple = TRUE,
+												  									  		 												  options = list("max-options" = 1),
+												  									  		 												  inline = FALSE
+												  									  		 						),
+												  									  		 						shinyWidgets::pickerInput(inputId = "yvarViewInput",
+												  									  		 												  label = i18n$t("Variable to y-axis"),
+												  									  		 												  choices = NULL,
+												  									  		 												  multiple = TRUE,
+												  									  		 												  options = list("max-options" = 1),
+												  									  		 												  inline = FALSE
+												  									  		 						),
+												  									  		 						shiny::uiOutput("radioShowRefViewParOutput"),
+												  									  		 						# shinyWidgets::prettyRadioButtons(inputId = "hideRefViewParInput",
+												  									  		 						# 								 label = i18n$t("Hide reference sites"),
+												  									  		 						# 								 choices = stats::setNames(
+												  									  		 						# 								 	c(TRUE, FALSE),
+												  									  		 						# 								 	c("Yes", "No") # Set labels
+												  									  		 						# 								 ),
+												  									  		 						# 								 selected = FALSE,
+												  									  		 						# 								 inline = TRUE,
+												  									  		 						# 								 status = "primary"
+												  									  		 						# ),
+												  									  		 						# hr(),
+												  									  		 						shiny::textInput(inputId = "xvarLab", 
+												  									  		 										 label = i18n$t("Label to x-axis"), 
+												  									  		 										 value = ""),
+												  									  		 						shiny::textInput(inputId = "yvarLab", 
+												  									  		 										 label = i18n$t("Label to y-axis"), 
+												  									  		 										 value = ""),
+												  									  		 						shinyWidgets::actionBttn(inputId = "doPlotPar", 
+												  									  		 												 label = i18n$t("Plot"),
+												  									  		 												 style = "fill",
+												  									  		 												 size = "md",
+												  									  		 												 color = "success"),
+												  									  		 						shinyWidgets::actionBttn(inputId = "doPlotParClear", 
+												  									  		 												 label = i18n$t("Clear"),
+												  									  		 												 style = "fill",
+												  									  		 												 size = "md",
+												  									  		 												 color = "default")
+												  									  		 )
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 8,
@@ -1557,47 +1584,49 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 4,
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::uiOutput("radioScenarioTypeViewMultiOutput"),
-												  									  						# shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewMultiInput",
-												  									  						# 								 label = i18n$t("Scenario type"),
-												  									  						# 								 choices = stats::setNames(
-												  									  						# 								 	c("Raw", "Selected"),
-												  									  						# 								 	c("Raw", "Selected") # Set labels
-												  									  						# 								 ),
-												  									  						# 								 selected = "Raw",
-												  									  						# 								 inline = TRUE,
-												  									  						# 								 status = "primary"
-												  									  						# ),
-												  									  						shinyWidgets::pickerInput(inputId = "scenarioViewMultiInput",
-												  									  												  label = i18n$t("Choose scenario"),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list("max-options" = 1),
-												  									  												  inline = FALSE
-												  									  						),
-												  									  						shiny::uiOutput("radioShowRefViewMultiOutput"),
-												  									  						# shinyWidgets::prettyRadioButtons(inputId = "hideRefViewMultiInput",
-												  									  						# 								 label = i18n$t("Hide reference sites"),
-												  									  						# 								 choices = stats::setNames(
-												  									  						# 								 	c(TRUE, FALSE),
-												  									  						# 								 	c("Yes", "No") # Set labels
-												  									  						# 								 ),
-												  									  						# 								 selected = FALSE,
-												  									  						# 								 inline = TRUE,
-												  									  						# 								 status = "primary"
-												  									  						# ),
-												  									  						shiny::uiOutput("labelMultiOutput"),
-												  									  						shinyWidgets::actionBttn(inputId = "doPlotMulti", 
-												  									  												 label = i18n$t("Plot"),
-												  									  												 style = "fill",
-												  									  												 size = "md",
-												  									  												 color = "success"),
-												  									  						shinyWidgets::actionBttn(inputId = "doPlotMultiClear", 
-												  									  												 label = i18n$t("Clear"),
-												  									  												 style = "fill",
-												  									  												 size = "md",
-												  									  												 color = "default")
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::uiOutput("radioScenarioTypeViewMultiOutput"),
+												  									  		 						# shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewMultiInput",
+												  									  		 						# 								 label = i18n$t("Scenario type"),
+												  									  		 						# 								 choices = stats::setNames(
+												  									  		 						# 								 	c("Raw", "Selected"),
+												  									  		 						# 								 	c("Raw", "Selected") # Set labels
+												  									  		 						# 								 ),
+												  									  		 						# 								 selected = "Raw",
+												  									  		 						# 								 inline = TRUE,
+												  									  		 						# 								 status = "primary"
+												  									  		 						# ),
+												  									  		 						shinyWidgets::pickerInput(inputId = "scenarioViewMultiInput",
+												  									  		 												  label = i18n$t("Choose scenario"),
+												  									  		 												  choices = NULL,
+												  									  		 												  multiple = TRUE,
+												  									  		 												  options = list("max-options" = 1),
+												  									  		 												  inline = FALSE
+												  									  		 						),
+												  									  		 						shiny::uiOutput("radioShowRefViewMultiOutput"),
+												  									  		 						# shinyWidgets::prettyRadioButtons(inputId = "hideRefViewMultiInput",
+												  									  		 						# 								 label = i18n$t("Hide reference sites"),
+												  									  		 						# 								 choices = stats::setNames(
+												  									  		 						# 								 	c(TRUE, FALSE),
+												  									  		 						# 								 	c("Yes", "No") # Set labels
+												  									  		 						# 								 ),
+												  									  		 						# 								 selected = FALSE,
+												  									  		 						# 								 inline = TRUE,
+												  									  		 						# 								 status = "primary"
+												  									  		 						# ),
+												  									  		 						shiny::uiOutput("labelMultiOutput"),
+												  									  		 						shinyWidgets::actionBttn(inputId = "doPlotMulti", 
+												  									  		 												 label = i18n$t("Plot"),
+												  									  		 												 style = "fill",
+												  									  		 												 size = "md",
+												  									  		 												 color = "success"),
+												  									  		 						shinyWidgets::actionBttn(inputId = "doPlotMultiClear", 
+												  									  		 												 label = i18n$t("Clear"),
+												  									  		 												 style = "fill",
+												  									  		 												 size = "md",
+												  									  		 												 color = "default")
+												  									  		 )
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 8,
@@ -1616,85 +1645,87 @@ body <- shinydashboard::dashboardBody(
 												  					shiny::fluidRow(
 												  						htmltools::br(),
 												  						shiny::column(width = 4,
-												  									  shinydashboardPlus::box(id = "boxNH", width = 12, title = NULL, headerBorder = FALSE,
-												  									  						shiny::uiOutput("radioScenarioTypeExportOutput"),
-												  									  						# shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeExportInput",
-												  									  						# 								 label = i18n$t("Scenario type"),
-												  									  						# 								 choices = stats::setNames(
-												  									  						# 								 	c("Raw", "Selected"),
-												  									  						# 								 	c("Raw", "Selected") # Set labels
-												  									  						# 								 ),
-												  									  						# 								 selected = "Raw",
-												  									  						# 								 inline = TRUE,
-												  									  						# 								 status = "primary"
-												  									  						# ),
-												  									  						shinyWidgets::pickerInput(inputId = "scenarioExportInput",
-												  									  												  label = i18n$t("Choose scenario"),
-												  									  												  choices = NULL,
-												  									  												  multiple = TRUE,
-												  									  												  options = list("max-options" = 1),
-												  									  												  inline = FALSE
-												  									  						),
-												  									  						shiny::uiOutput("pickerTypeExportOutput"),
-												  									  						# shinyWidgets::pickerInput(inputId = "typeExportInput",
-												  									  						# 						  label = i18n$t("Type of result"),
-												  									  						# 						  choices = stats::setNames(
-												  									  						# 						  	c("simComposition",
-												  									  						# 						  	  "simResults", 
-												  									  						# 						  	  "simMultifunctionality",
-												  									  						# 						  	  "simUnavailableSpecies",
-												  									  						# 						  	  "refComposition",
-												  									  						# 						  	  "refResults",
-												  									  						# 						  	  "refMultifunctionality", 
-												  									  						# 						  	  "supComposition", 
-												  									  						# 						  	  "supResults",
-												  									  						# 						  	  "supMultifunctionality"),
-												  									  						# 						  	c("simComposition",
-												  									  						# 						  	  "simResults", 
-												  									  						# 						  	  "simMultifunctionality",
-												  									  						# 						  	  "simUnavailableSpecies",
-												  									  						# 						  	  "refComposition",
-												  									  						# 						  	  "refResults",
-												  									  						# 						  	  "refMultifunctionality", 
-												  									  						# 						  	  "supComposition", 
-												  									  						# 						  	  "supResults",
-												  									  						# 						  	  "supMultifunctionality") # Set labels
-												  									  						# 						  ),
-												  									  						# 						  multiple = TRUE,
-												  									  						# 						  options = list("max-options" = 1),
-												  									  						# 						  inline = FALSE
-												  									  						# ),
-												  									  						shiny::conditionalPanel(condition = "(input.typeExportInput == 'simUnavailableSpecies')",
-												  									  												shinyWidgets::pickerInput(inputId = "avaExpInput",
-												  									  																		  label = i18n$t("Species availability"),
-												  									  																		  choices = NULL,
-												  									  																		  multiple = TRUE,
-												  									  																		  options = list("max-options" = 1),
-												  									  																		  inline = FALSE
-												  									  												)
-												  									  						),
-												  									  						shiny::conditionalPanel(condition = "(input.typeExportInput == 'simComposition') ||
+												  									  tags$div(class = "no-header-box",
+												  									  		 shinydashboardPlus::box(width = 12, title = NULL, headerBorder = FALSE,
+												  									  		 						shiny::uiOutput("radioScenarioTypeExportOutput"),
+												  									  		 						# shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeExportInput",
+												  									  		 						# 								 label = i18n$t("Scenario type"),
+												  									  		 						# 								 choices = stats::setNames(
+												  									  		 						# 								 	c("Raw", "Selected"),
+												  									  		 						# 								 	c("Raw", "Selected") # Set labels
+												  									  		 						# 								 ),
+												  									  		 						# 								 selected = "Raw",
+												  									  		 						# 								 inline = TRUE,
+												  									  		 						# 								 status = "primary"
+												  									  		 						# ),
+												  									  		 						shinyWidgets::pickerInput(inputId = "scenarioExportInput",
+												  									  		 												  label = i18n$t("Choose scenario"),
+												  									  		 												  choices = NULL,
+												  									  		 												  multiple = TRUE,
+												  									  		 												  options = list("max-options" = 1),
+												  									  		 												  inline = FALSE
+												  									  		 						),
+												  									  		 						shiny::uiOutput("pickerTypeExportOutput"),
+												  									  		 						# shinyWidgets::pickerInput(inputId = "typeExportInput",
+												  									  		 						# 						  label = i18n$t("Type of result"),
+												  									  		 						# 						  choices = stats::setNames(
+												  									  		 						# 						  	c("simComposition",
+												  									  		 						# 						  	  "simResults", 
+												  									  		 						# 						  	  "simMultifunctionality",
+												  									  		 						# 						  	  "simUnavailableSpecies",
+												  									  		 						# 						  	  "refComposition",
+												  									  		 						# 						  	  "refResults",
+												  									  		 						# 						  	  "refMultifunctionality", 
+												  									  		 						# 						  	  "supComposition", 
+												  									  		 						# 						  	  "supResults",
+												  									  		 						# 						  	  "supMultifunctionality"),
+												  									  		 						# 						  	c("simComposition",
+												  									  		 						# 						  	  "simResults", 
+												  									  		 						# 						  	  "simMultifunctionality",
+												  									  		 						# 						  	  "simUnavailableSpecies",
+												  									  		 						# 						  	  "refComposition",
+												  									  		 						# 						  	  "refResults",
+												  									  		 						# 						  	  "refMultifunctionality", 
+												  									  		 						# 						  	  "supComposition", 
+												  									  		 						# 						  	  "supResults",
+												  									  		 						# 						  	  "supMultifunctionality") # Set labels
+												  									  		 						# 						  ),
+												  									  		 						# 						  multiple = TRUE,
+												  									  		 						# 						  options = list("max-options" = 1),
+												  									  		 						# 						  inline = FALSE
+												  									  		 						# ),
+												  									  		 						shiny::conditionalPanel(condition = "(input.typeExportInput == 'simUnavailableSpecies')",
+												  									  		 												shinyWidgets::pickerInput(inputId = "avaExpInput",
+												  									  		 																		  label = i18n$t("Species availability"),
+												  									  		 																		  choices = NULL,
+												  									  		 																		  multiple = TRUE,
+												  									  		 																		  options = list("max-options" = 1),
+												  									  		 																		  inline = FALSE
+												  									  		 												)
+												  									  		 						),
+												  									  		 						shiny::conditionalPanel(condition = "(input.typeExportInput == 'simComposition') ||
 												  									  						(input.typeExportInput == 'simBaseline') ||
 												  									  						(input.typeExportInput == 'simAdditions') ||
 												  									  						(input.typeExportInput == 'refComposition') ||
 												  									  						(input.typeExportInput == 'supComposition')",
-												  									  												shiny::uiOutput("radiodbFormatExpOutput")
-												  									  												# shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
-												  									  												# 								 label = i18n$t("Data base format"),
-												  									  												# 								 choices = stats::setNames(
-												  									  												# 								 	c(TRUE, FALSE),
-												  									  												# 								 	c("Yes", "No") # Set labels
-												  									  												# 								 ),
-												  									  												# 								 selected = FALSE,
-												  									  												# 								 inline = TRUE,
-												  									  												# 								 status = "primary"
-												  									  												# )
-												  									  						),
-												  									  						shinyWidgets::actionBttn(inputId = "doExport",
-												  									  												 label = i18n$t("Preview"),
-												  									  												 style = "fill",
-												  									  												 size = "md",
-												  									  												 color = "success")
+												  									  		 												shiny::uiOutput("radiodbFormatExpOutput")
+												  									  		 												# shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
+												  									  		 												# 								 label = i18n$t("Data base format"),
+												  									  		 												# 								 choices = stats::setNames(
+												  									  		 												# 								 	c(TRUE, FALSE),
+												  									  		 												# 								 	c("Yes", "No") # Set labels
+												  									  		 												# 								 ),
+												  									  		 												# 								 selected = FALSE,
+												  									  		 												# 								 inline = TRUE,
+												  									  		 												# 								 status = "primary"
+												  									  		 												# )
+												  									  		 						),
+												  									  		 						shinyWidgets::actionBttn(inputId = "doExport",
+												  									  		 												 label = i18n$t("Preview"),
+												  									  		 												 style = "fill",
+												  									  		 												 size = "md",
+												  									  		 												 color = "success")
+												  									  		 )
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 8,
