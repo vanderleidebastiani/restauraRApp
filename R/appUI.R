@@ -61,7 +61,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 		id = "menu",
 		shinydashboardPlus::controlbarItem(
 			title = i18n$t("Global options"),
-			shiny::selectInput(inputId = "selectedLanguage",
+			shiny::selectInput(inputId = "languageInput",
 							   label = i18n$t("Change language"),
 							   choices = stats::setNames(
 							   	i18n$get_languages(),
@@ -89,7 +89,7 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 			# 					value = 5,
 			# 					min = 3,
 			# 					step = 1),
-			# radioGroupButtons(inputId = "selectedLanguage",
+			# radioGroupButtons(inputId = "languageInput",
 			# 					 label = i18n$t("Change language"),
 			# 					 choices = stats::setNames(
 			# 					 	i18n$get_languages(),
@@ -406,10 +406,10 @@ body <- shinydashboard::dashboardBody(
 												  						shiny::column(width = 12,
 												  									  shiny::conditionalPanel(condition = "output.showTraitsData == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Traits class"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableTraitsClass"),
+												  									  						rhandsontable::rHandsontableOutput("tableTraitsClass"),
 												  									  						htmltools::br(),
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Traits data"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableTraitsData")
+												  									  						rhandsontable::rHandsontableOutput("tableTraitsData")
 												  									  )
 												  						) # End column
 												  					) # End row
@@ -420,12 +420,12 @@ body <- shinydashboard::dashboardBody(
 												  						shiny::column(width = 12,
 												  									  shiny::conditionalPanel(condition = "output.showRestComp == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Species composition"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableRestComp"),
+												  									  						rhandsontable::rHandsontableOutput("tableRestComp"),
 												  									  						htmltools::br()				 
 												  									  ),
 												  									  shiny::conditionalPanel(condition = "output.showRestGroup == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Complementary information"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableRestGroup")				 
+												  									  						rhandsontable::rHandsontableOutput("tableRestGroup")				 
 												  									  )
 												  						) # End column
 												  					) # End row
@@ -436,12 +436,12 @@ body <- shinydashboard::dashboardBody(
 												  						shiny::column(width = 12,
 												  									  shiny::conditionalPanel(condition = "output.showReference == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Species composition of reference sites"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableRefComp"),
+												  									  						rhandsontable::rHandsontableOutput("tableRefComp"),
 												  									  						htmltools::br()				 
 												  									  ),
 												  									  shiny::conditionalPanel(condition = "output.showSupplementary == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Species composition of supplementary sites"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableSuppleComp")				 
+												  									  						rhandsontable::rHandsontableOutput("tableSuppleComp")				 
 												  									  )
 												  						) # End column
 												  					) # End row
@@ -452,12 +452,12 @@ body <- shinydashboard::dashboardBody(
 												  						shiny::column(width = 12,
 												  									  shiny::conditionalPanel(condition = "output.showCooccurrence == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Co-occurrence matrix"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableCooccurrence"),
+												  									  						rhandsontable::rHandsontableOutput("tableCooccurrence"),
 												  									  						htmltools::br()
 												  									  ),
 												  									  shiny::conditionalPanel(condition = "output.showSppDist == true",
 												  									  						htmltools::h5(htmltools::strong(i18n$t("Species distance matrix"))),
-												  									  						rhandsontable::rHandsontableOutput("outputTableSppDist")
+												  									  						rhandsontable::rHandsontableOutput("tableSppDist")
 												  									  )
 												  						) # End column
 												  					) # End row
@@ -764,8 +764,8 @@ body <- shinydashboard::dashboardBody(
 												  									  						 color = "success"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
-												  									  shiny::textOutput(outputId = "countScenariosText"),
-												  									  shiny::textOutput(outputId = "countSimulationText"),
+												  									  shiny::textOutput(outputId = "textCountScenarios"),
+												  									  shiny::textOutput(outputId = "textCountSimulation"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
 												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
@@ -872,7 +872,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						  options = list("max-options" = 1),
 												  									  						  inline = FALSE
 												  									  ),
-												  									  shiny::htmlOutput(outputId = "outputSimulateSummaryText")
+												  									  shiny::htmlOutput(outputId = "textSimulateSummary")
 												  						)
 												  					) # End row
 												  	) # End tabPanel
@@ -1145,7 +1145,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						  options = list("max-options" = 1),
 												  									  						  inline = FALSE
 												  									  ),
-												  									  shiny::htmlOutput(outputId = "outputComputeSummaryText")
+												  									  shiny::htmlOutput(outputId = "textComputeSummary")
 												  						)
 												  					) # End row
 												  	) # End tabPanel
@@ -1210,7 +1210,7 @@ body <- shinydashboard::dashboardBody(
 												  									  												  options = list(`actions-box` = TRUE),
 												  									  												  inline = FALSE
 												  									  						),
-												  									  						shiny::uiOutput(outputId = "outputRankList"),
+												  									  						shiny::uiOutput(outputId = "prioritySelRankList"),
 												  									  						shiny::conditionalPanel(condition = "output.showSlidersTestsPrioritySel == true",
 												  									  												shiny::uiOutput("slidersTestsPrioritySel"),
 												  									  												htmltools::br(),
@@ -1266,8 +1266,8 @@ body <- shinydashboard::dashboardBody(
 												  									  						 color = "success"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
-												  									  shiny::textOutput(outputId = "countSelectText"),
-												  									  shiny::textOutput(outputId = "countSimulationSelText"),
+												  									  shiny::textOutput(outputId = "textCountSelect"),
+												  									  shiny::textOutput(outputId = "textCountSimulationSelect"),
 												  									  htmltools::br(),
 												  									  htmltools::br(),
 												  									  shinydashboardPlus::box(width = 12, headerBorder = FALSE,
@@ -1325,7 +1325,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						  options = list("max-options" = 1),
 												  									  						  inline = FALSE
 												  									  ),
-												  									  shiny::htmlOutput(outputId = "outputSelectSummaryText")
+												  									  shiny::htmlOutput(outputId = "textSelectSummary")
 												  						)
 												  					) # End row
 												  	), # End tabPanel
@@ -1482,7 +1482,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						  options = list("max-options" = 1),
 												  									  						  inline = FALSE
 												  									  ),
-												  									  shiny::htmlOutput(outputId = "outputOptimiseSummaryText")
+												  									  shiny::htmlOutput(outputId = "textOptimiseSummary")
 												  						)
 												  					) # End row
 												  	), # End tabPanel
@@ -1708,7 +1708,7 @@ body <- shinydashboard::dashboardBody(
 												  									  						(input.typeExportInput == 'simAdditions') ||
 												  									  						(input.typeExportInput == 'refComposition') ||
 												  									  						(input.typeExportInput == 'supComposition')",
-												  									  		 												shiny::uiOutput("radiodbFormatExpOutput")
+												  									  		 												shiny::uiOutput("radioDbFormatExpOutput")
 												  									  		 												# shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
 												  									  		 												# 								 label = i18n$t("Data base format"),
 												  									  		 												# 								 choices = stats::setNames(
@@ -1729,7 +1729,7 @@ body <- shinydashboard::dashboardBody(
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 8,
-												  									  rhandsontable::rHandsontableOutput("outputExportTable"),
+												  									  rhandsontable::rHandsontableOutput("tableExport"),
 												  									  htmltools::br(),
 												  									  shinyWidgets::downloadBttn(outputId = "doDownloadExport",
 												  									  						   label = i18n$t("Download"),

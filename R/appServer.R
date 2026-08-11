@@ -26,7 +26,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		return(safe)
 	}
 	# Collapse controlbar when changing the language
-	observeEvent(input$selectedLanguage, {
+	observeEvent(input$languageInput, {
 		shinydashboardPlus::updateControlbar(id = "controlbar", session = session)
 	}, ignoreInit = TRUE)
 	## Reactive Values ----
@@ -50,8 +50,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 	})
 	output$decimalPlaces <- shiny::renderUI({
-		# Only to establish the reactive dependency with selectedLanguage
-		input$selectedLanguage
+		# Only to establish the reactive dependency with languageInput
+		input$languageInput
 		shiny::numericInput(inputId = "decimalPlaces", 
 							label = i18n$t("Decimal places"),
 							min = globalRV$digitsMin, 
@@ -648,8 +648,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# 	# )
 	# })
 	## Selected language ----
-	shiny::observeEvent(input$selectedLanguage, {
-		shiny.i18n::update_lang(input$selectedLanguage, session)
+	shiny::observeEvent(input$languageInput, {
+		shiny.i18n::update_lang(input$languageInput, session)
 	}, ignoreInit = TRUE)
 	## Update pickers - Scenarios ----
 	### Scenarios pickers ----
@@ -941,9 +941,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	shiny::observeEvent(input$groupSimInput, {
 		output$slidersProbRicSim <- shiny::renderUI({
 			inVars <- unique(inputDataRV$traits[, input$groupSimInput])
-			pvars <- length(inVars)
-			if (pvars > 0) {
-				lapply(seq(pvars), function(i) {
+			nVars <- length(inVars)
+			if (nVars > 0) {
+				lapply(seq(nVars), function(i) {
 					shiny::sliderInput(inputId = paste0("probRichSimGrop", inVars[i]), 
 									   label = paste0(i18n$t("Probability to draw richness - Group: "), inVars[i]), 
 									   value = 1/length(inVars),
@@ -954,9 +954,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		})
 		output$slidersProbAbuSim <- shiny::renderUI({
 			inVars <- unique(inputDataRV$traits[, input$groupSimInput])
-			pvars <- length(inVars)
-			if (pvars > 0) {
-				lapply(seq(pvars), function(i) {
+			nVars <- length(inVars)
+			if (nVars > 0) {
+				lapply(seq(nVars), function(i) {
 					shiny::sliderInput(inputId = paste0("probAbunSimGrop", inVars[i]), 
 									   label = paste0(i18n$t("Probability to draw abundance - Group: "), inVars[i]), 
 									   value = 1/length(inVars),
@@ -974,11 +974,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		obsChartRV$priority <- list()
 		output$slidersTestsPrioritySel <- shiny::renderUI({
 			inVars <- input$testsPrioritySelInput
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			scenario <- resultsRV$simulate[[input$scenarioSelInput]]
 			scenario <- scenario$simulation$results
-			if (pvars > 0) {
-				lapply(seq(pvars), function(i) {
+			if (nVars > 0) {
+				lapply(seq(nVars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						newObs <- shiny::observeEvent(input[[paste0("logicalTestPrioritySelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
@@ -1057,11 +1057,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		obsChartRV$filter <- list()
 		output$slidersTestsFilterSel <- shiny::renderUI({
 			inVars <- input$testsFilterSelInput
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			scenario <- resultsRV$simulate[[input$scenarioSelInput]]
 			scenario <- scenario$simulation$results
-			if (pvars > 0) {
-				lapply(seq(pvars), function(i) {
+			if (nVars > 0) {
+				lapply(seq(nVars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						newObs <- shiny::observeEvent(input[[paste0("logicalTestFilterSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
@@ -1139,11 +1139,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		obsChartRV$multi <- list()
 		output$slidersMulti <- shiny::renderUI({
 			inVars <- input$testsMultiInput
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			scenario <- resultsRV$simulate[[input$scenarioComMultiInput]]
 			scenario <- scenario$simulation$results
-			if (pvars > 0) {
-				lapply(seq(pvars), function(i) {
+			if (nVars > 0) {
+				lapply(seq(nVars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						newObs <- shiny::observeEvent(input[[paste0("logicalTestMultiInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
@@ -1221,11 +1221,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		obsChartRV$multisite <- list()
 		output$slidersTestsMultisiteSel <- shiny::renderUI({
 			inVars <- input$testsMultisiteOptInput
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			scenario <- resultsRV$select[[input$scenarioSelOptInput]]
 			scenario <- scenario$selection$multisite$results
-			if (pvars > 0) {
-				lapply(seq(pvars), function(i) {
+			if (nVars > 0) {
+				lapply(seq(nVars), function(i) {
 					if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 						newObs <- shiny::observeEvent(input[[paste0("logicalTestMultisiteSelInput", inVars[i], "chart")]], {
 							output$plotVarModal <- shiny::renderPlot({
@@ -1316,9 +1316,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				}
 				if (!is.null(resMulti)) {
 					inVars <- colnames(resMulti)[-1]
-					pvars <- length(inVars)
-					if (pvars > 0) {
-						lapply(seq(pvars), function(i) {
+					nVars <- length(inVars)
+					if (nVars > 0) {
+						lapply(seq(nVars), function(i) {
 							shiny::textInput(inputId = paste0("labMulti", inVars[i]), 
 											 label = i18n$t("Label"), 
 											 value = inVars[i])
@@ -1731,7 +1731,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### dbFormatExpInput ----
-	output$radiodbFormatExpOutput <- renderUI({
+	output$radioDbFormatExpOutput <- renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
 										 label = i18n$t("Database format"),
 										 choices = stats::setNames(
@@ -2450,22 +2450,22 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			if(input$specifyGroupsSimInput == "Yes" && !is.null(input$groupSimInput)){
 				inputParSimRV$group <- input$groupSimInput
 				inVars <- unique(inputDataRV$traits[, input$groupSimInput])
-				pvars <- length(inVars)
+				nVars <- length(inVars)
 				if(input$probGroupTypeSimInput == "Abundance"){
-					argListAbunTemp <- vector("list", length = pvars)
+					argListAbunTemp <- vector("list", length = nVars)
 					names(argListAbunTemp) <- inVars
-					for(i in 1:pvars){
+					for(i in 1:nVars){
 						argListAbunTemp[[i]] <- input[[paste0("probAbunSimGrop", inVars[i])]]
 					}
 					inputParSimRV$probGroupRich <- NULL
 					inputParSimRV$probGroupAbund <- unlist(argListAbunTemp, use.names = TRUE)
 				}
 				if(input$probGroupTypeSimInput == "Richness and abundance"){
-					argListRichTemp <- vector("list", length = pvars)
+					argListRichTemp <- vector("list", length = nVars)
 					names(argListRichTemp) <- inVars
-					argListAbunTemp <- vector("list", length = pvars)
+					argListAbunTemp <- vector("list", length = nVars)
 					names(argListAbunTemp) <- inVars
-					for(i in 1:pvars){
+					for(i in 1:nVars){
 						argListRichTemp[[i]] <- input[[paste0("probRichSimGrop", inVars[i])]]
 						argListAbunTemp[[i]] <- input[[paste0("probAbunSimGrop", inVars[i])]]
 					}
@@ -2741,11 +2741,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(!is.null(input$testsMultiInput)){
 			inVars <- input$testsMultiInput
 			names(inVars) <- inVars
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			testList <- c()
 			scenario <- resultsRV$simulate[[input$scenarioComMultiInput]]
 			scenario <- scenario$simulation$results
-			for(i in seq_len(pvars)){
+			for(i in seq_len(nVars)){
 				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestMultiInput", inVars[i])]]
@@ -2854,13 +2854,13 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			parOrd <- input$rankHeiSelInput
 			inVars <- input$testsPrioritySelInput
 			names(inVars) <- inVars
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			# Order inVars
 			if(!is.null(parOrd)){
 				inVars <- inVars[parOrd]
 			}
 			testList <- c()
-			for(i in seq_len(pvars)){
+			for(i in seq_len(nVars)){
 				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestPrioritySelInput", inVars[i])]]
@@ -2881,9 +2881,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(!is.null(input$testsFilterSelInput)){
 			inVars <- input$testsFilterSelInput
 			names(inVars) <- inVars
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			testList <- c()
-			for(i in seq_len(pvars)){
+			for(i in seq_len(nVars)){
 				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestFilterSelInput", inVars[i])]]
@@ -3079,9 +3079,9 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		if(!is.null(input$testsMultisiteOptInput)){
 			inVars <- input$testsMultisiteOptInput
 			names(inVars) <- inVars
-			pvars <- length(inVars)
+			nVars <- length(inVars)
 			testList <- c()
-			for(i in seq_len(pvars)){
+			for(i in seq_len(nVars)){
 				if(restauraR:::vectorClass(scenario[,inVars[i]]) == "numeric"){
 					nameTest <- inVars[i]
 					valueTest <- input[[paste0("logicalTestMultisiteSelInput", inVars[i])]]
@@ -3242,15 +3242,15 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# 			# Update using dynamic text inputs
 	# 			# Force labels change
 	# 			inVars <- colnames(resMulti)[-1]
-	# 			pvars <- length(inVars)
-	# 			if (pvars > 0) {
-	# 				# lapply(seq(pvars), function(i) {
+	# 			nVars <- length(inVars)
+	# 			if (nVars > 0) {
+	# 				# lapply(seq(nVars), function(i) {
 	# 				# 	colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
 	# 				# 	if(!is.null(scenario$reference$multifunctionality)){
 	# 				# 		colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
 	# 				# 	}
 	# 				# })
-	# 				for(i in seq(pvars)){
+	# 				for(i in seq(nVars)){
 	# 					colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
 	# 					if(!is.null(scenario$reference$multifunctionality)){
 	# 						colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
@@ -3309,15 +3309,15 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			# Update using dynamic text inputs
 			# Force labels change
 			inVars <- colnames(resMulti)[-1]
-			pvars <- length(inVars)
-			if (pvars > 0) {
-				# lapply(seq(pvars), function(i) {
+			nVars <- length(inVars)
+			if (nVars > 0) {
+				# lapply(seq(nVars), function(i) {
 				# 	colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
 				# 	if(!is.null(scenario$reference$multifunctionality)){
 				# 		colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <<- input[[paste0("labMulti", inVars[i])]]
 				# 	}
 				# })
-				for(i in seq(pvars)){
+				for(i in seq(nVars)){
 					colnames(resMulti)[which(colnames(resMulti) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
 					if(!is.null(scenario$reference$multifunctionality)){
 						colnames(scenario$reference$multifunctionality)[which(colnames(scenario$reference$multifunctionality) == inVars[i])] <- input[[paste0("labMulti", inVars[i])]]
@@ -3925,8 +3925,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Outputs ----
 	### Output diagram - diagramOutput ----
 	output$diagramOutput <- DiagrammeR::renderGrViz({
-		# Only to establish the reactive dependency with selectedLanguage
-		input$selectedLanguage
+		# Only to establish the reactive dependency with languageInput
+		input$languageInput
 		DiagrammeR::grViz(paste0(
 			"digraph restauraRFlowchart {
       # define node aesthetics
@@ -3967,11 +3967,11 @@ appServer <- shiny::shinyServer(function(input, output, session) {
      }"
 		))
 	})
-	### Output aux - outputRankList ----
+	### Output aux - prioritySelRankList ----
 	shiny::observeEvent(input$testsPrioritySelInput, ignoreNULL = FALSE, {
 		inputParSelRV$auxRankHeiSel <- input$testsPrioritySelInput
 	})
-	output$outputRankList <- shiny::renderUI({
+	output$prioritySelRankList <- shiny::renderUI({
 		if(length(inputParSelRV$auxRankHeiSel)>1){
 			sortable::rank_list(
 				input_id = "rankHeiSelInput",
@@ -4063,25 +4063,25 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		!is.null(inputDataRV[["sppDist"]])
 	})
 	outputOptions(output, "showSppDist", suspendWhenHidden = FALSE)
-	### Output text - countScenariosText ----
-	output$countScenariosText <- shiny::renderText({
+	### Output text - textCountScenarios ----
+	output$textCountScenarios <- shiny::renderText({
 		paste0(i18n$t("Simulation scenarios: "),  resultsRV[["nSce"]])
 	})
-	### Output text - countSimulationText ----
-	output$countSimulationText <- shiny::renderText({
+	### Output text - textCountSimulation ----
+	output$textCountSimulation <- shiny::renderText({
 		paste0(i18n$t("Total simulations: "),  resultsRV[["nSim"]])
 	})
-	### Output text - countSelectText ----
-	output$countSelectText <- shiny::renderText({
+	### Output text - textCountSelect ----
+	output$textCountSelect <- shiny::renderText({
 		paste0(i18n$t("Selected scenarios: "),  resultsRV[["nSel"]])
 	})
-	### Output text - countSimulationSelText ----
-	output$countSimulationSelText <- shiny::renderText({
+	### Output text - textCountSimulationSelect ----
+	output$textCountSimulationSelect <- shiny::renderText({
 		paste0(i18n$t("Total simulations selected: "),  resultsRV[["nSimSel"]])
 	})
 	### Output text - Simulate tab ----
 	shiny::observeEvent(input$scenarioSimulateSummaryInput, {
-		output$outputSimulateSummaryText <- shiny::renderUI({
+		output$textSimulateSummary <- shiny::renderUI({
 			if(!is.null(input$scenarioSimulateSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioSimulateSummaryInput]]
 				strTemp <- c()
@@ -4108,7 +4108,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Output text - Compute tab ----
 	shiny::observeEvent(input$scenarioComputeSummaryInput, {
-		output$outputComputeSummaryText <- shiny::renderUI({
+		output$textComputeSummary <- shiny::renderUI({
 			if(!is.null(input$scenarioComputeSummaryInput)){
 				x <- resultsRV$simulate[[input$scenarioComputeSummaryInput]]
 				strTemp <- c()
@@ -4134,7 +4134,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Output text - Select tab ----
 	shiny::observeEvent(input$scenarioSelectSummaryInput, {
-		output$outputSelectSummaryText <- shiny::renderUI({
+		output$textSelectSummary <- shiny::renderUI({
 			if(!is.null(input$scenarioSelectSummaryInput)){
 				x <- resultsRV$select[[input$scenarioSelectSummaryInput]]
 				strTemp <- c()
@@ -4166,7 +4166,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	})
 	### Output text - Optimise tab ----
 	shiny::observeEvent(input$scenarioOptimiseSummaryInput, {
-		output$outputOptimiseSummaryText <- shiny::renderUI({
+		output$textOptimiseSummary <- shiny::renderUI({
 			if(!is.null(input$scenarioOptimiseSummaryInput)){
 				x <- resultsRV$select[[input$scenarioOptimiseSummaryInput]]
 				strTemp <- c()
@@ -4197,63 +4197,63 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		})
 	})
 	### Output table - Traits data ----
-	output$outputTableTraitsData <- rhandsontable::renderRHandsontable({
+	output$tableTraitsData <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$traits)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$traits, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Traits class ----
-	output$outputTableTraitsClass <- rhandsontable::renderRHandsontable({
+	output$tableTraitsClass <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$auxTraitsClass)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$auxTraitsClass, contextMenu =  FALSE, readOnly = TRUE, height = 50, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Species composition of restoration sites ----
-	output$outputTableRestComp <- rhandsontable::renderRHandsontable({
+	output$tableRestComp <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$restComp)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$restComp, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Complementary information for restoration sites ----
-	output$outputTableRestGroup <- rhandsontable::renderRHandsontable({
+	output$tableRestGroup <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$restGroup)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$restGroup, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Species composition of reference sites ----
-	output$outputTableRefComp <- rhandsontable::renderRHandsontable({
+	output$tableRefComp <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$reference)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$reference, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Species composition of supplementary sites ----
-	output$outputTableSuppleComp <- rhandsontable::renderRHandsontable({
+	output$tableSuppleComp <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$supplementary)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$supplementary, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Co-ocorrence matrix ----
-	output$outputTableCooccurrence <- rhandsontable::renderRHandsontable({
+	output$tableCooccurrence <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$cooccurrence)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$cooccurrence, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
 	### Output table - Species distance matrix ----
-	output$outputTableSppDist <- rhandsontable::renderRHandsontable({
+	output$tableSppDist <- rhandsontable::renderRHandsontable({
 		if(is.null(inputDataRV$sppDist)){
 			return(NULL)
 		}
 		rhandsontable::rhandsontable(inputDataRV$sppDist, contextMenu =  FALSE, readOnly = TRUE, stretchH = "all", rowHeaderWidth = 200)
 	})
-	### Output table - Export table ----
-	output$outputExportTable <- rhandsontable::renderRHandsontable({
+	### Output table - Table export ----
+	output$tableExport <- rhandsontable::renderRHandsontable({
 		if(is.null(exportRV$summaryTable)){
 			return(NULL)
 		}
