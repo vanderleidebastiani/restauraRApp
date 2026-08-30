@@ -37,6 +37,9 @@ Imports:
     shinyWidgets,
     shinyjs,
     shinydashboardPlus,
+    stringi,
+    fs,
+    plotly,
     bslib
 Description: Create restoration solutions to assemble communities from a regional species pool to achieve multiple functional targets based on simulation.
 License: GPL (>= 3)

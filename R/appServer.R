@@ -25,8 +25,12 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 		return(safe)
 	}
+	# Selected language 
+	i18nReact <- reactive({
+		i18n$set_translation_language(input$languageInput)
+	})
 	# Collapse controlbar when changing the language
-	observeEvent(input$languageInput, {
+	shiny::observeEvent(input$languageInput, {
 		shinydashboardPlus::updateControlbar(id = "controlbar", session = session)
 	}, ignoreInit = TRUE)
 	## Reactive Values ----
@@ -34,7 +38,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	globalRV <- shiny::reactiveValues(digitsVal = 5, 
 									  digitsMin = 3,
 									  # currentDate = format(Sys.Date(), "%Y%m%d"),
-									  probs = c(0, 0.25, 0.5, 0.75, 1))
+									  probs = c(0, 0.25, 0.5, 0.75, 1)
+									  )
 	#### Set the minimal decimal places ----
 	numVal <- shiny::reactive({
 		if(!is.null(input$decimalPlaces)){
@@ -58,6 +63,23 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 							step = 1,
 							value = numVal())
 	})
+	output$interactiveGraphs <- shiny::renderUI({
+		# Only to establish the reactive dependency with languageInput
+		input$languageInput
+		shinyWidgets::prettyRadioButtons(inputId = "isInteractiveGraphsInput",
+										 label = i18n$t("Interactive graphs"),
+										 choices = stats::setNames(
+										 	c("TRUE", "FALSE"),
+										 	c(i18n$t("Yes"), i18n$t("No")) # Set labels
+										 ),
+										 selected = TRUE,
+										 inline = TRUE,
+										 status = "primary"
+		)
+	})
+	# Force renderUI to evaluate
+	# stackoverflow.com/questions/57515604
+	shiny::outputOptions(output, "interactiveGraphs", suspendWhenHidden = FALSE)
 	### inputDataRV ----
 	inputDataRV <- shiny::reactiveValues(traits = NULL,
 										 restComp = NULL,
@@ -127,6 +149,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									   plotMulti = NULL,  # Ok
 									   updatePar = 0 # Ok
 	)
+	### 
+	resultsPlotly <- list(Plotly = NULL)
 	### viewRV ----
 	viewRV <- shiny::reactiveValues(showMultisiteViewParInput = FALSE
 	)
@@ -142,7 +166,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# 	multi = list(),
 	# 	multisite = list()
 	# )
-	obsChartRV <- new.env()
+	# obsChartRV <- new.env()
+	obsChartRV <- list()
 	obsChartRV$priority = list()
 	obsChartRV$filter = list()
 	obsChartRV$multi = list()
@@ -650,7 +675,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Selected language ----
 	shiny::observeEvent(input$languageInput, {
 		shiny.i18n::update_lang(input$languageInput, session)
-	}, ignoreInit = TRUE)
+	}, ignoreInit = FALSE)
 	## Update pickers - Scenarios ----
 	### Scenarios pickers ----
 	# Observe changes in any scenario
@@ -1331,7 +1356,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	## Create dynamic radio buttons and select input ----
 	# Inside server to allow the use of translate functions
 	### goalsSimInput ----
-	output$radioGoalsSimOutput <- renderUI({
+	output$radioGoalsSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "goalsSimInput",
 										 label = htmltools::p(i18n$t("Restoration goals"),
 										 					 shiny::actionButton("goalsSimInputInfo",
@@ -1348,7 +1373,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### methodSimInput ----
-	output$radioMethodSimOutput <- renderUI({
+	output$radioMethodSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "methodSimInput",
 										 label = htmltools::p(i18n$t("Method"), 
 										 					 shiny::actionButton("methodSimInputInfo",
@@ -1365,7 +1390,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### isRichSiteSpecificInput ----
-	output$radioRichSiteSpecificSimOutput <- renderUI({
+	output$radioRichSiteSpecificSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isRichSiteSpecificInput",
 										 label = htmltools::p(i18n$t("Specify richness by site-specific"),
 										 					 shiny::actionButton("isRichSiteSpecificInputInfo",
@@ -1383,7 +1408,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### isNIndSiteSpecificInput ----
-	output$radioNIndSiteSpecificSimOutput <- renderUI({
+	output$radioNIndSiteSpecificSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isNIndSiteSpecificInput",
 										 label = htmltools::p(i18n$t("Specify number of individuals by site-specific"),
 										 					 shiny::actionButton("isNIndSiteSpecificInputInfo",
@@ -1401,7 +1426,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### isDistMaxDiverInput ----
-	output$radioDistMaxDiverSimOutput <- renderUI({
+	output$radioDistMaxDiverSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistMaxDiverInput",
 										 label = htmltools::p(i18n$t("Specify diversity optimisation based on the distance matrix"),
 										 					 shiny::actionButton("isDistMaxDiverInputInfo",
@@ -1419,7 +1444,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### specifyGroupsSimInput ----
-	output$radioSpecifyGroupsSimOutput <- renderUI({
+	output$radioSpecifyGroupsSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSimInput",
 										 label = htmltools::p(i18n$t("Specify probabilities for groups of species"), 
 										 					 shiny::actionButton("specifyGroupsSimInputInfo",
@@ -1436,7 +1461,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### specifyCooccurSimInput ----
-	output$radioSpecifyCooccurSimOutput <- renderUI({
+	output$radioSpecifyCooccurSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyCooccurSimInput",
 										 label = htmltools::p(i18n$t("Specify co-occurrence probabilities"), 
 										 					 shiny::actionButton("specifyCooccurSimInputInfo",
@@ -1453,7 +1478,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### probGroupTypeSimInput ----
-	output$radioProbGroupTypeSimOutput <- renderUI({
+	output$radioProbGroupTypeSimOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "probGroupTypeSimInput",
 										 label = htmltools::p(i18n$t("Probabilities to draw species"), 
 										 					 shiny::actionButton("probGroupTypeSimInputInfo",
@@ -1469,7 +1494,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 										 status = "primary"
 		)
 	})
-	# output$radioScenarioSimAdjOutput <- renderUI({
+	# output$radioScenarioSimAdjOutput <- shiny::renderUI({
 	#   shinyWidgets::prettyRadioButtons(inputId = "reallocateAdjSimInput",
 	#                                    label = htmltools::p(i18n$t("Reallocate removed individuals"),
 	#                                                         shiny::actionButton("reallocateAdjSimInputInfo",
@@ -1486,7 +1511,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	#   )
 	# })
 	### specifyMethodStanInput ----
-	output$radioSpecifyMethodStanOutput <- renderUI({
+	output$radioSpecifyMethodStanOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyMethodStanInput",
 										 label = htmltools::p(i18n$t("Standardisation method"), 
 										 					 shiny::actionButton("specifyMethodStanInputInfo",
@@ -1503,7 +1528,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### isDistRaoComInput ----
-	output$radioDistRaoComOutput <- renderUI({
+	output$radioDistRaoComOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistRaoComInput",
 										 label = htmltools::p(i18n$t("Calculate diversity based on the distance matrix"),
 										 					 shiny::actionButton("isDistRaoComInputInfo",
@@ -1521,7 +1546,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### isDistDissComInput ----
-	output$radioDistDissComOutput <- renderUI({
+	output$radioDistDissComOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistDissComInput",
 										 label = htmltools::p(i18n$t("Calculate dissimilarity based on the distance matrix"),
 										 					 shiny::actionButton("isDistDissComInputInfo",
@@ -1539,7 +1564,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### specifyGroupsSelInput ----
-	output$radioSpecifyGroupsSelOutput <- renderUI({
+	output$radioSpecifyGroupsSelOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "specifyGroupsSelInput",
 										 label = htmltools::p(i18n$t("Selection inside sites groups"), 
 										 					 shiny::actionButton("specifyGroupsSelInputInfo",
@@ -1556,7 +1581,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### singleSelectionInput ----
-	output$radioSingleSelectionSelOutput <- renderUI({
+	output$radioSingleSelectionSelOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "singleSelectionInput",
 										 label = htmltools::p(i18n$t("Selection method"), 
 										 					 shiny::actionButton("singleSelectionInputInfo",
@@ -1574,7 +1599,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### includeReferenceOptInput ----
-	output$radioIncludeReferenceOptOutput <- renderUI({
+	output$radioIncludeReferenceOptOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "includeReferenceOptInput",
 										 label = htmltools::p(i18n$t("Include reference sites"), 
 										 					 shiny::actionButton("includeReferenceOptInputInfo",
@@ -1592,7 +1617,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### methodOptInput ----
-	output$pickerMethodOptOutput <- renderUI({
+	output$pickerMethodOptOutput <- shiny::renderUI({
 		shinyWidgets::pickerInput(inputId = "methodOptInput",
 								  label = htmltools::p(i18n$t("Method"),
 								  					 shiny::actionButton("methodOptInputInfo",
@@ -1614,7 +1639,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### calcTaxonomicBetaOptInput ----
-	output$radioCalcTaxonomicBetaOptOutput <- renderUI({
+	output$radioCalcTaxonomicBetaOptOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "calcTaxonomicBetaOptInput",
 										 label = htmltools::p(i18n$t("Calculate taxonomic beta diversity"), 
 										 					 shiny::actionButton("calcTaxonomicBetaOptInputInfo",
@@ -1632,7 +1657,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### isDistBetaOptInput ----
-	output$radioDistBetaOptOutput <- renderUI({
+	output$radioDistBetaOptOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "isDistBetaOptInput",
 										 label = htmltools::p(i18n$t("Calculate beta diversity based on the distance matrix"),
 										 					 shiny::actionButton("isDistBetaOptInputInfo",
@@ -1650,7 +1675,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### scenarioTypeViewParInput ----
-	output$radioScenarioTypeViewParOutput <- renderUI({
+	output$radioScenarioTypeViewParOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewParInput",
 										 label = i18n$t("Scenario type"),
 										 choices = stats::setNames(
@@ -1663,7 +1688,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### showRefViewParInput ----
-	output$radioShowRefViewParOutput <- renderUI({
+	output$radioShowRefViewParOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "showRefViewParInput",
 										 label = i18n$t("Show reference sites"),
 										 choices = stats::setNames(
@@ -1677,7 +1702,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### scenarioTypeViewMultiInput ----
-	output$radioScenarioTypeViewMultiOutput <- renderUI({
+	output$radioScenarioTypeViewMultiOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeViewMultiInput",
 										 label = i18n$t("Scenario type"),
 										 choices = stats::setNames(
@@ -1690,7 +1715,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### showRefViewMultiInput ----
-	output$radioShowRefViewMultiOutput <- renderUI({
+	output$radioShowRefViewMultiOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "showRefViewMultiInput",
 										 label = i18n$t("Show reference sites"),
 										 choices = stats::setNames(
@@ -1704,7 +1729,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### showMultisiteViewParInput ----
-	output$radioShowMultisiteViewParOutput <- renderUI({
+	output$radioShowMultisiteViewParOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "showMultisiteViewParInput",
 										 label = i18n$t("Plot results from the multisite analysis"),
 										 choices = stats::setNames(
@@ -1718,7 +1743,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### scenarioTypeExportInput ----
-	output$radioScenarioTypeExportOutput <- renderUI({
+	output$radioScenarioTypeExportOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "scenarioTypeExportInput",
 										 label = i18n$t("Scenario type"),
 										 choices = stats::setNames(
@@ -1731,7 +1756,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### dbFormatExpInput ----
-	output$radioDbFormatExpOutput <- renderUI({
+	output$radioDbFormatExpOutput <- shiny::renderUI({
 		shinyWidgets::prettyRadioButtons(inputId = "dbFormatExpInput",
 										 label = i18n$t("Database format"),
 										 choices = stats::setNames(
@@ -1745,7 +1770,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		)
 	})
 	### typeExportInput ----
-	output$pickerTypeExportOutput <- renderUI({
+	output$pickerTypeExportOutput <- shiny::renderUI({
 		shinyWidgets::pickerInput(inputId = "typeExportInput",
 								  label = i18n$t("Type of result"),
 								  choices = stats::setNames(
@@ -3986,22 +4011,22 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	output$showSlidersTestsPrioritySel <- shiny::reactive({
 		!is.null(input$testsPrioritySelInput)
 	})
-	outputOptions(output, "showSlidersTestsPrioritySel", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showSlidersTestsPrioritySel", suspendWhenHidden = FALSE)
 	### Output aux - testsFilterSelInput ----
 	output$showSlidersTestsFilterSel <- shiny::reactive({
 		!is.null(input$testsFilterSelInput)
 	})
-	outputOptions(output, "showSlidersTestsFilterSel", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showSlidersTestsFilterSel", suspendWhenHidden = FALSE)
 	### Output aux - showSlidersMulti ----
 	output$showSlidersMulti <- shiny::reactive({
 		!is.null(input$testsMultiInput)
 	})
-	outputOptions(output, "showSlidersMulti", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showSlidersMulti", suspendWhenHidden = FALSE)
 	### Output aux - showSlidersTestsMultisiteSel  ----
 	output$showSlidersTestsMultisiteSel <- shiny::reactive({
 		!is.null(input$testsMultisiteOptInput)
 	})
-	outputOptions(output, "showSlidersTestsMultisiteSel", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showSlidersTestsMultisiteSel", suspendWhenHidden = FALSE)
 	### Update text - xvar - View tab ----
 	shiny::observeEvent(input$xvarViewInput, ignoreNULL = FALSE, {
 		if(!is.null(input$xvarViewInput)){
@@ -4031,38 +4056,38 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	output$showTraitsData <- shiny::reactive({
 		!is.null(inputDataRV[["traits"]])
 	})
-	outputOptions(output, "showTraitsData", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showTraitsData", suspendWhenHidden = FALSE)
 	### Output aux - showRestComp ----
 	output$showRestComp <- shiny::reactive({
 		!is.null(inputDataRV[["restComp"]])
 	})
-	outputOptions(output, "showRestComp", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showRestComp", suspendWhenHidden = FALSE)
 	### Output aux - showRestGroup ----
 	output$showRestGroup <- shiny::reactive({
 		!is.null(inputDataRV[["restGroup"]])
 	})
-	outputOptions(output, "showRestGroup", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showRestGroup", suspendWhenHidden = FALSE)
 	### Output aux - showReference ----
 	output$showReference <- shiny::reactive({
 		!is.null(inputDataRV[["reference"]])
 	})
-	outputOptions(output, "showReference", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showReference", suspendWhenHidden = FALSE)
 	### Output aux - showSupplementary ----
 	output$showSupplementary <- shiny::reactive({
 		!is.null(inputDataRV[["supplementary"]])
 	})
-	outputOptions(output, "showSupplementary", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showSupplementary", suspendWhenHidden = FALSE)
 	### Output aux - showCooccurrence ----
 	output$showCooccurrence <- shiny::reactive({
 		!is.null(inputDataRV[["cooccurrence"]])
 	})
-	outputOptions(output, "showCooccurrence", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showCooccurrence", suspendWhenHidden = FALSE)
 	
 	### Output aux - showSppDist ----
 	output$showSppDist <- shiny::reactive({
 		!is.null(inputDataRV[["sppDist"]])
 	})
-	outputOptions(output, "showSppDist", suspendWhenHidden = FALSE)
+	shiny::outputOptions(output, "showSppDist", suspendWhenHidden = FALSE)
 	### Output text - textCountScenarios ----
 	output$textCountScenarios <- shiny::renderText({
 		paste0(i18n$t("Simulation scenarios: "),  resultsRV[["nSce"]])
@@ -4262,6 +4287,16 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	### Output plot - plotParOutput ----
 	output$plotParOutput <- shiny::renderPlot({
 		resultsRV$plotPar
+	})
+	getPlot <- function(){
+		if(!is.null(resultsRV$plotPar)){
+			print(resultsRV$plotPar)
+		} else{
+			print(ggplot2::ggplot())
+		}
+	}
+	output$plotParInterOutput <- plotly::renderPlotly({
+		plotly::ggplotly(getPlot())
 	})
 	### Output plot - plotMultiOutput ----
 	output$plotMultiOutput <- shiny::renderPlot({

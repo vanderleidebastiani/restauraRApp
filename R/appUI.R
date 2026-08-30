@@ -117,9 +117,13 @@ controlbar <- shinydashboardPlus::dashboardControlbar(
 		),
 		shinydashboardPlus::controlbarItem(
 			title = i18n$t("Plot options"),
-			shiny::numericInput(inputId = "saveWidth", label = i18n$t("Width (mm)"), value = 160),
-			shiny::numericInput(inputId = "saveHeight", label = i18n$t("Height (mm)"), value = 120),
-			shiny::numericInput(inputId = "saveDPI", label = i18n$t("DPI"), value = 300)
+			shiny::numericInput(inputId = "saveWidth", label = i18n$t("Width (mm)"), 
+								value = 160, min = 10, max = 1200), # ~A0 dimensions
+			shiny::numericInput(inputId = "saveHeight", label = i18n$t("Height (mm)"), 
+								value = 120, min = 10, max = 1200), # ~A0 dimensions
+			shiny::numericInput(inputId = "saveDPI", label = i18n$t("DPI"), 
+								value = 300, min = 72, max = 1200), 
+			shiny::uiOutput("interactiveGraphs")
 		)
 	)
 )
@@ -1569,7 +1573,14 @@ body <- shinydashboard::dashboardBody(
 												  									  )
 												  						), # End column
 												  						shiny::column(width = 8,
-												  									  shiny::plotOutput("plotParOutput"),
+												  									  # shiny::plotOutput("plotParOutput"),
+												  									  # plotly::plotlyOutput("plotParOutput"),
+												  									  shiny::conditionalPanel(condition = "(input.isInteractiveGraphsInput == 'FALSE')",
+												  									  						shiny::plotOutput("plotParOutput")
+												  									  ),
+												  									  shiny::conditionalPanel(condition = "(input.isInteractiveGraphsInput == 'TRUE')",
+												  									  						plotly::plotlyOutput("plotParInterOutput")
+												  									  ),
 												  									  htmltools::br(),
 												  									  shinyWidgets::downloadBttn(outputId = "doDownloadParPlot",
 												  									  						   label = i18n$t("Download"),
