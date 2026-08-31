@@ -166,8 +166,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 	# 	multi = list(),
 	# 	multisite = list()
 	# )
-	# obsChartRV <- new.env()
-	obsChartRV <- list()
+	obsChartRV <- new.env()
+	# obsChartRV <- list()
 	obsChartRV$priority = list()
 	obsChartRV$filter = list()
 	obsChartRV$multi = list()
