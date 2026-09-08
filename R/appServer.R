@@ -39,7 +39,7 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									  digitsMin = 3,
 									  # currentDate = format(Sys.Date(), "%Y%m%d"),
 									  probs = c(0, 0.25, 0.5, 0.75, 1)
-									  )
+	)
 	#### Set the minimal decimal places ----
 	numVal <- shiny::reactive({
 		if(!is.null(input$decimalPlaces)){
@@ -147,8 +147,15 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 									   select = list(), # Ok
 									   plotPar = NULL, # Ok
 									   plotMulti = NULL,  # Ok
-									   updatePar = 0 # Ok
+									   updatePar = 0, # Ok
+									   # process = NULL,
+									   # msg = NULL,
+									   # obs = NULL
 	)
+	
+
+	
+	
 	### 
 	resultsPlotly <- list(Plotly = NULL)
 	### viewRV ----
@@ -403,49 +410,57 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 					type = "error"
 				)
 			} else{
-				# Check if it is a restauraR object
-				if(is.null(inputList$fileClass) || inputList$fileClass != "restauraR"){
+				if(!inherits(inputList, what = "list")){
 					shinyWidgets::sendSweetAlert(
 						session = session,
 						title = i18n$t("Not a restauraR object. No file loaded!"),
 						type = "error"
 					)
 				} else{
-					# Project name
-					shiny::updateTextInput(session = session,
-										   inputId = "projectName",
-										   value = inputList$projectName)
-					# inputDataRV
-					inputDataRV$traits <- inputList$inputDataTraits
-					inputDataRV$restComp <- inputList$inputDataRestComp
-					inputDataRV$restGroup <- inputList$inputDataRestGroup
-					inputDataRV$reference <- inputList$inputDataReference
-					inputDataRV$supplementary <- inputList$inputDataSupplementary
-					inputDataRV$cooccurrence <- inputList$inputDataCooccurrence
-					inputDataRV$sppDist <- inputList$inputDataSppDist
-					inputDataRV$auxTraitsClass <- inputList$inputDataAuxTraitsClass
-					inputDataRV$auxTraitsVariables <- inputList$inputDataAuxTraitsVariables
-					inputDataRV$auxRestGroupClass <- inputList$inputDataAuxRestGroupClass
-					inputDataRV$auxRestGroupVariables <- inputList$inputDataAuxRestGroupVariables
-					# Force update
-					inputDataRV$updateData <- ifelse(inputDataRV$updateData == 1, 0, 1)
-					# resultsRV
-					resultsRV$nSce <- inputList$resultsDataNSce
-					resultsRV$nSim <- inputList$resultsDataNSim
-					resultsRV$simulate <- inputList$resultsDataSimulate
-					resultsRV$nSel <- inputList$resultsDataNSel
-					resultsRV$nSimSel <- inputList$resultsDataNSimSel
-					resultsRV$select <- inputList$resultsDataSelect
-					resultsRV$plotPar <- inputList$resultsDataPlotPar
-					resultsRV$plotMulti <- inputList$resultsDataPlotMulti
-					# Force update
-					resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
-					shinyWidgets::sendSweetAlert(
-						session = session,
-						title = i18n$t("Done!"),
-						text = paste0(i18n$t("Project loaded: "), inputList$projectName),
-						type = "success"
-					)
+					# Check if it is a restauraR object
+					if(is.null(inputList$fileClass) || inputList$fileClass != "restauraR"){
+						shinyWidgets::sendSweetAlert(
+							session = session,
+							title = i18n$t("Not a restauraR object. No file loaded!"),
+							type = "error"
+						)
+					} else{
+						# Project name
+						shiny::updateTextInput(session = session,
+											   inputId = "projectName",
+											   value = inputList$projectName)
+						# inputDataRV
+						inputDataRV$traits <- inputList$inputDataTraits
+						inputDataRV$restComp <- inputList$inputDataRestComp
+						inputDataRV$restGroup <- inputList$inputDataRestGroup
+						inputDataRV$reference <- inputList$inputDataReference
+						inputDataRV$supplementary <- inputList$inputDataSupplementary
+						inputDataRV$cooccurrence <- inputList$inputDataCooccurrence
+						inputDataRV$sppDist <- inputList$inputDataSppDist
+						inputDataRV$auxTraitsClass <- inputList$inputDataAuxTraitsClass
+						inputDataRV$auxTraitsVariables <- inputList$inputDataAuxTraitsVariables
+						inputDataRV$auxRestGroupClass <- inputList$inputDataAuxRestGroupClass
+						inputDataRV$auxRestGroupVariables <- inputList$inputDataAuxRestGroupVariables
+						# Force update
+						inputDataRV$updateData <- ifelse(inputDataRV$updateData == 1, 0, 1)
+						# resultsRV
+						resultsRV$nSce <- inputList$resultsDataNSce
+						resultsRV$nSim <- inputList$resultsDataNSim
+						resultsRV$simulate <- inputList$resultsDataSimulate
+						resultsRV$nSel <- inputList$resultsDataNSel
+						resultsRV$nSimSel <- inputList$resultsDataNSimSel
+						resultsRV$select <- inputList$resultsDataSelect
+						resultsRV$plotPar <- inputList$resultsDataPlotPar
+						resultsRV$plotMulti <- inputList$resultsDataPlotMulti
+						# Force update
+						resultsRV$updatePar <- ifelse(resultsRV$updatePar == 1, 0, 1)
+						shinyWidgets::sendSweetAlert(
+							session = session,
+							title = i18n$t("Done!"),
+							text = paste0(i18n$t("Project loaded: "), inputList$projectName),
+							type = "success"
+						)
+					}
 				}
 			}
 		}
@@ -2457,6 +2472,37 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 		}
 	})
 	### doSimulate ----
+	#
+	# Stop the process
+	#
+	# shiny::observeEvent(input$doStopSimulate, {
+	# 	resultsRV$result <- dfEmpty
+	# 	if (!is.null(resultsRV$process)) {
+	# 		tools::pskill(resultsRV$process$pid)
+	# 		resultsRV$msg <- sprintf("%1$s killed", resultsRV$process$pid)
+	# 		resultsRV$process <- NULL
+	# 		if (!is.null(resultsRV$obs)) {
+	# 			resultsRV$obs$destroy()
+	# 		}
+	# 	}
+	# })
+	# 
+	# #
+	# # Handle process event
+	# #
+	# shiny::observeEvent(resultsRV$process, {
+	# 	resultsRV$obs <- observe({
+	# 		invalidateLater(500, session)
+	# 		isolate({
+	# 			result <- mccollect(resultsRV$process, wait = FALSE)
+	# 			if (!is.null(result)) {
+	# 				resultsRV$result <- result
+	# 				resultsRV$obs$destroy()
+	# 				resultsRV$process <- NULL
+	# 			}
+	# 		})
+	# 	})
+	# })
 	shiny::observeEvent(input$doSimulate, {
 		# Remove any open modal
 		shiny::removeModal(session = session)
@@ -2469,7 +2515,8 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 				type = "error"
 			)
 		} else {
-			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), footer = NULL), session = session)
+			shiny::showModal(shiny::modalDialog(title = i18n$t("Running"), 
+												footer = NULL), session = session)
 			# Set and update the arguments group, probGroupRich and probGroupAbund
 			# Update using dynamic slides
 			if(input$specifyGroupsSimInput == "Yes" && !is.null(input$groupSimInput)){
@@ -2527,28 +2574,52 @@ appServer <- shiny::shinyServer(function(input, output, session) {
 			# }
 			# print(input$confirmSimOverwrite)
 			scenario <- tryCatch(restauraR::simulateCommunities(traits = inputDataRV$traits,
-																restComp = inputParSimRV$restComp, # Ok
-																restGroup = inputParSimRV$restGroup, # Ok
-																# restGroup = inputDataRV$restGroup, # straight input
-																ava = input$avaSimInput, # straight input
-																und = input$undSimInput, # straight input
-																it = inputParSimRV$it, # Ok
-																rich = inputParSimRV$rich, # straight input
-																# maxDiver = input$maxDiverSimInput, # straight input
-																maxDiver = inputParSimRV$maxDiver, # Ok
-																constCWM = input$constCWMSimInput, # straight input
-																prob = input$probSimInput, # straight input
-																phi = input$phiSimInput, # straight input
-																nInd = inputParSimRV$nInd, # Ok
-																cvAbund = inputParSimRV$cvAbund, # Ok
-																prefix = scenarioName, # Ok
-																method = tolower(input$methodSimInput), # straight input
-																cooccur = inputParSimRV$cooccurrence, # ok
-																minAbund = inputParSimRV$minAbund, # ok
-																group = inputParSimRV$group, # Ok
-																probGroupRich = inputParSimRV$probGroupRich, # Ok
-																probGroupAbund = inputParSimRV$probGroupAbund # Ok
+																								restComp = inputParSimRV$restComp, # Ok
+																								restGroup = inputParSimRV$restGroup, # Ok
+																								# restGroup = inputDataRV$restGroup, # straight input
+																								ava = input$avaSimInput, # straight input
+																								und = input$undSimInput, # straight input
+																								it = inputParSimRV$it, # Ok
+																								rich = inputParSimRV$rich, # straight input
+																								# maxDiver = input$maxDiverSimInput, # straight input
+																								maxDiver = inputParSimRV$maxDiver, # Ok
+																								constCWM = input$constCWMSimInput, # straight input
+																								prob = input$probSimInput, # straight input
+																								phi = input$phiSimInput, # straight input
+																								nInd = inputParSimRV$nInd, # Ok
+																								cvAbund = inputParSimRV$cvAbund, # Ok
+																								prefix = scenarioName, # Ok
+																								method = tolower(input$methodSimInput), # straight input
+																								cooccur = inputParSimRV$cooccurrence, # ok
+																								minAbund = inputParSimRV$minAbund, # ok
+																								group = inputParSimRV$group, # Ok
+																								probGroupRich = inputParSimRV$probGroupRich, # Ok
+																								probGroupAbund = inputParSimRV$probGroupAbund # Ok
 			), error = function(e) e)
+			# resultsRV$process <- mcparallel({tryCatch(restauraR::simulateCommunities(traits = inputDataRV$traits,
+			# 													restComp = inputParSimRV$restComp, # Ok
+			# 													restGroup = inputParSimRV$restGroup, # Ok
+			# 													# restGroup = inputDataRV$restGroup, # straight input
+			# 													ava = input$avaSimInput, # straight input
+			# 													und = input$undSimInput, # straight input
+			# 													it = inputParSimRV$it, # Ok
+			# 													rich = inputParSimRV$rich, # straight input
+			# 													# maxDiver = input$maxDiverSimInput, # straight input
+			# 													maxDiver = inputParSimRV$maxDiver, # Ok
+			# 													constCWM = input$constCWMSimInput, # straight input
+			# 													prob = input$probSimInput, # straight input
+			# 													phi = input$phiSimInput, # straight input
+			# 													nInd = inputParSimRV$nInd, # Ok
+			# 													cvAbund = inputParSimRV$cvAbund, # Ok
+			# 													prefix = scenarioName, # Ok
+			# 													method = tolower(input$methodSimInput), # straight input
+			# 													cooccur = inputParSimRV$cooccurrence, # ok
+			# 													minAbund = inputParSimRV$minAbund, # ok
+			# 													group = inputParSimRV$group, # Ok
+			# 													probGroupRich = inputParSimRV$probGroupRich, # Ok
+			# 													probGroupAbund = inputParSimRV$probGroupAbund # Ok
+			# ), error = function(e) e)})
+			# scenario <- resultsRV$result
 			shiny::removeModal(session = session)
 			if(inherits(scenario, what = "error")){
 				shinyWidgets::sendSweetAlert(
